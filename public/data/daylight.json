@@ -1,0 +1,17 @@
+{
+  "_note": "서울 기준 월별(15일) 일출·일몰 근사값. 날짜 사이는 선형 보간.",
+  "months": [
+    { "sunrise": "07:46", "sunset": "17:35" },
+    { "sunrise": "07:25", "sunset": "18:07" },
+    { "sunrise": "06:48", "sunset": "18:35" },
+    { "sunrise": "06:03", "sunset": "19:03" },
+    { "sunrise": "05:28", "sunset": "19:29" },
+    { "sunrise": "05:11", "sunset": "19:55" },
+    { "sunrise": "05:22", "sunset": "19:54" },
+    { "sunrise": "05:47", "sunset": "19:28" },
+    { "sunrise": "06:12", "sunset": "18:46" },
+    { "sunrise": "06:38", "sunset": "18:01" },
+    { "sunrise": "07:09", "sunset": "17:24" },
+    { "sunrise": "07:35", "sunset": "17:15" }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "_note": "솜 — 첫 만남만 해요체, 이후 반말. 짧은 문장을 빠르게. 주중엔 텐션 높고 주말엔 축 처짐. 슈는 '동거인'으로 생활 이야기만. 깊은 속마음은 데이지에게만(플레이어에겐 '좀 피곤하네' 정도).",
+  "npc": "som",
+  "lines": [
+    { "id": "som.first", "when": { "firstMeet": true }, "pages": ["어? 새로 온 사람이죠? 반가워요! 저 솜이에요.", "낮엔 미용실, 밤엔 바에서 일해요. 둘 다 이 동네라 자주 볼 거예요.", "…근데 우리 말 편하게 해도 되지? 난 그게 편해서! {player}, 잘 부탁해!"] },
+
+    { "id": "som.salon.01", "when": { "place": "salon", "activity": "work" }, "pages": ["어서 와! 머리 하러 왔어?", "오늘 예약이 꽉 차서… 다음에 시간 맞춰 줄게!"] },
+    { "id": "som.salon.02", "when": { "place": "salon", "activity": "work" }, "pages": ["{player}, 머리 끝 좀 상했다? 다음에 오면 다듬어 줄게."] },
+    { "id": "som.salon.morning", "when": { "place": "salon", "activity": "work", "timeBand": "morning" }, "pages": ["오전부터 손님이 쭉 이어져서 정신없어.", "그래도 일 들어오는 게 좋지 뭐!"] },
+    { "id": "som.salon.lunch", "when": { "place": "salon", "activity": "work", "timeBand": "lunch" }, "pages": ["점심? 아, 그냥 여기서 대충 먹었어. 시간 아까워서."] },
+    { "id": "som.salon.afternoon", "when": { "place": "salon", "activity": "work", "timeBand": "afternoon" }, "pages": ["여섯 시까지 여기, 그다음엔 바.", "오늘도 꽉 찬 하루다! 오케이!"] },
+    { "id": "som.salon.style", "when": { "place": "salon", "activity": "work", "familiarity": { "min": 1 } }, "pages": ["너는 앞머리 조금만 내리면 인상이 확 달라질걸?", "아, 영업 아니고 진심이야. 하하!"] },
+
+    { "id": "som.cafe.01", "when": { "place": "cafe" }, "pages": ["바 가기 전에 핀네서 커피 한 잔.", "이거 없으면 밤까지 못 버텨!"] },
+    { "id": "som.cafe.withdi", "when": { "place": "cafe", "with": ["di"] }, "pages": ["디도 왔네. 디한테 오늘 있었던 일 얘기하면 그냥 다 들어 줘서 편해."] },
+    { "id": "som.cafe.withfin", "when": { "place": "cafe", "with": ["fin"] }, "pages": ["핀은 맨날 웃고 있잖아. 보기만 해도 좀 충전되는 느낌이야."] },
+
+    { "id": "som.bar.evening", "when": { "place": "bar", "activity": "bartend", "timeBand": "evening" }, "pages": ["어, 왔어? 앉아 앉아. 오늘 뭐 마실래?", "이 시간엔 가벼운 거 추천!"] },
+    { "id": "som.bar.night", "when": { "place": "bar", "activity": "bartend", "timeBand": "night" }, "pages": ["밤 되니까 손님 좀 들어온다. 열심히 벌어야지!"] },
+    { "id": "som.bar.late", "when": { "place": "bar", "activity": "bartend", "timeBand": "latenight" }, "pages": ["곧 마감이야. 오늘도 길었다…", "그래도 오늘 번 거 생각하면 뿌듯해."] },
+    { "id": "som.bar.withdaisy", "when": { "place": "bar", "with": ["daisy"] }, "pages": ["데이지 또 왔어. 내가 일하는 날이면 거의 와.", "덕분에 밤이 덜 길어."] },
+    { "id": "som.bar.fri", "when": { "place": "bar", "days": ["fri"] }, "pages": ["금요일이다! 이번 주도 이거만 끝내면 끝!", "주말엔 진짜 아무것도 안 할 거야."] },
+    { "id": "som.bar.mon", "when": { "place": "bar", "days": ["mon"] }, "pages": ["월요일부터 투잡 풀가동. 아 진짜, 그래도 해야지!"] },
+    { "id": "som.goal.01", "when": { "place": "bar", "familiarity": { "min": 2 } }, "pages": ["이번 달 목표 금액까지 조금 남았거든.", "그것만 채우면 여행 적금 하나 더 들 거야."] },
+    { "id": "som.goal.02", "when": { "familiarity": { "min": 2 }, "dayType": "weekday" }, "pages": ["나중에 좋은 집 살고, 여행도 다니고, 노후 준비까지 딱 해 두는 게 내 목표야.", "그러려면 지금 벌어야지!"] },
+    { "id": "som.goal.03", "when": { "familiarity": { "min": 2 } }, "pages": ["사고 싶은 게 하나 있는데 아직 참는 중이야.", "목표 채우면 그때 나한테 선물할 거야."] },
+    { "id": "som.fam3.01", "when": { "familiarity": { "min": 3 }, "dayType": "weekday" }, "pages": ["요즘 좀 피곤하긴 해.", "그래도 내가 벌어야 집세도 내고 생활비도 되니까. 괜찮아!"] },
+    { "id": "som.fam3.02", "when": { "familiarity": { "min": 3 } }, "pages": ["너랑 얘기하면 이상하게 시간 가는 줄 모르겠다. 아, 이제 일하러 가야지!"] },
+
+    { "id": "som.meet", "when": { "activity": "meet" }, "pages": ["데이지랑 잠깐 만나기로 했어.", "주말 밤엔 이 정도 외출이 딱이야."] },
+    { "id": "som.walk.01", "when": { "activity": "walk_together" }, "pages": ["슈랑 산책 중이야. 일요일 밤엔 이렇게 걷는 게 제일 좋아."] },
+    { "id": "som.walk.02", "when": { "activity": "walk_together", "place": "beach" }, "pages": ["바닷바람 시원하다. 일주일 동안 쌓인 게 좀 날아가는 느낌?"] },
+    { "id": "som.moving.weekday", "when": { "moving": true, "dayType": "weekday" }, "pages": ["어디 가? 난 일하러 가는 길! 나중에 봐!"] },
+    { "id": "som.moving.weekend", "when": { "moving": true, "dayType": "weekend" }, "pages": ["아, {player}. 오늘은 잠깐만 나온 거야. 금방 들어갈 거야."] },
+
+    { "id": "som.busy", "when": { "context": "busy" }, "pages": ["어, 잠깐만! 이 얘기만 하고!"] },
+
+    { "id": "som.knock.rest.01", "when": { "context": "knock", "activity": "rest" }, "pages": ["아… 오늘은 진짜 아무것도 안 할 거야.", "밤에 잠깐 바람이나 쐬려고."] },
+    { "id": "som.knock.rest.02", "when": { "context": "knock", "activity": "rest" }, "pages": ["주중에 너무 달렸더니 주말엔 그냥 누워 있고 싶어.", "미안, 다음에 놀자!"] },
+    { "id": "som.knock.rest.03", "when": { "context": "knock", "activity": "rest", "with": ["shu"] }, "pages": ["슈가 차 끓여 줘서 마시는 중이야. 오늘은 집이 최고다."] },
+    { "id": "som.knock.ready", "when": { "context": "knock", "activity": "ready" }, "pages": ["곧 나가! 미용실 오픈 준비해야 돼!"] },
+    { "id": "som.knock.sleep", "when": { "context": "knock", "activity": "sleep" }, "narration": true, "pages": ["(똑똑… 대답이 없다. 다들 자는 것 같다.)"] }
+  ],
+  "fallback": [
+    { "id": "som.fb.01", "pages": ["오늘도 화이팅이다!"] },
+    { "id": "som.fb.02", "pages": ["나중에 바에 놀러 와! 한 잔 맛있게 만들어 줄게."] }
+  ]
+}

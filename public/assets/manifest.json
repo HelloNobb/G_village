@@ -1,0 +1,21 @@
+{
+  "_note": "텍스처 키 목록. type 이 placeholder-* 이면 도형으로 그린다. 실제 그림으로 바꾸려면 같은 키에 { \"type\": \"spritesheet\", \"url\": \"assets/sprites/fin.png\", \"frameWidth\": 32, \"frameHeight\": 48 } 처럼 적으면 된다. 캐릭터 시트 프레임 배치: down 0-2, left 3-5, right 6-8, up 9-11 (각 방향 첫 칸 = 서 있기). 건물: { \"type\": \"image\", \"url\": \"...\" } (집은 가로 = 집 타일 너비, 지붕은 건물 크기 그대로).",
+  "player":       { "type": "placeholder-character", "w": 20, "h": 38, "color": "#ffffff", "hair": "#4fb3ff", "label": "나", "labelColor": "#4f8fcf" },
+  "npc.fin":      { "type": "placeholder-character", "w": 22, "h": 44, "color": "#f6d776", "hair": "#a4bf55", "label": "핀", "labelColor": "#6f7f2a", "frameHeight": 52 },
+  "npc.daisy":    { "type": "placeholder-character", "w": 20, "h": 38, "color": "#3b3550", "hair": "#ff4fa3", "detail": "sparkle", "label": "데" },
+  "npc.som":      { "type": "placeholder-character", "w": 20, "h": 38, "color": "#e8735a", "hair": "#5a1e2e", "hairStyle": "long", "label": "솜" },
+  "npc.shu":      { "type": "placeholder-character", "shape": "round", "w": 25, "h": 34, "color": "#f2c9a0", "hair": "#8c6a4a", "label": "슈", "labelColor": "#8c6a4a" },
+  "npc.di":       { "type": "placeholder-character", "w": 16, "h": 40, "color": "#5e6f8a", "hair": "#2b2b36", "hairStyle": "long", "label": "디" },
+  "pet.kkamangi": { "type": "placeholder-character", "shape": "cat", "color": "#1a1a1a", "frameWidth": 32, "frameHeight": 32 },
+  "tiles":        { "type": "placeholder-tileset", "_note": "map.json legend 순서대로 32px 타일이 가로로 나열된 그림. 교체 시 { \"type\": \"image\", \"url\": \"assets/tiles.png\" }" },
+  "bld.di":       { "type": "placeholder-house", "roof": "#4f5d75", "wall": "#e6e2da" },
+  "bld.player":   { "type": "placeholder-house", "roof": "#4f9fd6", "wall": "#f6f0e2" },
+  "bld.fin":      { "type": "placeholder-house", "roof": "#9ab34a", "wall": "#fff3d6" },
+  "bld.daisy":    { "type": "placeholder-house", "roof": "#b04a8a", "wall": "#efe6f0" },
+  "bld.somshu":   { "type": "placeholder-house", "roof": "#d9734f", "wall": "#f7e6d2" },
+  "roof.cafe":      { "type": "placeholder-roof", "roof": "#e9a35c", "sign": "#fff7e6" },
+  "roof.jewelry":   { "type": "placeholder-roof", "roof": "#6b5a8e", "sign": "#f4eefc" },
+  "roof.salon":     { "type": "placeholder-roof", "roof": "#e07a8c", "sign": "#fff0f2" },
+  "roof.bar":       { "type": "placeholder-roof", "roof": "#3f4a6e", "sign": "#ffe9b8" },
+  "roof.bookstore": { "type": "placeholder-roof", "roof": "#7a9a6a", "sign": "#f2f7ea" }
+}

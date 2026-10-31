@@ -1,0 +1,45 @@
+{
+  "_note": "슈 — 조심스러운 해요체, 말줄임표 많음, 짧음. 거절당할 것 같으면 먼저 물러섬. 솜은 '동거인'(생활 이야기만). 데이지 관련: 대답이 짧아지는 정도로만, 이유 설명·험담 금지.",
+  "npc": "shu",
+  "lines": [
+    { "id": "shu.first", "when": { "firstMeet": true }, "pages": ["아, 안녕하세요…! 처음 뵙는 것 같아요.", "저는 슈예요. 마을 서점에서 일해요…", "아, 혹시 책 좋아하시면… 언제든 놀러 오세요. 부담 안 가지셔도 돼요!"] },
+
+    { "id": "shu.store.01", "when": { "place": "bookstore", "activity": "work" }, "pages": ["아, 안녕하세요…! 혹시 찾으시는 책 있으세요?"] },
+    { "id": "shu.store.02", "when": { "place": "bookstore", "activity": "work" }, "pages": ["이쪽 칸은 제가 정리한 거예요…", "조금 삐뚤어도… 이해해 주세요."] },
+    { "id": "shu.store.03", "when": { "place": "bookstore", "activity": "work" }, "pages": ["조용하죠, 서점… 저는 이런 분위기가 좋아요."] },
+    { "id": "shu.store.morning", "when": { "place": "bookstore", "activity": "work", "timeBand": "morning" }, "pages": ["아침엔 손님이 별로 없어서… 책 정리를 해요.", "이 시간이 좀 좋아요."] },
+    { "id": "shu.store.afternoon", "when": { "place": "bookstore", "activity": "work", "timeBand": "afternoon" }, "pages": ["오후엔 햇빛이 창가 책장까지 들어와요…", "책 표지 바랠까 봐 자리를 조금씩 바꿔 줘요."] },
+    { "id": "shu.store.sat", "when": { "place": "bookstore", "days": ["sat"] }, "pages": ["토요일엔 세 시까지만 열어요…", "그다음엔 집에 가요."] },
+    { "id": "shu.store.rec", "when": { "place": "bookstore", "familiarity": { "min": 1 } }, "pages": ["혹시… 책 추천해 드려도 될까요? 아, 바쁘시면 괜찮아요!", "식물 키우는 법 나오는 책인데요… 그림이 많아서 보기 편해요."] },
+    { "id": "shu.store.farm", "when": { "place": "bookstore", "familiarity": { "min": 1 } }, "pages": ["요즘 시골에서 농사짓는 이야기가 나오는 책을 읽고 있어요.", "아… 재미없으시죠. 죄송해요."] },
+
+    { "id": "shu.dream.01", "when": { "familiarity": { "min": 2 } }, "pages": ["언젠가 작은 밭이 있으면 좋겠어요.", "상추 같은 거… 키워 보고 싶어서요."] },
+    { "id": "shu.dream.02", "when": { "familiarity": { "min": 2 } }, "pages": ["돈은 조금 벌어도… 좋아하는 일 하면서 지내는 게 저는 좋아요.", "지금처럼요."] },
+    { "id": "shu.dream.03", "when": { "familiarity": { "min": 2 } }, "pages": ["시골에 내려가면… 아침에 일어나서 밭 보고, 저녁엔 책 읽고.", "그런 하루면 충분할 것 같아요."] },
+    { "id": "shu.fam3.01", "when": { "familiarity": { "min": 3 } }, "pages": ["{player} 님한테는 이런 얘기 하기가 좀 편해요…", "아, 이상한 말이었으면 잊어 주세요!"] },
+    { "id": "shu.fam3.02", "when": { "familiarity": { "min": 3 } }, "pages": ["솜이랑 저녁 먹는 시간이 하루 중에 제일 좋아요…", "아, 별거 아닌 얘기였죠. 헤헤…"] },
+
+    { "id": "shu.lunch.01", "when": { "activity": "lunch" }, "pages": ["아, 점심 먹고 있었어요… 여기 조용해서 좋아요."] },
+    { "id": "shu.lunch.02", "when": { "activity": "lunch" }, "pages": ["꽃 보면서 먹으면… 뭔가 소소하게 행복해져요."] },
+    { "id": "shu.lunch.spring", "when": { "activity": "lunch", "months": [3, 4, 5] }, "pages": ["꽃밭에 새싹 올라온 거 보셨어요?", "저 이런 거 보면… 괜히 신나요."] },
+    { "id": "shu.lunch.cold", "when": { "activity": "lunch", "months": [11, 12, 1, 2] }, "pages": ["조금 춥긴 한데… 그래도 밖에서 먹는 게 좋아요."] },
+
+    { "id": "shu.walk.01", "when": { "activity": "walk_together" }, "pages": ["솜이랑 산책하는 중이에요…", "일주일 중에 이 시간이 제일 좋아요."] },
+    { "id": "shu.walk.02", "when": { "activity": "walk_together", "place": "beach" }, "pages": ["바다 소리 들으면서 걸으면… 마음이 편해져요."] },
+    { "id": "shu.moving.01", "when": { "moving": true }, "pages": ["아, 안녕하세요…! 저, 지금 가는 길이라서요…", "다음에 또 봬요."] },
+    { "id": "shu.decline", "when": { "familiarity": { "max": 1 } }, "pages": ["아… 바쁘시면 괜찮아요.", "다음에 얘기해도 돼요."] },
+
+    { "id": "shu.busy", "when": { "context": "busy" }, "pages": ["아, 잠, 잠깐만요…!"] },
+
+    { "id": "shu.knock.01", "when": { "context": "knock", "activity": "home" }, "pages": ["아, 네…! 누구세요? 아, {player} 님…", "무슨 일 있으세요?"] },
+    { "id": "shu.knock.withsom", "when": { "context": "knock", "with": ["som"], "dayType": "weekend" }, "pages": ["솜이 쉬는 중이라서요…", "오늘은 조용히 있어 주고 싶어요. 죄송해요…!"] },
+    { "id": "shu.knock.somwork", "when": { "context": "knock", "without": ["som"], "dayType": "weekday", "timeBand": ["evening", "night"] }, "pages": ["솜은 아직 일하는 중이에요… 늦게 와요."] },
+    { "id": "shu.knock.somout", "when": { "context": "knock", "without": ["som"], "days": ["sat"], "timeBand": "night" }, "pages": ["솜은… 잠깐 나갔어요.", "…곧 오겠죠."] },
+    { "id": "shu.knock.ready", "when": { "context": "knock", "activity": "ready" }, "pages": ["아, 저 곧 서점 가야 해서요…! 죄송해요."] },
+    { "id": "shu.knock.sleep", "when": { "context": "knock", "activity": "sleep" }, "narration": true, "pages": ["(똑똑… 대답이 없다. 자고 있는 것 같다.)"] }
+  ],
+  "fallback": [
+    { "id": "shu.fb.01", "pages": ["아… 네, 좋은 하루 보내세요…!"] },
+    { "id": "shu.fb.02", "pages": ["또… 놀러 오셔도 돼요. 아, 시간 되시면요."] }
+  ]
+}

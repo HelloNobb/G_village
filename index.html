@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+    <meta name="theme-color" content="#1a2050" />
+    <title>G village</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <div id="game"></div>
+
+    <div id="ui">
+      <!-- HUD: 하늘 띠 + 날짜/시간 -->
+      <div id="hud">
+        <canvas id="sky" width="320" height="40"></canvas>
+        <div id="clock"><span id="clock-date"></span><span id="clock-time"></span></div>
+        <button id="menu-btn" class="icon-btn" aria-label="메뉴">≡</button>
+      </div>
+      <div id="place-label"></div>
+
+      <!-- 대화창 -->
+      <div id="dialog" class="hidden" role="dialog" aria-live="polite">
+        <div id="dialog-name"></div>
+        <div id="dialog-text"></div>
+        <div id="dialog-next">▼</div>
+      </div>
+
+      <!-- 모바일 조작 -->
+      <div id="joystick" class="hidden"><div id="joystick-knob"></div></div>
+      <button id="talk-btn" class="hidden" aria-label="말걸기">💬</button>
+
+      <!-- 이름 입력 -->
+      <div id="name-modal" class="modal hidden">
+        <form id="name-form" class="modal-box">
+          <h2>어서 오세요</h2>
+          <p>최근에 이 동네로 이사 오셨군요.<br />이름을 알려 주세요.</p>
+          <input id="name-input" maxlength="10" autocomplete="off" placeholder="이름 (최대 10자)" />
+          <button type="submit">시작하기</button>
+        </form>
+      </div>
+
+      <!-- 메뉴 -->
+      <div id="menu-modal" class="modal hidden">
+        <div class="modal-box">
+          <h2>메뉴</h2>
+          <div id="menu-friends"></div>
+          <label class="row"><input type="checkbox" id="opt-ambient" /> 주민끼리 대화 말풍선 보기</label>
+          <div class="help">
+            <b>조작</b><br />
+            이동: 방향키 / WASD · 화면 드래그(조이스틱) · 탭한 곳으로 이동<br />
+            말걸기: Space / E · 💬 버튼 · 주민을 탭<br />
+            집 문 앞에서 말걸기 = 노크
+          </div>
+          <div class="row buttons">
+            <button id="menu-reset" class="danger">저장 초기화</button>
+            <button id="menu-close">닫기</button>
+          </div>
+        </div>
+      </div>
+
+      <pre id="debug" class="hidden"></pre>
+      <div id="loading">마을을 불러오는 중…</div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

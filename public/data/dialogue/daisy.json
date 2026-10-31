@@ -1,0 +1,616 @@
+{
+  "_note": "데이지 — 짧고 건조함. 친밀도 0~1 짧은 해요체, 2부터 반말. 남은 구체적으로 칭찬, 자기 작업엔 박함. 성별 대명사·성별 호칭 절대 금지.",
+  "npc": "daisy",
+  "lines": [
+    {
+      "id": "daisy.first",
+      "when": {
+        "firstMeet": true
+      },
+      "pages": [
+        "…처음 보는 얼굴이네요. 이사 왔어요?",
+        "데이지예요. 저 앞 보석상에서 반지 같은 거 디자인하고 팔아요.",
+        "{player}… 이름 괜찮네요. 기억할게요."
+      ]
+    },
+    {
+      "id": "daisy.shop.f0.01",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "구경은 편하게 해요. 사라고 붙잡진 않으니까."
+      ]
+    },
+    {
+      "id": "daisy.shop.f0.02",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "그 반지요? 디자인은 내가 했고, 세공은 디가 했어요.",
+        "솔직히 세공이 좋아서 살아난 거예요."
+      ]
+    },
+    {
+      "id": "daisy.shop.f0.03",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "{player} 씨 손엔 얇은 링이 어울리겠네요. 굵은 건 좀 과하고."
+      ]
+    },
+    {
+      "id": "daisy.shop.f0.04",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "남들 다 하는 모양은 일부러 피해요. 그럼 재미없잖아요."
+      ]
+    },
+    {
+      "id": "daisy.shop.f2.01",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "왔어? 새 시안 그리는 중인데… 아직 별로야.",
+        "내 눈엔 너무 평범해 보여서."
+      ]
+    },
+    {
+      "id": "daisy.shop.f2.02",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "너 오늘 그 색 조합 좋다. 아무나 못 하는 건데."
+      ]
+    },
+    {
+      "id": "daisy.shop.f2.03",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "디 손을 거치면 내 그림이 좀 그럴듯해져. 그건 인정."
+      ]
+    },
+    {
+      "id": "daisy.shop.f2.04",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "눈에 안 띄는 반지는… 뭐, 그냥 금속이지.",
+        "그래서 하나쯤은 꼭 튀는 데를 넣어."
+      ]
+    },
+    {
+      "id": "daisy.shop.evening",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "timeBand": "evening",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "곧 닫아요. 마지막으로 하나만 더 그려 보고."
+      ]
+    },
+    {
+      "id": "daisy.shop.evening.f2",
+      "when": {
+        "place": "jewelry",
+        "activity": "work",
+        "timeBand": "evening",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "곧 닫아. 마지막으로 하나만 더 그려 보고."
+      ]
+    },
+    {
+      "id": "daisy.receive.f0",
+      "when": {
+        "activity": "receive",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "디가 납품하러 오는 날이에요. 마감 한 번을 안 넘겨요. 신기할 정도로."
+      ]
+    },
+    {
+      "id": "daisy.receive.f2",
+      "when": {
+        "activity": "receive",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "오늘 디 오는 날이야. 디 작업 보면 내 그림이 좀 아까울 때가 있어. 좋은 쪽으로."
+      ]
+    },
+    {
+      "id": "daisy.cafe.f0",
+      "when": {
+        "place": "cafe",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "점심 겸 쿠키 사러 왔어요. 핀 가게는… 이상하게 들르게 돼요."
+      ]
+    },
+    {
+      "id": "daisy.cafe.f2.01",
+      "when": {
+        "place": "cafe",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "핀 쿠키는 모양이 매번 조금씩 달라. 그게 좋아."
+      ]
+    },
+    {
+      "id": "daisy.cafe.withfin",
+      "when": {
+        "place": "cafe",
+        "with": [
+          "fin"
+        ],
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "핀 봐요. 쿠키 포장하면서 혼자 웃고 있어.",
+        "…귀엽지 않아요?"
+      ]
+    },
+    {
+      "id": "daisy.cafe.withfin.f2",
+      "when": {
+        "place": "cafe",
+        "with": [
+          "fin"
+        ],
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "핀 봐. 쿠키 포장하면서 혼자 웃고 있어.",
+        "…귀엽지 않아?"
+      ]
+    },
+    {
+      "id": "daisy.cafe.sun",
+      "when": {
+        "place": "cafe",
+        "days": [
+          "sun"
+        ],
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "일요일엔 가게 닫아요. 그래서 여기서 좀 앉아 있다 가요."
+      ]
+    },
+    {
+      "id": "daisy.cafe.sun.f2",
+      "when": {
+        "place": "cafe",
+        "days": [
+          "sun"
+        ],
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "일요일엔 가게 닫아. 그래서 여기서 좀 앉아 있다 가."
+      ]
+    },
+    {
+      "id": "daisy.bar.f0",
+      "when": {
+        "place": "bar",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "여기 칵테일 괜찮아요. 솜이 만들면 더."
+      ]
+    },
+    {
+      "id": "daisy.bar.f2.01",
+      "when": {
+        "place": "bar",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "솜 일하는 거 보러 왔어.",
+        "저렇게 일하는데 표정 하나 안 무너지는 거, 진짜 대단하지."
+      ]
+    },
+    {
+      "id": "daisy.bar.f2.02",
+      "when": {
+        "place": "bar",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "밤엔 여기가 편해. 시끄럽지도 않고, 솜도 있고."
+      ]
+    },
+    {
+      "id": "daisy.bar.late",
+      "when": {
+        "place": "bar",
+        "timeBand": "night",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "한 잔만 더 하고 갈 거예요. …아마도."
+      ]
+    },
+    {
+      "id": "daisy.bar.late.f2",
+      "when": {
+        "place": "bar",
+        "timeBand": "night",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "한 잔만 더 하고 갈 거야. …아마도."
+      ]
+    },
+    {
+      "id": "daisy.meet",
+      "when": {
+        "activity": "meet",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "솜이랑 잠깐 바람 쐬는 중이에요.",
+        "주말엔 이 시간 아니면 얼굴 보기 힘들어서."
+      ]
+    },
+    {
+      "id": "daisy.meet.f2",
+      "when": {
+        "activity": "meet",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "주말엔 솜이 많이 지쳐 있어. 그래도 이렇게 나온 게 어디야."
+      ]
+    },
+    {
+      "id": "daisy.moving.f0",
+      "when": {
+        "moving": true,
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "어디 가는 길이에요? 난 가게 가요."
+      ]
+    },
+    {
+      "id": "daisy.moving.f2",
+      "when": {
+        "moving": true,
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "어, 왔어. 산책?"
+      ]
+    },
+    {
+      "id": "daisy.f3.01",
+      "when": {
+        "familiarity": {
+          "min": 3
+        }
+      },
+      "pages": [
+        "너는 남 눈치 안 보고 네 스타일대로 하잖아. 그거 쉬운 거 아니야."
+      ]
+    },
+    {
+      "id": "daisy.f3.02",
+      "when": {
+        "familiarity": {
+          "min": 3
+        }
+      },
+      "pages": [
+        "칭찬은 남한테 하는 게 편해. 나한테는… 뭐, 아직 멀었지."
+      ]
+    },
+    {
+      "id": "daisy.winter",
+      "when": {
+        "months": [
+          12,
+          1,
+          2
+        ],
+        "place": "jewelry",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "겨울엔 다들 장갑을 껴서 반지가 덜 보여요.",
+        "그래서 겨울 디자인은 좀 더 과감하게 해요."
+      ]
+    },
+    {
+      "id": "daisy.winter.f2",
+      "when": {
+        "months": [
+          12,
+          1,
+          2
+        ],
+        "place": "jewelry",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "겨울엔 다들 장갑 껴서 반지가 덜 보여.",
+        "그래서 겨울 디자인은 좀 더 과감하게 해."
+      ]
+    },
+    {
+      "id": "daisy.busy",
+      "when": {
+        "context": "busy",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "잠깐만요. 이 얘기만 마저 하고."
+      ]
+    },
+    {
+      "id": "daisy.busy.f2",
+      "when": {
+        "context": "busy",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "잠깐만. 이 얘기만 마저 하고."
+      ]
+    },
+    {
+      "id": "daisy.knock.f0",
+      "when": {
+        "context": "knock",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "…누구세요. 아, {player} 씨.",
+        "무슨 일이에요? 오늘은 그냥 쉬는 중이라."
+      ]
+    },
+    {
+      "id": "daisy.knock.f2",
+      "when": {
+        "context": "knock",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "어, 너구나. 오늘은 그냥 쉬는 중이야. 내일 가게로 와."
+      ]
+    },
+    {
+      "id": "daisy.knock.ready",
+      "when": {
+        "context": "knock",
+        "activity": "ready",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "곧 나가요. 가게 문 열어야 해서."
+      ]
+    },
+    {
+      "id": "daisy.knock.ready.f2",
+      "when": {
+        "context": "knock",
+        "activity": "ready",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "곧 나가. 가게 문 열어야 돼."
+      ]
+    },
+    {
+      "id": "daisy.knock.host.f0",
+      "when": {
+        "context": "knock",
+        "with": [
+          "som"
+        ],
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "솜이 와 있어요. 미안한데 다음에 와요."
+      ]
+    },
+    {
+      "id": "daisy.knock.host.f2",
+      "when": {
+        "context": "knock",
+        "with": [
+          "som"
+        ],
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "솜 와 있어. 오늘은 좀 쉬게 해 주고 싶어서.",
+        "다음에 와. 고마워."
+      ]
+    },
+    {
+      "id": "daisy.knock.sun",
+      "when": {
+        "context": "knock",
+        "days": [
+          "sun"
+        ],
+        "activity": "home",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "일요일엔 가게 안 열어요. 나도 좀 쉬어야지."
+      ]
+    },
+    {
+      "id": "daisy.knock.sun.f2",
+      "when": {
+        "context": "knock",
+        "days": [
+          "sun"
+        ],
+        "activity": "home",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "일요일엔 가게 안 열어. 나도 좀 쉬어야지."
+      ]
+    },
+    {
+      "id": "daisy.knock.sleep",
+      "when": {
+        "context": "knock",
+        "activity": "sleep"
+      },
+      "narration": true,
+      "pages": [
+        "(똑똑… 대답이 없다. 자고 있는 것 같다.)"
+      ]
+    }
+  ],
+  "fallback": [
+    {
+      "id": "daisy.fb.01",
+      "when": {
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "…네. 잘 가요."
+      ]
+    },
+    {
+      "id": "daisy.fb.02",
+      "when": {
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "나쁘지 않네, 오늘."
+      ]
+    },
+    {
+      "id": "daisy.fb.03",
+      "when": {
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "응. 또 와."
+      ]
+    }
+  ]
+}

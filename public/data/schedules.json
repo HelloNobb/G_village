@@ -1,0 +1,125 @@
+{
+  "_note": "주민 스케줄. 게임 하루는 05:00 시작 → 시간은 05:00~29:00 (25:00 = 다음 날 01:00). days: all | weekday | weekend | mon~sun | [\"mon\",\"wed\"]. 같은 시각에 여러 항목이 맞으면 요일이 더 구체적인 항목, 그다음 아래쪽 항목이 이김. at = map.json 의 spots 키 (배열이면 every 분마다 번갈아 감), route = map.json 의 routes 키 (반복해서 걸음), follow = 다른 주민을 따라다님. activity 는 대사 조건(when.activity)에 쓰임. [가정] = 문서에 없어 임시로 정한 것.",
+  "npcs": {
+    "fin": {
+      "default": { "at": "home.fin", "activity": "sleep", "label": "수면" },
+      "entries": [
+        { "days": "weekday", "from": "05:00", "to": "06:30", "at": "home.fin", "activity": "sleep", "label": "수면" },
+        { "days": "weekday", "from": "06:30", "to": "07:00", "at": "home.fin", "activity": "ready", "label": "준비" },
+        { "days": "weekday", "from": "07:00", "to": "08:00", "at": "cafe.kitchen", "activity": "bake", "label": "쿠키 굽기" },
+        { "days": "weekday", "from": "08:00", "to": "14:00", "at": "cafe.counter", "activity": "work", "label": "카페 영업" },
+        { "days": "weekday", "from": "14:00", "to": "14:30", "at": "plaza.bench1a", "activity": "break", "label": "쉬는 시간 [가정]" },
+        { "days": "weekday", "from": "14:30", "to": "20:00", "at": "cafe.counter", "activity": "work", "label": "카페 영업" },
+        { "days": "weekday", "from": "20:00", "to": "20:30", "at": "cafe.kitchen", "activity": "close", "label": "마감 정리" },
+        { "days": "weekday", "from": "20:30", "to": "23:00", "at": "home.fin", "activity": "home", "label": "휴식" },
+        { "days": "weekday", "from": "23:00", "to": "29:00", "at": "home.fin", "activity": "sleep", "label": "수면" },
+
+        { "days": "weekend", "from": "05:00", "to": "07:30", "at": "home.fin", "activity": "sleep", "label": "수면" },
+        { "days": "weekend", "from": "07:30", "to": "08:00", "at": "home.fin", "activity": "ready", "label": "준비" },
+        { "days": "weekend", "from": "08:00", "to": "09:00", "at": "cafe.kitchen", "activity": "bake", "label": "쿠키 굽기 [가정]" },
+        { "days": "weekend", "from": "09:00", "to": "19:00", "at": "cafe.counter", "activity": "work", "label": "주말 영업 [가정]" },
+        { "days": "weekend", "from": "19:00", "to": "19:30", "at": "cafe.kitchen", "activity": "close", "label": "마감 정리" },
+        { "days": "weekend", "from": "19:30", "to": "20:30", "at": "plaza.bench1a", "activity": "rest", "label": "마감 후 잠깐 쉼 [가정]" },
+        { "days": "weekend", "from": "20:30", "to": "23:00", "at": "home.fin", "activity": "home", "label": "휴식" },
+        { "days": "weekend", "from": "23:00", "to": "29:00", "at": "home.fin", "activity": "sleep", "label": "수면" }
+      ]
+    },
+
+    "daisy": {
+      "default": { "at": "home.daisy", "activity": "home", "label": "집" },
+      "entries": [
+        { "days": "weekday", "from": "05:00", "to": "09:30", "at": "home.daisy", "activity": "sleep", "label": "수면" },
+        { "days": "weekday", "from": "09:30", "to": "10:30", "at": "home.daisy", "activity": "ready", "label": "준비" },
+        { "days": "weekday", "from": "10:30", "to": "20:00", "at": ["jewelry.desk", "jewelry.counter"], "every": 60, "activity": "work", "label": "디자인·판매" },
+        { "days": ["mon", "wed", "fri"], "from": "13:00", "to": "13:40", "at": "cafe.table1", "activity": "visit", "label": "핀네 가게 들름" },
+        { "days": "thu", "from": "16:00", "to": "16:30", "at": "jewelry.counter", "activity": "receive", "label": "디의 납품 받기 [가정: 시간]" },
+        { "days": "weekday", "from": "20:00", "to": "23:30", "at": "home.daisy", "activity": "home", "label": "휴식" },
+        { "days": ["tue", "thu", "fri"], "from": "21:00", "to": "23:30", "at": "bar.seat1", "activity": "bar_guest", "label": "솜이 일하는 바에 들름" },
+        { "days": "weekday", "from": "23:30", "to": "29:00", "at": "home.daisy", "activity": "sleep", "label": "수면" },
+
+        { "days": "sat", "from": "05:00", "to": "10:00", "at": "home.daisy", "activity": "sleep", "label": "수면" },
+        { "days": "sat", "from": "10:00", "to": "10:30", "at": "home.daisy", "activity": "ready", "label": "준비" },
+        { "days": "sat", "from": "10:30", "to": "19:00", "at": ["jewelry.desk", "jewelry.counter"], "every": 60, "activity": "work", "label": "토요일 영업 [가정]" },
+        { "days": "sat", "from": "19:00", "to": "21:00", "at": "home.daisy", "activity": "home", "label": "휴식" },
+        { "days": "sat", "from": "21:00", "to": "22:00", "at": "plaza.bench2a", "activity": "meet", "label": "솜과 만남" },
+        { "days": "sat", "from": "22:00", "to": "23:00", "at": "home.daisy", "activity": "host", "label": "솜이 머물다 감" },
+        { "days": "sat", "from": "23:00", "to": "29:00", "at": "home.daisy", "activity": "sleep", "label": "수면" },
+
+        { "days": "sun", "from": "05:00", "to": "10:00", "at": "home.daisy", "activity": "sleep", "label": "수면" },
+        { "days": "sun", "from": "10:00", "to": "14:00", "at": "home.daisy", "activity": "home", "label": "휴무 [가정]" },
+        { "days": "sun", "from": "14:00", "to": "14:40", "at": "cafe.table1", "activity": "visit", "label": "핀네 가게 들름" },
+        { "days": "sun", "from": "14:40", "to": "23:30", "at": "home.daisy", "activity": "home", "label": "휴무 [가정]" },
+        { "days": "sun", "from": "23:30", "to": "29:00", "at": "home.daisy", "activity": "sleep", "label": "수면" }
+      ]
+    },
+
+    "som": {
+      "default": { "at": "home.somshu", "activity": "rest", "label": "쉼" },
+      "entries": [
+        { "days": "weekday", "from": "05:00", "to": "08:30", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+        { "days": "weekday", "from": "08:30", "to": "09:30", "at": "home.somshu", "activity": "ready", "label": "준비" },
+        { "days": "weekday", "from": "09:30", "to": "18:00", "at": ["salon.chair", "salon.front"], "every": 45, "activity": "work", "label": "미용실 근무" },
+        { "days": "weekday", "from": "18:00", "to": "18:40", "at": "cafe.order1", "activity": "visit", "label": "핀네 가게에서 커피" },
+        { "days": "weekday", "from": "18:40", "to": "25:00", "at": "bar.counter", "activity": "bartend", "label": "바텐더" },
+        { "days": "weekday", "from": "25:00", "to": "29:00", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+
+        { "days": "weekend", "from": "05:00", "to": "11:00", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+        { "days": "weekend", "from": "11:00", "to": "21:00", "at": "home.somshu", "activity": "rest", "label": "지쳐서 쉼" },
+        { "days": "sat", "from": "21:00", "to": "22:00", "at": "plaza.bench2b", "activity": "meet", "label": "데이지와 만남" },
+        { "days": "sat", "from": "22:00", "to": "23:00", "at": "home.daisy", "activity": "visit_daisy", "label": "데이지 집에 머묾" },
+        { "days": "sun", "from": "21:00", "to": "22:30", "route": "evening.walk", "activity": "walk_together", "label": "슈와 산책" },
+        { "days": "weekend", "from": "23:00", "to": "29:00", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+        { "days": "sun", "from": "22:30", "to": "23:00", "at": "home.somshu", "activity": "rest", "label": "쉼" }
+      ]
+    },
+
+    "shu": {
+      "default": { "at": "home.somshu", "activity": "home", "label": "집" },
+      "entries": [
+        { "days": "weekday", "from": "05:00", "to": "08:00", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+        { "days": "weekday", "from": "08:00", "to": "09:30", "at": "home.somshu", "activity": "ready", "label": "준비" },
+        { "days": "weekday", "from": "09:30", "to": "12:30", "at": "bookstore.counter", "activity": "work", "label": "서점 근무" },
+        { "days": "weekday", "from": "12:30", "to": "13:10", "at": "park.bench2a", "activity": "lunch", "label": "공원에서 점심 [가정]" },
+        { "days": "weekday", "from": "13:10", "to": "19:00", "at": ["bookstore.counter", "bookstore.shelf1", "bookstore.shelf2"], "every": 40, "activity": "work", "label": "서점 근무" },
+        { "days": "weekday", "from": "19:00", "to": "24:00", "at": "home.somshu", "activity": "home", "label": "집" },
+        { "days": "weekday", "from": "24:00", "to": "29:00", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+
+        { "days": "sat", "from": "05:00", "to": "08:30", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+        { "days": "sat", "from": "08:30", "to": "09:30", "at": "home.somshu", "activity": "ready", "label": "준비" },
+        { "days": "sat", "from": "09:30", "to": "15:00", "at": ["bookstore.counter", "bookstore.shelf1"], "every": 50, "activity": "work", "label": "토요일 단축 근무 [가정]" },
+        { "days": "sat", "from": "15:00", "to": "24:00", "at": "home.somshu", "activity": "home", "label": "집" },
+        { "days": "sat", "from": "24:00", "to": "29:00", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+
+        { "days": "sun", "from": "05:00", "to": "09:00", "at": "home.somshu", "activity": "sleep", "label": "수면" },
+        { "days": "sun", "from": "09:00", "to": "21:00", "at": "home.somshu", "activity": "home", "label": "휴무 [가정]" },
+        { "days": "sun", "from": "21:00", "to": "22:30", "follow": "som", "activity": "walk_together", "label": "솜과 산책" },
+        { "days": "sun", "from": "22:30", "to": "24:00", "at": "home.somshu", "activity": "home", "label": "집" },
+        { "days": "sun", "from": "24:00", "to": "29:00", "at": "home.somshu", "activity": "sleep", "label": "수면" }
+      ]
+    },
+
+    "di": {
+      "default": { "at": "home.di", "activity": "home", "label": "집" },
+      "entries": [
+        { "days": "weekday", "from": "05:00", "to": "09:30", "at": "home.di", "activity": "sleep", "label": "수면" },
+        { "days": "weekday", "from": "09:30", "to": "15:00", "at": "home.di", "activity": "craft", "label": "세공 작업" },
+        { "days": "weekday", "from": "15:00", "to": "15:30", "at": "cafe.order2", "activity": "buy_latte", "label": "딸기라떼 사러" },
+        { "days": "weekday", "from": "15:30", "to": "18:00", "at": "home.di", "activity": "craft", "label": "세공 작업" },
+        { "days": "thu", "from": "16:00", "to": "16:30", "at": "jewelry.guest", "activity": "deliver", "label": "보석상 납품 [가정: 시간]" },
+        { "days": "weekday", "from": "18:00", "to": "18:30", "at": "cafe.order2", "activity": "buy_salad", "label": "샐러드 포장" },
+        { "days": "weekday", "from": "18:30", "to": "24:30", "at": "home.di", "activity": "craft", "label": "작업·휴식" },
+        { "days": "weekday", "from": "24:30", "to": "29:00", "at": "home.di", "activity": "sleep", "label": "수면" },
+
+        { "days": "weekend", "from": "05:00", "to": "10:00", "at": "home.di", "activity": "sleep", "label": "수면" },
+        { "days": "weekend", "from": "10:00", "to": "11:00", "at": "home.di", "activity": "home", "label": "집" },
+        { "days": "weekend", "from": "11:00", "to": "12:30", "route": "park.loop", "activity": "walk_cat", "label": "까망이 산책" },
+        { "days": "weekend", "from": "12:30", "to": "15:00", "at": "home.di", "activity": "home", "label": "집" },
+        { "days": "weekend", "from": "15:00", "to": "17:00", "route": "village.long", "activity": "walk", "label": "혼자 산책" },
+        { "days": "weekend", "from": "17:00", "to": "20:30", "at": "home.di", "activity": "home", "label": "집" },
+        { "days": "weekend", "from": "20:30", "to": "21:30", "at": "beach.bench3a", "activity": "stargaze", "label": "밤하늘 보기 [가정]" },
+        { "days": "weekend", "from": "21:30", "to": "24:30", "at": "home.di", "activity": "home", "label": "집" },
+        { "days": "weekend", "from": "24:30", "to": "29:00", "at": "home.di", "activity": "sleep", "label": "수면" }
+      ]
+    }
+  }
+}

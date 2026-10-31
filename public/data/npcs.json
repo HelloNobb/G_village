@@ -1,0 +1,13 @@
+{
+  "_note": "주민 정의. 설정 기준: docs/characters.md. color = 대화창 이름표 색, sprite = public/assets/manifest.json 의 키.",
+  "residents": [
+    { "id": "fin",   "name": "핀",     "job": "베이커리 카페 사장",        "house": "fin",    "sprite": "npc.fin",   "color": "#8aa53c" },
+    { "id": "daisy", "name": "데이지", "job": "보석상 디자이너·판매",      "house": "daisy",  "sprite": "npc.daisy", "color": "#d6408f" },
+    { "id": "som",   "name": "솜",     "job": "미용사·바텐더",             "house": "somshu", "sprite": "npc.som",   "color": "#d9604a" },
+    { "id": "shu",   "name": "슈",     "job": "서점 직원",                 "house": "somshu", "sprite": "npc.shu",   "color": "#b0835a" },
+    { "id": "di",    "name": "디",     "job": "프리랜서 보석 세공사",      "house": "di",     "sprite": "npc.di",    "color": "#5e6f8a" }
+  ],
+  "pets": [
+    { "id": "kkamangi", "name": "까망이", "owner": "di", "sprite": "pet.kkamangi", "color": "#333333", "outWhen": ["walk_cat"] }
+  ]
+}

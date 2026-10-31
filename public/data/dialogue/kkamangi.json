@@ -1,0 +1,13 @@
+{
+  "_note": "까망이(디의 고양이) — 대사 없이 행동 묘사(narration)만.",
+  "npc": "kkamangi",
+  "lines": [
+    { "id": "kk.01", "narration": true, "pages": ["(까망이가 디의 발치에 바짝 붙어 걷고 있다.)"] },
+    { "id": "kk.02", "narration": true, "pages": ["(까망이가 잠깐 이쪽을 보더니, 다시 앞으로 걸어간다.)"] },
+    { "id": "kk.03", "narration": true, "pages": ["(까망이의 꼬리가 천천히 흔들린다.)"] },
+    { "id": "kk.04", "narration": true, "when": { "place": "park" }, "pages": ["(까망이가 꽃 냄새를 킁킁 맡고 있다.)"] }
+  ],
+  "fallback": [
+    { "id": "kk.fb", "narration": true, "pages": ["(까망이는 디 곁을 떠나지 않는다.)"] }
+  ]
+}
