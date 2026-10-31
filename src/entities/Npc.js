@@ -9,7 +9,7 @@ export class Npc {
    * @param {import('../map/MapBuilder.js').WorldMap} world
    * @param {import('../systems/Pathfinder.js').Pathfinder} pf
    */
-  constructor(scene, def, world, pf, speedFactor = 1) {
+  constructor(scene, def, world, pf, speedFactor = 1, scale = 1) {
     this.scene = scene;
     this.id = def.id;
     this.def = def;
@@ -17,7 +17,7 @@ export class Npc {
     this.pf = pf;
     this.speed = BASE_SPEED * speedFactor;
     this.key = def.sprite;
-    this.sprite = scene.add.sprite(0, 0, this.key, 0).setOrigin(0.5, 0.92);
+    this.sprite = scene.add.sprite(0, 0, this.key, 0).setOrigin(0.5, 0.92).setScale(scale);
     this.facing = 'down';
     this.hiddenIn = null; // 들어가 있는 집 id
     this.path = [];

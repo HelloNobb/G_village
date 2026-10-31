@@ -10,13 +10,15 @@ const PERSON_COOLDOWN = 40 * 1000;
 const PASS_COOLDOWN = 5 * 60 * 1000;
 
 export class AmbientChatSystem {
-  constructor(scene, data, { npcs, bubbles, isEnabled, getCtx }) {
+  constructor(scene, data, { npcs, bubbles, isEnabled, isPaused, getCtx, onChat }) {
     this.scene = scene;
     this.scripts = data.scripts ?? [];
     this.passing = data.passing ?? [];
     this.npcs = npcs; // Map<id, Npc>
     this.bubbles = bubbles;
-    this.isEnabled = isEnabled;
+    this.isEnabled = isEnabled; // 말풍선 표시 여부
+    this.isPaused = isPaused ?? (() => false);
+    this.onChat = onChat ?? (() => {});
     this.getCtx = getCtx;
     this.timer = 2;
     this.cool = new Map(); // scriptId → 다시 가능한 시각(ms)
@@ -32,8 +34,9 @@ export class AmbientChatSystem {
 
   update(dt) {
     if (this.running) { this.tickRunning(dt); return; }
-    if (!this.isEnabled()) return;
-    this.checkPassing();
+    if (this.isPaused()) return;
+    const bubblesOn = this.isEnabled();
+    if (bubblesOn) this.checkPassing();
     this.timer -= dt;
     if (this.timer > 0) return;
     this.timer = CHECK_EVERY;
@@ -52,19 +55,26 @@ export class AmbientChatSystem {
       if (ps.some((p) => p.place !== place)) continue;
       const near = sc.allowMoving ? NEAR_PX * 1.6 : NEAR_PX;
       if (ps.some((p) => Math.hypot(p.x - ps[0].x, p.y - ps[0].y) > near)) continue;
-      if (!ps.some((p) => this.inView(p))) continue;
+      // 화면 밖 대화는 말풍선 없이 '마을 소식'에만 기록 (조금 드물게)
+      const seen = bubblesOn && ps.some((p) => this.inView(p));
+      if (!seen && Math.random() > 0.35) continue;
       const present = [...this.npcs.values()].filter((n) => n.visible && n.place === place).map((n) => n.id);
       const ctx = { ...base, context: 'talk', place, activity: ps[0].activity, present, familiarity: 0, firstMeet: false, moving: ps.some((p) => p.moving) };
       const when = { ...(sc.when ?? {}) };
       delete when.familiarity;
       const n = matchWhen(when, ctx);
       if (n < 0) continue;
-      candidates.push({ sc, ps, w: (sc.weight ?? 1) * (1 + n * 0.3) });
+      candidates.push({ sc, ps, seen, place, w: (sc.weight ?? 1) * (1 + n * 0.3) });
     }
     if (!candidates.length) return;
     let r = Math.random() * candidates.reduce((s, c) => s + c.w, 0);
     const pick = candidates.find((c) => (r -= c.w) <= 0) ?? candidates[0];
-    this.start(pick.sc, pick.ps);
+    this.onChat(pick.sc.lines, pick.place, pick.seen);
+    if (pick.seen) this.start(pick.sc, pick.ps);
+    else {
+      this.cool.set(pick.sc.id, now + (pick.sc.cooldownMin ?? 60) * 60 * 1000);
+      pick.ps.forEach((p) => this.personCool.set(p.id, now + PERSON_COOLDOWN * 3));
+    }
   }
 
   start(sc, ps) {
@@ -122,6 +132,7 @@ export class AmbientChatSystem {
       if (Math.hypot(a.x - b.x, a.y - b.y) > PASS_PX) continue;
       if (!this.inView(a)) continue;
       this.passCool.set(key, now + PASS_COOLDOWN);
+      this.onChat(ps.lines, a.place, true);
       this.start({ id: `pass:${key}`, lines: ps.lines, cooldownMin: 0, allowMoving: true }, [a, b]);
       return;
     }

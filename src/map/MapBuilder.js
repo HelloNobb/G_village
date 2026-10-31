@@ -44,10 +44,18 @@ export class WorldMap {
     const seaTop = this.rows.findIndex((r) => r.includes('~'));
     this.seaRect = s.add.rectangle(0, seaTop * T, W * T, (H - seaTop) * T, 0x3aa0c8).setOrigin(0).setDepth(DEPTH.sea);
 
+    // 보이는 타일은 고해상도 타일셋(P px)으로 만들고 0.x배로 줄여 월드(T px)에 맞춘다
+    const tilesTex = s.textures.get('tiles');
+    const spec = s.cache.json.get('manifest').tiles ?? {};
+    const info = tilesTex.customData?.tileSize ? tilesTex.customData : { tileSize: spec.tileSize ?? T, margin: spec.margin ?? 0, spacing: spec.spacing ?? 0 };
+    const P = info.tileSize;
+    const view = s.make.tilemap({ tileWidth: P, tileHeight: P, width: W, height: H });
+    const vts = view.addTilesetImage('tiles', 'tiles', P, P, info.margin, info.spacing);
+    const ground = view.createBlankLayer('ground', vts).setDepth(DEPTH.ground).setScale(T / P);
+    const decor = view.createBlankLayer('decor', vts).setDepth(DEPTH.decor).setScale(T / P);
+    // 충돌용(보이지 않음)은 월드 크기 그대로
     const map = s.make.tilemap({ tileWidth: T, tileHeight: T, width: W, height: H });
     const ts = map.addTilesetImage('tiles', 'tiles', T, T, 0, 0);
-    const ground = map.createBlankLayer('ground', ts).setDepth(DEPTH.ground);
-    const decor = map.createBlankLayer('decor', ts).setDepth(DEPTH.decor);
     const collide = map.createBlankLayer('collide', ts).setVisible(false);
 
     const gData = [], dData = [], cData = [];
@@ -74,6 +82,9 @@ export class WorldMap {
     this.tilemap = map;
     this.collideLayer = collide;
 
+    // 분수: 'fountain' 타일 영역마다 둥근 분수 하나 (벡터라 확대해도 선명)
+    this.drawFountains();
+
     // 집 (스프라이트, y정렬)
     for (const b of this.houses) {
       const key = `bld.${b.id}`;
@@ -99,6 +110,32 @@ export class WorldMap {
       }).setOrigin(0.5, 0).setDepth((b.y + b.h) * T + 3).setVisible(false);
     }
     return this;
+  }
+
+  drawFountains() {
+    const T = this.T;
+    const seen = new Set();
+    for (let y = 0; y < this.H; y++) {
+      for (let x = 0; x < this.W; x++) {
+        if (this.nameOf[this.charAt(x, y)] !== 'fountain' || seen.has(`${x},${y}`)) continue;
+        // 연결된 영역의 경계 상자
+        let x1 = x, y1 = y;
+        while (this.nameOf[this.charAt(x1 + 1, y)] === 'fountain') x1++;
+        while (this.nameOf[this.charAt(x, y1 + 1)] === 'fountain') y1++;
+        for (let yy = y; yy <= y1; yy++) for (let xx = x; xx <= x1; xx++) seen.add(`${xx},${yy}`);
+        const cx = ((x + x1 + 1) / 2) * T, cy = ((y + y1 + 1) / 2) * T;
+        const rx = ((x1 - x + 1) * T) / 2, ry = ((y1 - y + 1) * T) / 2;
+        const g = this.scene.add.graphics().setDepth(DEPTH.decor + 0.5);
+        g.fillStyle(0x000000, 0.12).fillEllipse(cx, cy + 6, rx * 2, ry * 2);
+        g.fillStyle(0xc9ced6, 1).fillEllipse(cx, cy, rx * 2 - 2, ry * 2 - 2);
+        g.lineStyle(2, 0x8d93a0, 1).strokeEllipse(cx, cy, rx * 2 - 2, ry * 2 - 2);
+        g.fillStyle(0x6fb9e0, 1).fillEllipse(cx, cy, rx * 2 - 18, ry * 2 - 18);
+        g.fillStyle(0x9fd6f2, 1).fillEllipse(cx - rx * 0.2, cy - ry * 0.2, rx * 0.7, ry * 0.4);
+        g.fillStyle(0xc9ced6, 1).fillCircle(cx, cy, Math.min(rx, ry) * 0.28);
+        g.lineStyle(2, 0x8d93a0, 1).strokeCircle(cx, cy, Math.min(rx, ry) * 0.28);
+        g.fillStyle(0xe8f6ff, 1).fillCircle(cx, cy - 4, Math.min(rx, ry) * 0.12);
+      }
+    }
   }
 
   baseChar(x, y, name) {

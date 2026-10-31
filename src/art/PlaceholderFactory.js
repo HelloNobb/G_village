@@ -2,6 +2,8 @@
 // 규칙: 게임 코드는 텍스처 "키"만 안다. 같은 키로 실제 이미지가 로드돼 있으면 여기서는 아무것도 만들지 않는다.
 // → public/assets/manifest.json 에서 type 을 "spritesheet"/"image" 로 바꾸고 url 만 주면 교체 끝.
 
+import { TEX } from '../config.js';
+
 export const DIRS = ['down', 'left', 'right', 'up'];
 export const FRAMES_PER_DIR = 3; // 프레임 배치: down 0-2, left 3-5, right 6-8, up 9-11 (0 = 서 있기)
 
@@ -62,16 +64,17 @@ export class PlaceholderFactory {
   character(key, spec) {
     const fw = spec.frameWidth ?? 32;
     const fh = spec.frameHeight ?? 48;
-    const { tex, ctx } = this.canvas(key, fw * 12, fh);
+    const { tex, ctx } = this.canvas(key, fw * 12 * TEX, fh * TEX);
     DIRS.forEach((dir, d) => {
       for (let f = 0; f < FRAMES_PER_DIR; f++) {
         const ox = (d * FRAMES_PER_DIR + f) * fw;
         ctx.save();
+        ctx.scale(TEX, TEX);
         ctx.translate(ox, 0);
         if (spec.shape === 'cat') this.drawCat(ctx, fw, fh, spec, dir, f);
         else this.drawPerson(ctx, fw, fh, spec, dir, f);
         ctx.restore();
-        tex.add(d * FRAMES_PER_DIR + f, 0, ox, 0, fw, fh);
+        tex.add(d * FRAMES_PER_DIR + f, 0, ox * TEX, 0, fw * TEX, fh * TEX);
       }
     });
     tex.refresh();
@@ -184,17 +187,36 @@ export class PlaceholderFactory {
   }
 
   // ── 타일셋 ───────────────────────────────────────────────
+  // 타일 경계 틈(seam) 방지: 각 타일 둘레를 1px 늘려 그린다 → margin 1, spacing 2
   tileset(map) {
     const T = map.tileSize;
+    const P = T * TEX;
     const chars = Object.keys(map.legend);
-    const { tex, ctx } = this.canvas('tiles', T * chars.length, T);
+    const slot = P + 2;
+    const { tex, ctx } = this.canvas('tiles', slot * chars.length, slot);
+    const tmp = document.createElement('canvas');
+    tmp.width = P; tmp.height = P;
+    const tctx = tmp.getContext('2d');
     chars.forEach((ch, i) => {
-      ctx.save();
-      ctx.translate(i * T, 0);
-      this.drawTile(ctx, map.legend[ch].name, T, i);
-      ctx.restore();
+      tctx.clearRect(0, 0, P, P);
+      tctx.save();
+      tctx.scale(TEX, TEX);
+      this.drawTile(tctx, map.legend[ch].name, T, i);
+      tctx.restore();
+      const x = i * slot + 1, y = 1;
+      ctx.drawImage(tmp, x, y);
+      // 가장자리 늘리기
+      ctx.drawImage(tmp, 0, 0, P, 1, x, y - 1, P, 1);
+      ctx.drawImage(tmp, 0, P - 1, P, 1, x, y + P, P, 1);
+      ctx.drawImage(tmp, 0, 0, 1, P, x - 1, y, 1, P);
+      ctx.drawImage(tmp, P - 1, 0, 1, P, x + P, y, 1, P);
+      ctx.drawImage(tmp, 0, 0, 1, 1, x - 1, y - 1, 1, 1);
+      ctx.drawImage(tmp, P - 1, 0, 1, 1, x + P, y - 1, 1, 1);
+      ctx.drawImage(tmp, 0, P - 1, 1, 1, x - 1, y + P, 1, 1);
+      ctx.drawImage(tmp, P - 1, P - 1, 1, 1, x + P, y + P, 1, 1);
     });
     tex.refresh();
+    tex.customData = { tileSize: P, margin: 1, spacing: 2 };
   }
 
   drawTile(ctx, name, T, seed) {
@@ -267,9 +289,8 @@ export class PlaceholderFactory {
         ctx.fillStyle = '#b98c62'; ctx.fillRect(1, 3, T - 2, 6);
         break;
       case 'fountain':
-        ctx.fillStyle = '#bfc6cf'; ctx.fillRect(0, 0, T, T);
-        ctx.fillStyle = '#7cc4e8'; ctx.fillRect(3, 3, T - 6, T - 6);
-        ctx.fillStyle = 'rgba(255,255,255,0.6)'; ctx.fillRect(8, 9, 6, 2); ctx.fillRect(16, 19, 7, 2);
+        // 분수 모양은 MapBuilder 가 영역 전체에 하나로 그린다. 타일은 바닥만.
+        ctx.fillStyle = '#ddd5c6'; ctx.fillRect(0, 0, T, T);
         break;
       case 'house':
       default:
@@ -282,7 +303,8 @@ export class PlaceholderFactory {
     if (!b) return;
     const T = 32;
     const W = b.w * T, H = b.h * T + 12;
-    const { tex, ctx } = this.canvas(key, W, H);
+    const { tex, ctx } = this.canvas(key, W * TEX, H * TEX);
+    ctx.scale(TEX, TEX);
     const wallTop = H * 0.48;
     // 벽
     ctx.fillStyle = s.wall ?? '#f3e3c8';
@@ -311,14 +333,15 @@ export class PlaceholderFactory {
     ctx.fillStyle = 'rgba(255,255,255,0.95)';
     ctx.fillText(b.label, W / 2, wallTop * 0.55);
     tex.refresh();
-    tex.customData = { windows: win.map((x) => ({ x: x + 9, y: wy + 7 })) };
+    tex.customData = { windows: win.map((x) => ({ x: (x + 9) * TEX, y: (wy + 7) * TEX })) };
   }
 
   roof(key, s, b) {
     if (!b) return;
     const T = 32;
     const W = b.w * T, H = b.h * T;
-    const { tex, ctx } = this.canvas(key, W, H);
+    const { tex, ctx } = this.canvas(key, W * TEX, H * TEX);
+    ctx.scale(TEX, TEX);
     ctx.fillStyle = s.roof ?? '#6a7fb0';
     ctx.fillRect(0, 0, W, H);
     ctx.fillStyle = 'rgba(255,255,255,0.10)';
@@ -340,7 +363,7 @@ export class PlaceholderFactory {
   }
 
   light() {
-    const S = 128;
+    const S = 256;
     const { tex, ctx } = this.canvas('fx.light', S, S);
     const g = ctx.createRadialGradient(S / 2, S / 2, 0, S / 2, S / 2, S / 2);
     g.addColorStop(0, 'rgba(255,255,255,1)');
@@ -351,8 +374,8 @@ export class PlaceholderFactory {
   }
 
   star() {
-    const { tex, ctx } = this.canvas('fx.star', 4, 4);
-    ctx.fillStyle = '#fff'; ctx.fillRect(1, 0, 2, 4); ctx.fillRect(0, 1, 4, 2);
+    const { tex, ctx } = this.canvas('fx.star', 8, 8);
+    ctx.fillStyle = '#fff'; ctx.fillRect(3, 0, 2, 8); ctx.fillRect(0, 3, 8, 2);
     tex.refresh();
   }
 }

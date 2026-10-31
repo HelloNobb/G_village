@@ -1,16 +1,89 @@
 {
   "_note": "장소 이름과 영업시간. 시간은 게임 하루(05:00 시작) 기준이라 25:00 = 다음 날 01:00. hours 키: 요일(mon..sun) > weekday/weekend > all 순으로 적용. null = 휴무. [가정] 표시는 문서에 없어 임시로 정한 값.",
   "places": {
-    "cafe":      { "name": "핀네 베이커리 카페", "hours": { "weekday": ["08:00", "20:30"], "weekend": ["09:00", "19:30"] }, "_note": "[가정] 주말 영업" },
-    "jewelry":   { "name": "보석상",             "hours": { "weekday": ["11:00", "20:00"], "sat": ["11:00", "19:00"], "sun": null }, "_note": "[가정] 일요일 휴무" },
-    "salon":     { "name": "미용실",             "hours": { "weekday": ["10:00", "18:00"], "weekend": null }, "_note": "[가정] 솜이 주말에 일하지 않으므로 휴무" },
-    "bar":       { "name": "바",                 "hours": { "weekday": ["19:00", "25:00"], "weekend": null }, "_note": "[가정] 주말 휴무" },
-    "bookstore": { "name": "서점",               "hours": { "weekday": ["10:00", "19:00"], "sat": ["10:00", "15:00"], "sun": null }, "_note": "[가정] 토요일 단축, 일요일 휴무" },
-    "plaza":     { "name": "광장" },
-    "park":      { "name": "꽃밭 공원" },
-    "beach":     { "name": "해변" },
-    "residential": { "name": "주택가" },
-    "street":    { "name": "" },
-    "home":      { "name": "집 안" }
+    "cafe": {
+      "name": "핀네 베이커리 카페",
+      "hours": {
+        "weekday": [
+          "08:00",
+          "20:30"
+        ],
+        "weekend": [
+          "09:00",
+          "19:30"
+        ]
+      },
+      "_note": "[가정] 주말 영업"
+    },
+    "jewelry": {
+      "name": "보석상",
+      "hours": {
+        "weekday": [
+          "11:00",
+          "20:00"
+        ],
+        "sat": [
+          "11:00",
+          "19:00"
+        ],
+        "sun": null
+      },
+      "_note": "[가정] 일요일 휴무"
+    },
+    "salon": {
+      "name": "미용실",
+      "hours": {
+        "weekday": [
+          "10:00",
+          "18:00"
+        ],
+        "weekend": null
+      },
+      "_note": "[가정] 솜이 주말에 일하지 않으므로 휴무"
+    },
+    "bar": {
+      "name": "바",
+      "hours": {
+        "weekday": [
+          "19:00",
+          "25:00"
+        ],
+        "weekend": null
+      },
+      "_note": "[가정] 주말 휴무"
+    },
+    "bookstore": {
+      "name": "서점",
+      "hours": {
+        "weekday": [
+          "10:00",
+          "18:30"
+        ],
+        "sat": [
+          "10:00",
+          "15:00"
+        ],
+        "sun": null
+      },
+      "_note": "[가정] 평일 18:30까지(슈 퇴근 산책), 토요일 단축, 일요일 휴무"
+    },
+    "plaza": {
+      "name": "광장"
+    },
+    "park": {
+      "name": "꽃밭 공원"
+    },
+    "beach": {
+      "name": "해변"
+    },
+    "residential": {
+      "name": "주택가"
+    },
+    "street": {
+      "name": ""
+    },
+    "home": {
+      "name": "집 안"
+    }
   }
 }

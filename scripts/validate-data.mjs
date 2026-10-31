@@ -3,6 +3,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { ScheduleSystem } from '../src/systems/ScheduleSystem.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const D = (p) => path.join(root, 'public', 'data', p);
@@ -89,6 +90,46 @@ for (const id of residents) {
     for (let m = 300; m < 1740; m++) if (!cover[m]) gap++;
     if (gap > 0) warn(`schedules.json ${id}: ${day}에 스케줄 없는 시간 ${gap}분 (default로 처리됨)`);
   }
+}
+
+// ── 활동 시간 목표 검사 (경고) ──
+// 06:00~21:00: 누군가 한 명은 밖을 걸어 다님(route/follow) / 21:00~24:00: 주민 절반(2명 이상)이 밖에 있음
+if (!errors.length) {
+  const ss = new ScheduleSystem(sched);
+  const fmt = (m) => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
+  const ranges = (mins) => {
+    const out = [];
+    for (const m of mins) {
+      const last = out[out.length - 1];
+      if (last && last[1] === m - 1) last[1] = m; else out.push([m, m]);
+    }
+    return out.map(([a, b]) => `${fmt(a)}~${fmt(b + 1)}`).join(', ');
+  };
+  for (const day of DAYS) {
+    const t = { day, dayType: DAYSETS.weekend.includes(day) ? 'weekend' : 'weekday' };
+    const noWalker = [], fewOutside = [];
+    for (let m = 6 * 60; m < 24 * 60; m++) {
+      const res = residents.map((id) => ss.resolve(id, { ...t, dayMin: m }));
+      const walking = res.filter((r) => r.target.type !== 'spot').length;
+      const outside = res.filter((r) => r.target.type !== 'spot' || !map.spots[r.target.spot]?.inside).length;
+      if (m < 21 * 60 && walking === 0) noWalker.push(m);
+      if (m >= 21 * 60 && outside < 2) fewOutside.push(m);
+    }
+    if (noWalker.length) warn(`schedules.json ${day}: 밖을 걷는 주민이 없는 시간 ${ranges(noWalker)}`);
+    if (fewOutside.length) warn(`schedules.json ${day}: 밤에 밖에 있는 주민이 2명 미만인 시간 ${ranges(fewOutside)}`);
+  }
+}
+
+// ── news.json ──
+const news = load(D('news.json'));
+if (news) {
+  for (const k of Object.keys(news.activity ?? {})) if (!activities.has(k)) warn(`news.json: activity '${k}'는 스케줄에 없음`);
+  for (const a of activities) if (!(a in (news.activity ?? {}))) warn(`news.json: activity '${a}' 문구 없음 (소식이 안 뜸)`);
+  for (const k of Object.keys(news.npcActivity ?? {})) {
+    const [n, a] = k.split('.');
+    if (!residents.includes(n) || !activities.has(a)) err(`news.json npcActivity: '${k}' — 주민id.activity 형식이어야 함`);
+  }
+  for (const r of Object.keys(news.routes ?? {})) if (!map.routes[r]) warn(`news.json routes: '${r}' 루트 없음`);
 }
 
 // ── places ──

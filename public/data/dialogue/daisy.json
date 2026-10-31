@@ -576,6 +576,202 @@
       "pages": [
         "(똑똑… 대답이 없다. 자고 있는 것 같다.)"
       ]
+    },
+    {
+      "id": "daisy.walk.am.f0",
+      "when": {
+        "activity": "walk",
+        "timeBand": [
+          "dawn",
+          "morning"
+        ],
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "출근 전에 좀 돌아서 가요. 같은 길만 가면 지루하잖아요."
+      ]
+    },
+    {
+      "id": "daisy.walk.am.f2",
+      "when": {
+        "activity": "walk",
+        "timeBand": [
+          "dawn",
+          "morning"
+        ],
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "출근 전에 좀 돌아서 가. 같은 길만 가면 지루하잖아."
+      ]
+    },
+    {
+      "id": "daisy.walk.lunch.f0",
+      "when": {
+        "activity": "walk",
+        "timeBand": "lunch",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "점심엔 좀 걸어야 머리가 돌아가요."
+      ]
+    },
+    {
+      "id": "daisy.walk.lunch.f2",
+      "when": {
+        "activity": "walk",
+        "timeBand": "lunch",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "점심엔 좀 걸어야 머리가 돌아가. 오전 시안이 영 별로였거든."
+      ]
+    },
+    {
+      "id": "daisy.walk.f0",
+      "when": {
+        "activity": "walk",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "걷다 보면 괜찮은 색 조합이 눈에 들어와요. 간판이라든지, 꽃이라든지."
+      ]
+    },
+    {
+      "id": "daisy.walk.f2",
+      "when": {
+        "activity": "walk",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "걷다 보면 괜찮은 색이 눈에 들어와. 오늘은 저 꽃밭 분홍."
+      ]
+    },
+    {
+      "id": "daisy.nwalk.mon.f0",
+      "when": {
+        "activity": "night_walk",
+        "days": [
+          "mon"
+        ],
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "월요일 밤엔 그냥 좀 걸어요. 바는 조금 이따 가고."
+      ]
+    },
+    {
+      "id": "daisy.nwalk.mon.f2",
+      "when": {
+        "activity": "night_walk",
+        "days": [
+          "mon"
+        ],
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "월요일 밤엔 좀 걷다가 바에 가. 솜도 월요일은 정신없거든."
+      ]
+    },
+    {
+      "id": "daisy.nwalk.sun.f0",
+      "when": {
+        "activity": "night_walk",
+        "days": [
+          "sun"
+        ],
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "일요일 밤은 조용해서 좋아요."
+      ]
+    },
+    {
+      "id": "daisy.nwalk.sun.f2",
+      "when": {
+        "activity": "night_walk",
+        "days": [
+          "sun"
+        ],
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "일요일 밤은 조용해서 좋아. 내일 그릴 거 생각하기 딱이야."
+      ]
+    },
+    {
+      "id": "daisy.wsom.f0",
+      "when": {
+        "activity": "walk_with_som",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "솜 데려다주는 중이에요. 이 시간엔 같이 가는 게 나아서."
+      ]
+    },
+    {
+      "id": "daisy.wsom.f2",
+      "when": {
+        "activity": "walk_with_som",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "솜 집까지 데려다주는 중. 하루 종일 일했잖아."
+      ]
+    },
+    {
+      "id": "daisy.wsom.sat.f0",
+      "when": {
+        "activity": "walk_with_som",
+        "days": [
+          "sat"
+        ],
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "솜이랑 바다 좀 보고 있어요."
+      ]
+    },
+    {
+      "id": "daisy.wsom.sat.f2",
+      "when": {
+        "activity": "walk_with_som",
+        "days": [
+          "sat"
+        ],
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "솜이랑 바다 좀 보는 중. 오늘은 솜이 좀 웃네."
+      ]
     }
   ],
   "fallback": [

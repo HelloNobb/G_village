@@ -4,7 +4,7 @@ import { registerCharacterAnims } from '../art/AnimRegistry.js';
 
 // 1단계: 데이터 JSON / 2단계: 대사 + manifest 의 실제 이미지 / 3단계: 플레이스홀더 생성 → World
 
-const DATA = ['npcs', 'schedules', 'map', 'places', 'daylight', 'ambient'];
+const DATA = ['npcs', 'schedules', 'map', 'places', 'daylight', 'ambient', 'news'];
 
 export class BootScene extends Phaser.Scene {
   constructor() {

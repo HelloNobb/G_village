@@ -1,71 +1,882 @@
 {
   "_note": "주민끼리 짧은 대화. participants 전원이 같은 장소·가까이(4타일)·멈춰 있을 때 가끔 발동. s = 말하는 주민 id, t = 대사. allowMoving: true 면 걸으면서도 함. cooldownMin = 같은 대화가 다시 나올 때까지 실제 분. passing = 길에서 스쳐 지나갈 때.",
   "scripts": [
-    { "id": "amb.fin_di.latte.01", "participants": ["fin", "di"], "when": { "place": "cafe" }, "cooldownMin": 90,
-      "lines": [{ "s": "fin", "t": "디! 오늘도 딸기라떼지?" }, { "s": "di", "t": "…응." }, { "s": "fin", "t": "그, 그래! 금방 줄게." }] },
-    { "id": "amb.fin_di.latte.02", "participants": ["fin", "di"], "when": { "place": "cafe" }, "cooldownMin": 90,
-      "lines": [{ "s": "fin", "t": "오늘 날씨 좋더라!" }, { "s": "di", "t": "…그러게." }, { "s": "fin", "t": "…응!" }] },
-    { "id": "amb.fin_di.salad", "participants": ["fin", "di"], "when": { "place": "cafe", "timeBand": "evening" }, "cooldownMin": 90,
-      "lines": [{ "s": "fin", "t": "샐러드… 오늘도 그거면 돼?" }, { "s": "di", "t": "응." }, { "s": "fin", "t": "드레싱은 따로 담아 둘게!" }, { "s": "di", "t": "…고마워." }] },
-
-    { "id": "amb.fin_som.01", "participants": ["fin", "som"], "when": { "place": "cafe" }, "cooldownMin": 60,
-      "lines": [{ "s": "som", "t": "핀! 늘 먹던 걸로!" }, { "s": "fin", "t": "벌써 만들고 있었지롱!" }, { "s": "som", "t": "역시. 이거 마시고 바 출근이다." }] },
-    { "id": "amb.fin_som.02", "participants": ["fin", "som"], "when": { "place": "cafe" }, "cooldownMin": 60,
-      "lines": [{ "s": "fin", "t": "솜, 오늘도 하루 종일 일했어?" }, { "s": "som", "t": "당연하지! 벌 수 있을 때 벌어야지." }, { "s": "fin", "t": "와, 멋있다! 쿠키 하나 넣어 줄게. 힘내!" }] },
-    { "id": "amb.som_di.cafe", "participants": ["som", "di"], "when": { "place": "cafe" }, "cooldownMin": 60,
-      "lines": [{ "s": "som", "t": "디, 오늘 미용실에 손님이 진짜 끝도 없이 왔어." }, { "s": "di", "t": "그래서?" }, { "s": "som", "t": "그래서 이거 마시러 왔지. 아, 말하니까 좀 낫다." }, { "s": "di", "t": "…응. 다행이네." }] },
-    { "id": "amb.som_di.cafe2", "participants": ["som", "di"], "when": { "place": "cafe" }, "cooldownMin": 60,
-      "lines": [{ "s": "som", "t": "넌 오늘 뭐 했어?" }, { "s": "di", "t": "반지 깎았어." }, { "s": "som", "t": "그게 다야? 너다워." }, { "s": "di", "t": "…응." }] },
-
-    { "id": "amb.fin_daisy.01", "participants": ["fin", "daisy"], "when": { "place": "cafe" }, "cooldownMin": 60,
-      "lines": [{ "s": "daisy", "t": "핀, 오늘 쿠키 얼굴이 왜 이렇게 웃고 있어." }, { "s": "fin", "t": "헤헤, 오늘 기분이 좋아서 그런가 봐!" }, { "s": "daisy", "t": "…귀엽네. 두 개 줘." }] },
-    { "id": "amb.fin_daisy.02", "participants": ["fin", "daisy"], "when": { "place": "cafe" }, "cooldownMin": 60,
-      "lines": [{ "s": "fin", "t": "데이지! 이번에 새로 만든 쿠키 봐 봐!" }, { "s": "daisy", "t": "모양 좋다. 너 이런 센스 있어." }, { "s": "fin", "t": "진짜? 데이지가 그러면 진짜 같아!" }] },
-    { "id": "amb.fin_daisy.03", "participants": ["fin", "daisy"], "when": { "place": "cafe", "days": ["sun"] }, "cooldownMin": 60,
-      "lines": [{ "s": "fin", "t": "일요일인데도 와 줬네!" }, { "s": "daisy", "t": "쉬는 날이니까 오는 거야." }, { "s": "fin", "t": "헤헤, 그럼 오늘은 제일 귀여운 걸로 골라 줄게!" }] },
-
-    { "id": "amb.som_daisy.bar.01", "participants": ["som", "daisy"], "when": { "place": "bar" }, "cooldownMin": 45,
-      "lines": [{ "s": "som", "t": "야, 오늘 진짜 길었다." }, { "s": "daisy", "t": "얼굴에 다 쓰여 있어." }, { "s": "som", "t": "티 나? 손님한텐 안 나야 하는데." }, { "s": "daisy", "t": "손님들은 몰라. 나니까 아는 거지." }] },
-    { "id": "amb.som_daisy.bar.02", "participants": ["som", "daisy"], "when": { "place": "bar" }, "cooldownMin": 45,
-      "lines": [{ "s": "daisy", "t": "오늘은 무슨 얘기 하고 싶어?" }, { "s": "som", "t": "그냥… 좀 지친다는 얘기?" }, { "s": "daisy", "t": "그 얘기면 밤새 들어줄 수 있어." }, { "s": "som", "t": "고마워. 진짜로." }] },
-    { "id": "amb.som_daisy.bar.03", "participants": ["som", "daisy"], "when": { "place": "bar" }, "cooldownMin": 45,
-      "lines": [{ "s": "som", "t": "이번 달 목표까지 조금 남았어." }, { "s": "daisy", "t": "넌 진짜 대단해. 난 그렇게 못 해." }, { "s": "som", "t": "너도 네 일 잘하잖아." }, { "s": "daisy", "t": "…글쎄. 아직 멀었지." }] },
-    { "id": "amb.som_daisy.bar.04", "participants": ["som", "daisy"], "when": { "place": "bar", "days": ["fri"] }, "cooldownMin": 45,
-      "lines": [{ "s": "daisy", "t": "금요일이다. 이번 주도 버텼네." }, { "s": "som", "t": "주말엔 나 찾지 마. 누워만 있을 거야." }, { "s": "daisy", "t": "토요일 밤엔 찾을 건데." }, { "s": "som", "t": "…그건 나갈게." }] },
-
-    { "id": "amb.som_daisy.plaza.01", "participants": ["som", "daisy"], "when": { "place": "plaza" }, "cooldownMin": 40,
-      "lines": [{ "s": "daisy", "t": "주말엔 얼굴 보기 힘드네." }, { "s": "som", "t": "주말엔 진짜 아무것도 못 하겠어. 이것도 겨우 나온 거야." }, { "s": "daisy", "t": "나온 게 어디야. 잘했어." }] },
-    { "id": "amb.som_daisy.plaza.02", "participants": ["som", "daisy"], "when": { "place": "plaza" }, "cooldownMin": 40,
-      "lines": [{ "s": "som", "t": "오늘 너희 집 좀 들렀다 가도 돼?" }, { "s": "daisy", "t": "언제든. 물어볼 필요도 없어." }] },
-
-    { "id": "amb.daisy_di.01", "participants": ["daisy", "di"], "when": { "place": "jewelry" }, "cooldownMin": 30,
-      "lines": [{ "s": "di", "t": "이번 거. 확인해 봐." }, { "s": "daisy", "t": "…와. 이 각도 살린 거 봐. 역시 디야." }, { "s": "di", "t": "그림이 그렇게 생겼으니까." }] },
-    { "id": "amb.daisy_di.02", "participants": ["daisy", "di"], "when": { "place": "jewelry" }, "cooldownMin": 30,
-      "lines": [{ "s": "daisy", "t": "다음 시안 좀 까다로운데, 괜찮겠어?" }, { "s": "di", "t": "보내. 해 볼게." }, { "s": "daisy", "t": "늘 믿고 맡긴다." }] },
-    { "id": "amb.daisy_di.03", "participants": ["daisy", "di"], "when": { "place": "jewelry" }, "cooldownMin": 30,
-      "lines": [{ "s": "daisy", "t": "이거 너무 평범하지 않아?" }, { "s": "di", "t": "아니. 괜찮아." }, { "s": "daisy", "t": "…넌 빈말은 안 하니까. 믿을게." }] },
-
-    { "id": "amb.som_shu.walk.01", "participants": ["som", "shu"], "allowMoving": true, "when": { "activity": "walk_together" }, "cooldownMin": 15,
-      "lines": [{ "s": "som", "t": "슈야, 바람 시원하다." }, { "s": "shu", "t": "응… 이렇게 걷는 거 좋아." }, { "s": "som", "t": "다음 주 일요일에도 꼭 걷자." }, { "s": "shu", "t": "응!" }] },
-    { "id": "amb.som_shu.walk.02", "participants": ["som", "shu"], "allowMoving": true, "when": { "activity": "walk_together" }, "cooldownMin": 15,
-      "lines": [{ "s": "shu", "t": "솜아, 이번 주 많이 피곤했지…" }, { "s": "som", "t": "조금? 그래도 이렇게 걸으니까 풀린다." }, { "s": "shu", "t": "…다행이다." }] },
-    { "id": "amb.som_shu.walk.03", "participants": ["som", "shu"], "allowMoving": true, "when": { "activity": "walk_together" }, "cooldownMin": 15,
-      "lines": [{ "s": "som", "t": "이번 달 집세 걱정은 하지 마. 내가 다 계산해 놨어." }, { "s": "shu", "t": "…고마워. 나도 아껴 쓸게." }] },
-    { "id": "amb.som_shu.walk.04", "participants": ["som", "shu"], "allowMoving": true, "when": { "activity": "walk_together" }, "cooldownMin": 15,
-      "lines": [{ "s": "shu", "t": "나중에… 작은 밭 있는 데서 살면 좋겠다." }, { "s": "som", "t": "밭? 너 진짜 그거 좋아하는구나." }, { "s": "shu", "t": "응… 그냥 상상만 해도 좋아." }] },
-    { "id": "amb.som_shu.walk.05", "participants": ["som", "shu"], "allowMoving": true, "when": { "activity": "walk_together", "place": "beach" }, "cooldownMin": 15,
-      "lines": [{ "s": "shu", "t": "바다 냄새 좋다…" }, { "s": "som", "t": "언젠가 바다 예쁜 데로 여행 가자. 돈 모아서." }, { "s": "shu", "t": "…응. 기대할게." }] }
+    {
+      "id": "amb.fin_di.latte.01",
+      "participants": [
+        "fin",
+        "di"
+      ],
+      "when": {
+        "place": "cafe"
+      },
+      "cooldownMin": 90,
+      "lines": [
+        {
+          "s": "fin",
+          "t": "디! 오늘도 딸기라떼지?"
+        },
+        {
+          "s": "di",
+          "t": "…응."
+        },
+        {
+          "s": "fin",
+          "t": "그, 그래! 금방 줄게."
+        }
+      ]
+    },
+    {
+      "id": "amb.fin_di.latte.02",
+      "participants": [
+        "fin",
+        "di"
+      ],
+      "when": {
+        "place": "cafe"
+      },
+      "cooldownMin": 90,
+      "lines": [
+        {
+          "s": "fin",
+          "t": "오늘 날씨 좋더라!"
+        },
+        {
+          "s": "di",
+          "t": "…그러게."
+        },
+        {
+          "s": "fin",
+          "t": "…응!"
+        }
+      ]
+    },
+    {
+      "id": "amb.fin_di.salad",
+      "participants": [
+        "fin",
+        "di"
+      ],
+      "when": {
+        "place": "cafe",
+        "timeBand": "evening"
+      },
+      "cooldownMin": 90,
+      "lines": [
+        {
+          "s": "fin",
+          "t": "샐러드… 오늘도 그거면 돼?"
+        },
+        {
+          "s": "di",
+          "t": "응."
+        },
+        {
+          "s": "fin",
+          "t": "드레싱은 따로 담아 둘게!"
+        },
+        {
+          "s": "di",
+          "t": "…고마워."
+        }
+      ]
+    },
+    {
+      "id": "amb.fin_som.01",
+      "participants": [
+        "fin",
+        "som"
+      ],
+      "when": {
+        "place": "cafe"
+      },
+      "cooldownMin": 60,
+      "lines": [
+        {
+          "s": "som",
+          "t": "핀! 늘 먹던 걸로!"
+        },
+        {
+          "s": "fin",
+          "t": "벌써 만들고 있었지롱!"
+        },
+        {
+          "s": "som",
+          "t": "역시. 이거 마시고 바 출근이다."
+        }
+      ]
+    },
+    {
+      "id": "amb.fin_som.02",
+      "participants": [
+        "fin",
+        "som"
+      ],
+      "when": {
+        "place": "cafe"
+      },
+      "cooldownMin": 60,
+      "lines": [
+        {
+          "s": "fin",
+          "t": "솜, 오늘도 하루 종일 일했어?"
+        },
+        {
+          "s": "som",
+          "t": "당연하지! 벌 수 있을 때 벌어야지."
+        },
+        {
+          "s": "fin",
+          "t": "와, 멋있다! 쿠키 하나 넣어 줄게. 힘내!"
+        }
+      ]
+    },
+    {
+      "id": "amb.som_di.cafe",
+      "participants": [
+        "som",
+        "di"
+      ],
+      "when": {
+        "place": "cafe"
+      },
+      "cooldownMin": 60,
+      "lines": [
+        {
+          "s": "som",
+          "t": "디, 오늘 미용실에 손님이 진짜 끝도 없이 왔어."
+        },
+        {
+          "s": "di",
+          "t": "그래서?"
+        },
+        {
+          "s": "som",
+          "t": "그래서 이거 마시러 왔지. 아, 말하니까 좀 낫다."
+        },
+        {
+          "s": "di",
+          "t": "…응. 다행이네."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_di.cafe2",
+      "participants": [
+        "som",
+        "di"
+      ],
+      "when": {
+        "place": "cafe"
+      },
+      "cooldownMin": 60,
+      "lines": [
+        {
+          "s": "som",
+          "t": "넌 오늘 뭐 했어?"
+        },
+        {
+          "s": "di",
+          "t": "반지 깎았어."
+        },
+        {
+          "s": "som",
+          "t": "그게 다야? 너다워."
+        },
+        {
+          "s": "di",
+          "t": "…응."
+        }
+      ]
+    },
+    {
+      "id": "amb.fin_daisy.01",
+      "participants": [
+        "fin",
+        "daisy"
+      ],
+      "when": {
+        "place": "cafe"
+      },
+      "cooldownMin": 60,
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "핀, 오늘 쿠키 얼굴이 왜 이렇게 웃고 있어."
+        },
+        {
+          "s": "fin",
+          "t": "헤헤, 오늘 기분이 좋아서 그런가 봐!"
+        },
+        {
+          "s": "daisy",
+          "t": "…귀엽네. 두 개 줘."
+        }
+      ]
+    },
+    {
+      "id": "amb.fin_daisy.02",
+      "participants": [
+        "fin",
+        "daisy"
+      ],
+      "when": {
+        "place": "cafe"
+      },
+      "cooldownMin": 60,
+      "lines": [
+        {
+          "s": "fin",
+          "t": "데이지! 이번에 새로 만든 쿠키 봐 봐!"
+        },
+        {
+          "s": "daisy",
+          "t": "모양 좋다. 너 이런 센스 있어."
+        },
+        {
+          "s": "fin",
+          "t": "진짜? 데이지가 그러면 진짜 같아!"
+        }
+      ]
+    },
+    {
+      "id": "amb.fin_daisy.03",
+      "participants": [
+        "fin",
+        "daisy"
+      ],
+      "when": {
+        "place": "cafe",
+        "days": [
+          "sun"
+        ]
+      },
+      "cooldownMin": 60,
+      "lines": [
+        {
+          "s": "fin",
+          "t": "일요일인데도 와 줬네!"
+        },
+        {
+          "s": "daisy",
+          "t": "쉬는 날이니까 오는 거야."
+        },
+        {
+          "s": "fin",
+          "t": "헤헤, 그럼 오늘은 제일 귀여운 걸로 골라 줄게!"
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.bar.01",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "when": {
+        "place": "bar"
+      },
+      "cooldownMin": 45,
+      "lines": [
+        {
+          "s": "som",
+          "t": "야, 오늘 진짜 길었다."
+        },
+        {
+          "s": "daisy",
+          "t": "얼굴에 다 쓰여 있어."
+        },
+        {
+          "s": "som",
+          "t": "티 나? 손님한텐 안 나야 하는데."
+        },
+        {
+          "s": "daisy",
+          "t": "손님들은 몰라. 나니까 아는 거지."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.bar.02",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "when": {
+        "place": "bar"
+      },
+      "cooldownMin": 45,
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "오늘은 무슨 얘기 하고 싶어?"
+        },
+        {
+          "s": "som",
+          "t": "그냥… 좀 지친다는 얘기?"
+        },
+        {
+          "s": "daisy",
+          "t": "그 얘기면 밤새 들어줄 수 있어."
+        },
+        {
+          "s": "som",
+          "t": "고마워. 진짜로."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.bar.03",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "when": {
+        "place": "bar"
+      },
+      "cooldownMin": 45,
+      "lines": [
+        {
+          "s": "som",
+          "t": "이번 달 목표까지 조금 남았어."
+        },
+        {
+          "s": "daisy",
+          "t": "넌 진짜 대단해. 난 그렇게 못 해."
+        },
+        {
+          "s": "som",
+          "t": "너도 네 일 잘하잖아."
+        },
+        {
+          "s": "daisy",
+          "t": "…글쎄. 아직 멀었지."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.bar.04",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "when": {
+        "place": "bar",
+        "days": [
+          "fri"
+        ]
+      },
+      "cooldownMin": 45,
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "금요일이다. 이번 주도 버텼네."
+        },
+        {
+          "s": "som",
+          "t": "주말엔 나 찾지 마. 누워만 있을 거야."
+        },
+        {
+          "s": "daisy",
+          "t": "토요일 밤엔 찾을 건데."
+        },
+        {
+          "s": "som",
+          "t": "…그건 나갈게."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.plaza.01",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "when": {
+        "place": "plaza"
+      },
+      "cooldownMin": 40,
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "주말엔 얼굴 보기 힘드네."
+        },
+        {
+          "s": "som",
+          "t": "주말엔 진짜 아무것도 못 하겠어. 이것도 겨우 나온 거야."
+        },
+        {
+          "s": "daisy",
+          "t": "나온 게 어디야. 잘했어."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.plaza.02",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "when": {
+        "place": "plaza"
+      },
+      "cooldownMin": 40,
+      "lines": [
+        {
+          "s": "som",
+          "t": "오늘 너희 집 좀 들렀다 가도 돼?"
+        },
+        {
+          "s": "daisy",
+          "t": "언제든. 물어볼 필요도 없어."
+        }
+      ]
+    },
+    {
+      "id": "amb.daisy_di.01",
+      "participants": [
+        "daisy",
+        "di"
+      ],
+      "when": {
+        "place": "jewelry"
+      },
+      "cooldownMin": 30,
+      "lines": [
+        {
+          "s": "di",
+          "t": "이번 거. 확인해 봐."
+        },
+        {
+          "s": "daisy",
+          "t": "…와. 이 각도 살린 거 봐. 역시 디야."
+        },
+        {
+          "s": "di",
+          "t": "그림이 그렇게 생겼으니까."
+        }
+      ]
+    },
+    {
+      "id": "amb.daisy_di.02",
+      "participants": [
+        "daisy",
+        "di"
+      ],
+      "when": {
+        "place": "jewelry"
+      },
+      "cooldownMin": 30,
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "다음 시안 좀 까다로운데, 괜찮겠어?"
+        },
+        {
+          "s": "di",
+          "t": "보내. 해 볼게."
+        },
+        {
+          "s": "daisy",
+          "t": "늘 믿고 맡긴다."
+        }
+      ]
+    },
+    {
+      "id": "amb.daisy_di.03",
+      "participants": [
+        "daisy",
+        "di"
+      ],
+      "when": {
+        "place": "jewelry"
+      },
+      "cooldownMin": 30,
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "이거 너무 평범하지 않아?"
+        },
+        {
+          "s": "di",
+          "t": "아니. 괜찮아."
+        },
+        {
+          "s": "daisy",
+          "t": "…넌 빈말은 안 하니까. 믿을게."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_shu.walk.01",
+      "participants": [
+        "som",
+        "shu"
+      ],
+      "allowMoving": true,
+      "when": {
+        "activity": "walk_together"
+      },
+      "cooldownMin": 15,
+      "lines": [
+        {
+          "s": "som",
+          "t": "슈야, 바람 시원하다."
+        },
+        {
+          "s": "shu",
+          "t": "응… 이렇게 걷는 거 좋아."
+        },
+        {
+          "s": "som",
+          "t": "다음 주 일요일에도 꼭 걷자."
+        },
+        {
+          "s": "shu",
+          "t": "응!"
+        }
+      ]
+    },
+    {
+      "id": "amb.som_shu.walk.02",
+      "participants": [
+        "som",
+        "shu"
+      ],
+      "allowMoving": true,
+      "when": {
+        "activity": "walk_together"
+      },
+      "cooldownMin": 15,
+      "lines": [
+        {
+          "s": "shu",
+          "t": "솜아, 이번 주 많이 피곤했지…"
+        },
+        {
+          "s": "som",
+          "t": "조금? 그래도 이렇게 걸으니까 풀린다."
+        },
+        {
+          "s": "shu",
+          "t": "…다행이다."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_shu.walk.03",
+      "participants": [
+        "som",
+        "shu"
+      ],
+      "allowMoving": true,
+      "when": {
+        "activity": "walk_together"
+      },
+      "cooldownMin": 15,
+      "lines": [
+        {
+          "s": "som",
+          "t": "이번 달 집세 걱정은 하지 마. 내가 다 계산해 놨어."
+        },
+        {
+          "s": "shu",
+          "t": "…고마워. 나도 아껴 쓸게."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_shu.walk.04",
+      "participants": [
+        "som",
+        "shu"
+      ],
+      "allowMoving": true,
+      "when": {
+        "activity": "walk_together"
+      },
+      "cooldownMin": 15,
+      "lines": [
+        {
+          "s": "shu",
+          "t": "나중에… 작은 밭 있는 데서 살면 좋겠다."
+        },
+        {
+          "s": "som",
+          "t": "밭? 너 진짜 그거 좋아하는구나."
+        },
+        {
+          "s": "shu",
+          "t": "응… 그냥 상상만 해도 좋아."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_shu.walk.05",
+      "participants": [
+        "som",
+        "shu"
+      ],
+      "allowMoving": true,
+      "when": {
+        "activity": "walk_together",
+        "place": "beach"
+      },
+      "cooldownMin": 15,
+      "lines": [
+        {
+          "s": "shu",
+          "t": "바다 냄새 좋다…"
+        },
+        {
+          "s": "som",
+          "t": "언젠가 바다 예쁜 데로 여행 가자. 돈 모아서."
+        },
+        {
+          "s": "shu",
+          "t": "…응. 기대할게."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.walk.01",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "allowMoving": true,
+      "when": {
+        "activity": "walk_with_daisy"
+      },
+      "cooldownMin": 20,
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "바다 보니까 좀 낫지?"
+        },
+        {
+          "s": "som",
+          "t": "응. 일주일 치 피곤이 좀 빠지는 느낌."
+        },
+        {
+          "s": "daisy",
+          "t": "다행이다."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.walk.02",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "allowMoving": true,
+      "when": {
+        "activity": "walk_with_daisy"
+      },
+      "cooldownMin": 20,
+      "lines": [
+        {
+          "s": "som",
+          "t": "다음 달엔 여행 적금 하나 더 들 거야."
+        },
+        {
+          "s": "daisy",
+          "t": "넌 계획이 늘 확실해서 좋아."
+        },
+        {
+          "s": "som",
+          "t": "그래야 버티지!"
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.home",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "allowMoving": true,
+      "when": {
+        "timeBand": "latenight"
+      },
+      "cooldownMin": 30,
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "오늘도 고생했어."
+        },
+        {
+          "s": "som",
+          "t": "끝까지 있어 줘서 고마워."
+        },
+        {
+          "s": "daisy",
+          "t": "내가 좋아서 있는 거야."
+        }
+      ]
+    }
   ],
   "passing": [
-    { "pair": ["fin", "di"],    "lines": [{ "s": "fin", "t": "아, 디. 안녕!" }, { "s": "di", "t": "…어." }] },
-    { "pair": ["fin", "som"],   "lines": [{ "s": "som", "t": "핀! 이따 갈게!" }, { "s": "fin", "t": "응! 기다릴게!" }] },
-    { "pair": ["fin", "daisy"], "lines": [{ "s": "fin", "t": "데이지, 안녕~!" }, { "s": "daisy", "t": "응. 오늘도 밝네." }] },
-    { "pair": ["fin", "shu"],   "lines": [{ "s": "fin", "t": "슈, 안녕! 오늘도 서점?" }, { "s": "shu", "t": "아, 네…! 안녕하세요." }] },
-    { "pair": ["daisy", "shu"], "lines": [{ "s": "daisy", "t": "슈, 안녕." }, { "s": "shu", "t": "…아, 안녕하세요." }] },
-    { "pair": ["daisy", "di"],  "lines": [{ "s": "daisy", "t": "디, 다음 주 시안 보낼게." }, { "s": "di", "t": "응." }] },
-    { "pair": ["daisy", "som"], "lines": [{ "s": "daisy", "t": "어, 솜." }, { "s": "som", "t": "야! 이따 바에서 봐!" }] },
-    { "pair": ["som", "di"],    "lines": [{ "s": "som", "t": "디! 오늘도 산책?" }, { "s": "di", "t": "…응." }] },
-    { "pair": ["shu", "di"],    "lines": [{ "s": "shu", "t": "아… 안녕하세요." }, { "s": "di", "t": "…네." }] },
-    { "pair": ["som", "shu"],   "lines": [{ "s": "som", "t": "슈야! 오늘 저녁 뭐 먹을까?" }, { "s": "shu", "t": "음… 집에 가서 생각해 볼게." }] }
+    {
+      "pair": [
+        "fin",
+        "di"
+      ],
+      "lines": [
+        {
+          "s": "fin",
+          "t": "아, 디. 안녕!"
+        },
+        {
+          "s": "di",
+          "t": "…어."
+        }
+      ]
+    },
+    {
+      "pair": [
+        "fin",
+        "som"
+      ],
+      "lines": [
+        {
+          "s": "som",
+          "t": "핀! 이따 갈게!"
+        },
+        {
+          "s": "fin",
+          "t": "응! 기다릴게!"
+        }
+      ]
+    },
+    {
+      "pair": [
+        "fin",
+        "daisy"
+      ],
+      "lines": [
+        {
+          "s": "fin",
+          "t": "데이지, 안녕~!"
+        },
+        {
+          "s": "daisy",
+          "t": "응. 오늘도 밝네."
+        }
+      ]
+    },
+    {
+      "pair": [
+        "fin",
+        "shu"
+      ],
+      "lines": [
+        {
+          "s": "fin",
+          "t": "슈, 안녕! 오늘도 서점?"
+        },
+        {
+          "s": "shu",
+          "t": "아, 네…! 안녕하세요."
+        }
+      ]
+    },
+    {
+      "pair": [
+        "daisy",
+        "shu"
+      ],
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "슈, 안녕."
+        },
+        {
+          "s": "shu",
+          "t": "…아, 안녕하세요."
+        }
+      ]
+    },
+    {
+      "pair": [
+        "daisy",
+        "di"
+      ],
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "디, 다음 주 시안 보낼게."
+        },
+        {
+          "s": "di",
+          "t": "응."
+        }
+      ]
+    },
+    {
+      "pair": [
+        "daisy",
+        "som"
+      ],
+      "lines": [
+        {
+          "s": "daisy",
+          "t": "어, 솜."
+        },
+        {
+          "s": "som",
+          "t": "야! 이따 바에서 봐!"
+        }
+      ]
+    },
+    {
+      "pair": [
+        "som",
+        "di"
+      ],
+      "lines": [
+        {
+          "s": "som",
+          "t": "디! 오늘도 산책?"
+        },
+        {
+          "s": "di",
+          "t": "…응."
+        }
+      ]
+    },
+    {
+      "pair": [
+        "shu",
+        "di"
+      ],
+      "lines": [
+        {
+          "s": "shu",
+          "t": "아… 안녕하세요."
+        },
+        {
+          "s": "di",
+          "t": "…네."
+        }
+      ]
+    },
+    {
+      "pair": [
+        "som",
+        "shu"
+      ],
+      "lines": [
+        {
+          "s": "som",
+          "t": "슈야! 오늘 저녁 뭐 먹을까?"
+        },
+        {
+          "s": "shu",
+          "t": "음… 집에 가서 생각해 볼게."
+        }
+      ]
+    }
   ]
 }

@@ -1,4 +1,5 @@
 import { DEPTH } from '../map/MapBuilder.js';
+import { DPR } from '../config.js';
 
 // 주민 머리 위 말풍선 (Phaser Text). 멀리 있으면 "…"로 줄여서 보여준다.
 const FONT = "'Gowun Dodum','Apple SD Gothic Neo','Noto Sans KR',sans-serif";
@@ -20,7 +21,7 @@ export class SpeechBubbles {
       padding: { x: 7, y: 4 },
       wordWrap: { width: 170, useAdvancedWrap: true },
       align: 'center',
-      resolution: Math.min(3, (window.devicePixelRatio || 1) * 1.5),
+      resolution: DPR * 2.5, // 카메라 확대까지 고려해 선명하게
     }).setOrigin(0.5, 1).setDepth(DEPTH.bubble);
     this.items.push({ target, obj, text, life: seconds, total: seconds });
   }

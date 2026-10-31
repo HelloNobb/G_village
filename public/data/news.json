@@ -1,0 +1,58 @@
+{
+  "_note": "오른쪽 '마을 소식' 문구. {name} = 주민 이름, {place} = 가는 곳 이름, {player} = 플레이어 이름, {level} = 친밀도 이름. {name:이} 처럼 쓰면 받침에 맞춰 이/가(은/는, 을/를, 와/과, 으로/로)를 붙임. activity = 스케줄 activity 가 바뀔 때. npcActivity = 특정 주민만 다른 문구('주민id.activity'). 문구를 null 로 두면 소식을 띄우지 않음.",
+  "activity": {
+    "sleep": "{name:이} 잠자리에 들었어요.",
+    "ready": "{name:이} 일어나서 하루를 준비해요.",
+    "bake": "{name:이} 카페 주방에서 쿠키를 굽기 시작했어요.",
+    "work": "{name:이} {place:으로} 일하러 가요.",
+    "close": "{name:이} {place} 마감 정리를 해요.",
+    "morning_walk": "{name:이} 아침 산책을 나섰어요.",
+    "walk": "{name:이} 잠깐 산책을 나섰어요.",
+    "night_walk": "{name:이} 밤바람을 쐬러 나왔어요.",
+    "home": "{name:이} 집으로 돌아갔어요.",
+    "rest": "{name:이} 집에서 쉬고 있어요.",
+    "visit": "{name:이} {place}에 들렀어요.",
+    "receive": "{name:이} 보석상에서 납품을 기다려요.",
+    "bar_guest": "{name:이} 바에 들렀어요.",
+    "bartend": "{name:이} 바 카운터에 섰어요.",
+    "meet": "{name:이} 광장으로 나왔어요.",
+    "host": null,
+    "visit_daisy": "{name:이} 데이지네 집에 잠깐 들렀어요.",
+    "walk_with_som": "{name:이} 솜과 함께 걸어요.",
+    "walk_with_daisy": null,
+    "walk_together": "솜과 슈가 함께 산책을 나왔어요.",
+    "lunch": "{name:이} 공원 벤치에서 점심을 먹어요.",
+    "craft": "{name:이} 집에서 세공 작업을 해요.",
+    "buy_latte": "{name:이} 딸기라떼를 사러 카페에 가요.",
+    "buy_salad": "{name:이} 샐러드를 포장하러 카페에 가요.",
+    "deliver": "{name:이} 완성한 보석을 들고 보석상에 가요.",
+    "walk_cat": "{name:이} 까망이와 산책을 나왔어요.",
+    "stargaze": "{name:이} 해변에서 밤하늘을 올려다봐요."
+  },
+  "npcActivity": {
+    "fin.work": "{name:이} 카페 카운터에 섰어요.",
+    "som.work": "{name:이} 미용실에서 손님을 맞아요.",
+    "shu.work": "{name:이} 서점 카운터를 지켜요.",
+    "daisy.work": "{name:이} 보석상 작업대 앞에 앉았어요.",
+    "shu.walk_together": null,
+    "som.rest": "{name:은} 오늘 집에서 푹 쉬는 중이에요.",
+    "di.home": "{name:이} 집으로 돌아갔어요. 까망이가 기다리고 있을 거예요.",
+    "daisy.walk_with_som": "{name:이} 솜과 나란히 걸어요."
+  },
+  "events": {
+    "shopOpen": "{place:이} 문을 열었어요.",
+    "shopClose": "{place:이} 문을 닫았어요.",
+    "sunrise": "해가 떴어요. 좋은 아침이에요.",
+    "sunset": "해가 졌어요. 가로등이 하나둘 켜져요.",
+    "welcome": "{player} 님이 마을에 들어왔어요.",
+    "firstMeet": "{name:와} 처음 인사를 나눴어요.",
+    "levelUp": "{name:와} 한층 가까워졌어요 · {level}"
+  },
+  "routes": {
+    "beach.walk": "해변",
+    "park.loop": "꽃밭 공원",
+    "plaza.loop": "광장",
+    "village.long": "동네 한 바퀴",
+    "evening.walk": "공원과 해변"
+  }
+}

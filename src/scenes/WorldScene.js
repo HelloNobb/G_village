@@ -15,9 +15,14 @@ import { Hud } from '../ui/Hud.js';
 import { TouchControls } from '../ui/TouchControls.js';
 import { SpeechBubbles } from '../ui/SpeechBubbles.js';
 import { Menu } from '../ui/Menu.js';
+import { Minimap } from '../ui/Minimap.js';
+import { NewsFeed } from '../ui/NewsFeed.js';
+import { DPR, IS_TOUCH, texResolution } from '../config.js';
 
 const TALK_RANGE = 70;
 const KNOCK_RANGE = 40;
+const LEVEL_KO = ['처음 만남', '아는 사이', '친한 이웃', '단골 이웃'];
+const stripTag = (s) => (s ?? '').replace(/\s*\[[^\]]*\]/g, '');
 const DAY_KO = { mon: '월요일', tue: '화요일', wed: '수요일', thu: '목요일', fri: '금요일', sat: '토요일', sun: '일요일' };
 
 export class WorldScene extends Phaser.Scene {
@@ -36,6 +41,9 @@ export class WorldScene extends Phaser.Scene {
     const dialogues = {};
     for (const n of [...this.npcData.residents, ...(this.npcData.pets ?? [])]) dialogues[n.id] = J(`dialogue.${n.id}`);
     this.dialogue = new DialogueSystem(dialogues);
+    this.newsData = J('news');
+    const manifest = J('manifest');
+    this.texScale = (key) => 1 / texResolution(manifest[key]);
 
     // ── 맵 ──
     this.world = new WorldMap(this, J('map')).build();
@@ -46,7 +54,7 @@ export class WorldScene extends Phaser.Scene {
     // ── 플레이어 ──
     const sp = this.save.data.player;
     const spawn = sp.x != null ? { x: sp.x, y: sp.y } : this.world.center(this.world.data.playerSpawn.x, this.world.data.playerSpawn.y);
-    this.player = new Player(this, spawn.x, spawn.y);
+    this.player = new Player(this, spawn.x, spawn.y, this.texScale('player'));
     this.player.facing = sp.facing ?? 'down';
     this.physics.add.collider(this.player.sprite, this.world.collideLayer);
     for (const b of this.world.shops) {
@@ -56,8 +64,8 @@ export class WorldScene extends Phaser.Scene {
     // ── 주민 ──
     const speedFactor = Math.min(this.clock.speed, 12);
     this.npcs = new Map();
-    for (const def of this.npcData.residents) this.npcs.set(def.id, new Npc(this, def, this.world, this.pf, speedFactor));
-    this.pets = (this.npcData.pets ?? []).map((def) => new Pet(this, def, this.npcs.get(def.owner)));
+    for (const def of this.npcData.residents) this.npcs.set(def.id, new Npc(this, def, this.world, this.pf, speedFactor, this.texScale(def.sprite)));
+    this.pets = (this.npcData.pets ?? []).map((def) => new Pet(this, def, this.npcs.get(def.owner), this.texScale(def.sprite)));
     const getNpc = (id) => this.npcs.get(id);
     this.getNpc = getNpc;
     const t0 = this.clock.update();
@@ -68,7 +76,7 @@ export class WorldScene extends Phaser.Scene {
     const cam = this.cameras.main;
     cam.setBounds(0, 0, this.world.W * T, this.world.H * T);
     cam.startFollow(this.player.sprite, true, 0.15, 0.15);
-    cam.setRoundPixels(true);
+    cam.setRoundPixels(false);
     this.applyZoom();
     this.scale.on('resize', () => this.applyZoom());
 
@@ -80,18 +88,24 @@ export class WorldScene extends Phaser.Scene {
     this.ambient = new AmbientChatSystem(this, J('ambient'), {
       npcs: this.npcs,
       bubbles: this.bubbles,
-      isEnabled: () => this.save.data.settings.ambientBubbles && !this.dialog.open,
+      isEnabled: () => this.save.data.settings.ambientBubbles,
+      isPaused: () => this.dialog.open,
       getCtx: () => this.baseCtx(),
+      onChat: (lines, place) => this.news.pushChat(this.clock.label().time, this.placeName(place), lines, (id) => this.npcs.get(id)?.def.name ?? id),
     });
 
     // ── UI ──
     this.dialog = new DialogueBox();
     this.hud = new Hud();
     this.talkBtn = document.getElementById('talk-btn');
+    this.talkLabel = this.talkBtn.querySelector('.label');
+    this.talkIcon = this.talkBtn.querySelector('.icon');
     this.talkBtn.addEventListener('pointerdown', (e) => { e.preventDefault(); e.stopPropagation(); this.interact(); });
-    this.touch = new TouchControls(this, (x, y) => this.onTap(x, y));
+    this.touch = new TouchControls(this, { onTap: (x, y) => this.onTap(x, y), onDoubleTap: () => this.interact() });
     this.menu = new Menu(this);
-    this.indicator = this.add.text(0, 0, '💬', { fontSize: '16px', resolution: 2 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble).setVisible(false);
+    this.minimap = new Minimap(this);
+    this.news = new NewsFeed(this, this.newsData);
+    this.indicator = this.add.text(0, 0, '💬', { fontSize: '16px', resolution: DPR * 2.5 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble).setVisible(false);
 
     // ── 키보드 ──
     const K = Phaser.Input.Keyboard.KeyCodes;
@@ -111,6 +125,7 @@ export class WorldScene extends Phaser.Scene {
     this.saveTimer = 0;
     this.skyTimer = 0;
     this.updateSky(true);
+    this.backfillNews();
     document.getElementById('loading').classList.add('hidden');
     window.addEventListener('pagehide', () => this.savePosition());
     document.addEventListener('visibilitychange', () => { if (document.hidden) this.savePosition(); });
@@ -126,7 +141,7 @@ export class WorldScene extends Phaser.Scene {
     this.overlay = s.add.image(0, 0, 'fx.white').setOrigin(0).setDisplaySize(WW, WH).setDepth(DEPTH.overlay).setBlendMode(Phaser.BlendModes.MULTIPLY);
     this.lights = [];
     const addLight = (x, y, scale, tint, kind, ref) => {
-      const img = s.add.image(x, y, 'fx.light').setBlendMode(Phaser.BlendModes.ADD).setDepth(DEPTH.light).setScale(scale).setTint(tint).setAlpha(0);
+      const img = s.add.image(x, y, 'fx.light').setBlendMode(Phaser.BlendModes.ADD).setDepth(DEPTH.light).setScale(scale * 0.5).setTint(tint).setAlpha(0);
       this.lights.push({ img, kind, ref });
     };
     for (const [x, y] of this.world.data.lamps) {
@@ -146,7 +161,7 @@ export class WorldScene extends Phaser.Scene {
     this.stars = [];
     for (let i = 0; i < 70; i++) {
       const st = s.add.image(Math.random() * WW, seaTop + 8 + Math.random() * (WH - seaTop - 16), 'fx.star')
-        .setBlendMode(Phaser.BlendModes.ADD).setDepth(DEPTH.light).setAlpha(0).setScale(0.6 + Math.random() * 0.8);
+        .setBlendMode(Phaser.BlendModes.ADD).setDepth(DEPTH.light).setAlpha(0).setScale(0.3 + Math.random() * 0.4);
       this.stars.push({ img: st, phase: Math.random() * Math.PI * 2, sp: 0.6 + Math.random() * 1.6 });
     }
   }
@@ -262,7 +277,12 @@ export class WorldScene extends Phaser.Scene {
       this.player.frozen = false;
       const before = this.save.familiarity(id);
       this.save.recordTalk(id, line.id, this.clock.state.dateKey, new Date(this.clock.state.ms).toISOString());
-      if (!isPet && this.save.familiarity(id) > before) this.bubbles.show(npc, '♥', 1.6);
+      if (isPet) return;
+      const after = this.save.familiarity(id);
+      const vars = { name: def.name, level: LEVEL_KO[after], player: this.textVars().player };
+      if (ctx.firstMeet) this.news.push({ time: this.clock.label().time, kind: 'me', text: this.news.event('firstMeet', vars) });
+      else if (after > before) this.news.push({ time: this.clock.label().time, kind: 'me', text: this.news.event('levelUp', vars) });
+      if (after > before) this.bubbles.show(npc, '♥', 1.6);
     });
   }
 
@@ -314,15 +334,19 @@ export class WorldScene extends Phaser.Scene {
     if (this.dialog.open) { this.dialog.advance(); return; }
     const p = this.player;
     // 주민/고양이 탭
+    let hit = null, hd = 34;
     for (const n of [...this.npcs.values(), ...this.pets]) {
       if (!n.visible) continue;
-      if (Math.abs(wx - n.x) < 18 && wy < n.y + 4 && wy > n.y - n.sprite.displayHeight) {
-        if (Math.hypot(n.x - p.x, n.y - p.y) < TALK_RANGE) { this.talkTo(n); return; }
-        this.walkPlayerTo(this.world.tileOf(n.x, n.y - 4), () => {
-          if (n.visible && Math.hypot(n.x - p.x, n.y - p.y) < TALK_RANGE + 20) this.talkTo(n);
-        });
-        return;
-      }
+      const d = Math.hypot(wx - n.x, wy - (n.y - n.sprite.displayHeight * 0.45));
+      if (d < hd) { hd = d; hit = n; }
+    }
+    if (hit) {
+      const n = hit;
+      if (Math.hypot(n.x - p.x, n.y - p.y) < TALK_RANGE) { this.talkTo(n); return; }
+      this.walkPlayerTo(this.world.tileOf(n.x, n.y - 4), () => {
+        if (n.visible && Math.hypot(n.x - p.x, n.y - p.y) < TALK_RANGE + 20) this.talkTo(n);
+      });
+      return;
     }
     const tt = this.world.tileOf(wx, wy);
     // 집 탭 → 문 앞으로 가서 노크
@@ -332,6 +356,12 @@ export class WorldScene extends Phaser.Scene {
       return;
     }
     this.walkPlayerTo(tt);
+  }
+
+  onMinimapTap(tx, ty) {
+    if (this.dialog.open || this.menu.isOpen()) return;
+    const t = this.pf.nearestWalkable(tx, ty);
+    if (t) this.walkPlayerTo(t);
   }
 
   walkPlayerTo(tile, onArrive) {
@@ -384,7 +414,10 @@ export class WorldScene extends Phaser.Scene {
       const ay = tg.type === 'npc' ? tg.npc.y - tg.npc.sprite.displayHeight - 2 : (tg.house.y + tg.house.h) * this.world.T - 30;
       this.indicator.setPosition(ax, ay - (Math.sin(time / 200) + 1) * 2).setVisible(true).setText(tg.type === 'door' ? '🚪' : '💬');
     } else this.indicator.setVisible(false);
-    this.talkBtn.classList.toggle('hidden', !tg || blocked);
+    this.updateTalkButton(tg, blocked);
+    this.minimap.update(dt, this.sky);
+    this.detectNews();
+    this.news.updateNow(dt, (n) => this.describe(n));
 
     // HUD
     const ptile = this.world.tileOf(this.player.x, this.player.y - 4);
@@ -401,6 +434,109 @@ export class WorldScene extends Phaser.Scene {
     if (this.debugOn && !this.debugEl.classList.contains('hidden')) this.renderDebug(t);
   }
 
+  updateTalkButton(tg, blocked) {
+    const dialogOpen = this.dialog.open;
+    const show = IS_TOUCH ? !this.menu.isOpen() : (!!tg && !blocked) || dialogOpen;
+    this.talkBtn.classList.toggle('hidden', !show);
+    const state = dialogOpen ? 'next' : tg ? tg.type : 'none';
+    if (this._talkState === state) return;
+    this._talkState = state;
+    const L = { next: ['▶', '다음'], npc: ['💬', '말걸기'], door: ['🚪', '노크'], none: ['💬', '말걸기'] }[state];
+    this.talkIcon.textContent = L[0];
+    this.talkLabel.textContent = L[1];
+    this.talkBtn.classList.toggle('idle', state === 'none');
+    this.talkBtn.classList.toggle('ready', state === 'npc' || state === 'door');
+  }
+
+  // ───────────────────────────────── 마을 소식
+  placeName(area) {
+    if (area === 'street') return '길';
+    return this.places.places[area]?.name ?? '';
+  }
+
+  /** 스케줄 목표의 장소 이름 */
+  targetName(target, npcId) {
+    if (target.type === 'route') return this.newsData.routes?.[target.route] ?? '동네';
+    if (target.type === 'follow') return `${this.npcs.get(target.npc)?.def.name ?? ''} 곁`;
+    const [prefix, rest] = target.spot.split('.');
+    if (prefix === 'home') {
+      const own = this.npcs.get(npcId)?.def.house === rest;
+      return own ? '집' : this.world.houseById(rest)?.label ?? '집';
+    }
+    return this.placeName(prefix);
+  }
+
+  newsTextFor(npcId, res) {
+    const def = this.npcs.get(npcId).def;
+    return this.news.activityText(npcId, res.activity, { name: def.name, place: this.targetName(res.target, npcId), player: this.textVars().player });
+  }
+
+  backfillNews() {
+    const t = this.clock.state;
+    const items = [];
+    const prevAct = {}, prevShop = {};
+    for (let m = 300; m <= Math.floor(t.dayMin); m++) {
+      const tt = { ...t, dayMin: m };
+      for (const n of this.npcs.values()) {
+        const r = this.schedule.resolve(n.id, tt);
+        if (prevAct[n.id] !== undefined && prevAct[n.id] !== r.activity) items.push({ m, text: this.newsTextFor(n.id, r) });
+        prevAct[n.id] = r.activity;
+      }
+      for (const b of this.world.shops) {
+        const o = this.isOpen(b.id, tt);
+        if (prevShop[b.id] !== undefined && o !== prevShop[b.id]) items.push({ m, text: this.news.event(o ? 'shopOpen' : 'shopClose', { place: this.placeName(b.id) }) });
+        prevShop[b.id] = o;
+      }
+    }
+    const sr = Math.round(this.sky.sunrise), ss = Math.round(this.sky.sunset);
+    if (t.dayMin >= sr) items.push({ m: sr, text: this.news.event('sunrise', {}) });
+    if (t.dayMin >= ss) items.push({ m: ss, text: this.news.event('sunset', {}) });
+    items.filter((i) => i.text).sort((a, b) => a.m - b.m).slice(-14)
+      .forEach((i) => this.news.push({ time: fmt(i.m % 1440), text: i.text }));
+    this.news.push({ time: this.clock.label().time, kind: 'me', text: this.news.event('welcome', { player: this.textVars().player }) });
+    this.lastAct = Object.fromEntries([...this.npcs.values()].map((n) => [n.id, n.activity]));
+    this.lastShop = Object.fromEntries(this.world.shops.map((b) => [b.id, this.isOpen(b.id)]));
+    this.lastDay = t.clockMin >= this.sky.sunrise && t.clockMin < this.sky.sunset;
+  }
+
+  detectNews() {
+    if (!this.lastAct) return;
+    const t = this.clock.state;
+    const time = this.clock.label().time;
+    for (const n of this.npcs.values()) {
+      if (this.lastAct[n.id] === n.activity) continue;
+      this.lastAct[n.id] = n.activity;
+      const text = this.newsTextFor(n.id, this.schedule.resolve(n.id, t));
+      if (text) this.news.push({ time, text });
+    }
+    for (const b of this.world.shops) {
+      const o = this.isOpen(b.id);
+      if (o === this.lastShop[b.id]) continue;
+      this.lastShop[b.id] = o;
+      this.news.push({ time, text: this.news.event(o ? 'shopOpen' : 'shopClose', { place: this.placeName(b.id) }) });
+    }
+    const isDay = t.clockMin >= this.sky.sunrise && t.clockMin < this.sky.sunset;
+    if (isDay !== this.lastDay) {
+      this.lastDay = isDay;
+      this.news.push({ time, text: this.news.event(isDay ? 'sunrise' : 'sunset', {}) });
+    }
+  }
+
+  /** "지금 마을에서" 한 줄 */
+  describe(n) {
+    const label = stripTag(n.label);
+    if (n.hiddenIn) {
+      const own = n.hiddenIn === n.def.house;
+      return { where: own ? '집 안' : this.world.houseById(n.hiddenIn)?.label ?? '집 안', what: label, inside: true };
+    }
+    const where = this.placeName(n.place) || '길';
+    if (n.moving && n.goal?.kind === 'spot') {
+      const dest = this.targetName({ type: 'spot', spot: n.goal.spot }, n.id);
+      if (dest !== where) return { where, what: `${dest}(으)로 가는 중`.replace(/\(으\)로/, josaRo(dest)), inside: false };
+    }
+    return { where, what: label, inside: false };
+  }
+
   savePosition() {
     const d = this.save.data.player;
     d.x = Math.round(this.player.x);
@@ -410,9 +546,10 @@ export class WorldScene extends Phaser.Scene {
   }
 
   applyZoom() {
-    const w = this.scale.width, h = this.scale.height;
-    const z = Math.max(1, Math.min(2.25, Math.round(Math.min(w / 560, h / 440) * 4) / 4));
-    this.cameras.main.setZoom(z);
+    // 화면(CSS px) 크기 기준 확대율 × DPR (캔버스가 DPR 배 크기로 그려지므로)
+    const w = this.scale.width / DPR, h = this.scale.height / DPR;
+    const z = Math.max(1, Math.min(2.25, Math.min(w / 600, h / 430)));
+    this.cameras.main.setZoom(z * DPR);
   }
 
   renderDebug(t) {
@@ -428,6 +565,13 @@ export class WorldScene extends Phaser.Scene {
     lines.push('', '` 키로 숨기기 / ?t=2026-11-01T21:30&speed=60');
     this.debugEl.textContent = lines.join('\n');
   }
+}
+
+function josaRo(word) {
+  const ch = word.charCodeAt(word.length - 1);
+  if (ch < 0xac00 || ch > 0xd7a3) return '로';
+  const jong = (ch - 0xac00) % 28;
+  return jong === 0 || jong === 8 ? '로' : '으로';
 }
 
 function fmt(m) {

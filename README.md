@@ -12,9 +12,12 @@
 | | PC | 모바일 |
 |---|---|---|
 | 이동 | 방향키 / WASD, 클릭한 곳으로 이동 | 화면 드래그(조이스틱), 탭한 곳으로 이동 |
-| 말걸기 / 대화 넘기기 | Space / E | 💬 버튼, 주민 탭 |
-| 노크 | 주민 집 문 앞에서 Space | 집을 탭 |
-| 메뉴 | Esc / ≡ | ≡ |
+| 말걸기 / 대화 넘기기 | Space / E | 💬 버튼(항상 보임), 주민 탭, 화면 두 번 탭 |
+| 노크 | 주민 집 문 앞에서 Space | 집을 탭 / 문 앞에서 💬 |
+| 빠른 이동 | 미니맵 클릭 | 미니맵 탭 |
+| 메뉴 | Esc / 메뉴 | 메뉴 |
+
+화면 구성: 테두리 안 게임 화면(왼쪽 위 시계·하늘, 오른쪽 위 실시간 미니맵) + 오른쪽 패널(**지금 마을에서** = 주민별 현재 위치, **마을 소식** = 스케줄 변화·가게 영업·해 뜨고 짐·주민끼리 나눈 대화). 좁은 화면에서는 패널이 게임 아래로 내려갑니다.
 
 - 주민이 **집 안에 있을 때만** 노크에 대답합니다. 밖에 있는 주민에게는 어디서든 바로 말을 걸 수 있습니다.
 - 주민마다 하루 첫 대화에서 친밀도가 오르고(메뉴에서 확인), 친해질수록 말투가 편해지거나 다른 이야기를 합니다.
@@ -66,6 +69,7 @@ npm run validate
 | `map.json` | 맵(글자 그림), 건물, 스폿, 산책 루트, 가로등 |
 | `npcs.json` | 주민 이름·직업·집·이름표 색 |
 | `daylight.json` | 월별 일출·일몰 |
+| `news.json` | 오른쪽 '마을 소식' 문구 (`{name:이}` = 받침에 맞는 조사) |
 
 ### 대사 한 줄 형식
 
@@ -119,6 +123,7 @@ npm run validate
 - `days`: `all` / `weekday` / `weekend` / `mon`… / `["tue","thu"]`. 겹치면 더 구체적인 요일 지정이 이깁니다.
 - `at`: `map.json`의 `spots` 이름. `home.<집>`은 집 안(화면에서 사라짐). 배열 + `every`(분)면 번갈아 이동.
 - `route`: `map.json`의 `routes` 이름(반복해서 걷기) / `follow`: 다른 주민 따라가기.
+- `npm run validate`가 **06~21시엔 누군가 밖을 걷고 있는지, 21~24시엔 2명 이상 밖에 있는지** 확인해서 빈 시간을 경고로 알려 줍니다.
 
 ### 반드시 지킬 것 (docs/characters.md "구현 시 주의")
 
@@ -130,6 +135,10 @@ npm run validate
 
 ---
 
+## 화질
+
+캔버스를 기기 픽셀 비율(최대 2배)로 그리고, 플레이스홀더 그림도 2~3배 해상도로 만든 뒤 줄여서 씁니다(`src/config.js`). 실제 그림을 넣을 때 2배 크기로 그렸다면 manifest 항목에 `"resolution": 2`를 적으면 같은 크기로 보입니다.
+
 ## 그림 바꾸기 (플레이스홀더 → 스프라이트)
 
 게임 코드는 **텍스처 키**만 알고, 그게 도형인지 그림인지는 모릅니다. `public/assets/manifest.json`에서 키의 `type`만 바꾸면 됩니다.
@@ -139,7 +148,7 @@ npm run validate
 ```
 
 - 캐릭터 시트 프레임 배치: **down 0–2, left 3–5, right 6–8, up 9–11** (각 방향 첫 칸 = 서 있기). 다른 배치면 `"frames": { "down": [0,1,2], "left": [...], ... }` 추가.
-- 타일: `"tiles": { "type": "image", "url": "assets/tiles.png" }` — `map.json`의 `legend` 순서대로 32px 타일을 가로로 나열.
+- 타일: `"tiles": { "type": "image", "url": "assets/tiles.png", "tileSize": 32 }` — `map.json`의 `legend` 순서대로 타일을 가로로 나열 (`margin`/`spacing` 지정 가능).
 - 집 `bld.<집>` / 가게 지붕 `roof.<가게>`: `{ "type": "image", "url": "..." }`. 집 창문 불빛 위치는 `"windows": [{ "x": 30, "y": 90 }]`(이미지 픽셀 좌표).
 
 ## 구조
@@ -151,7 +160,7 @@ src/
   entities/ Player · Npc · Pet
   map/      MapBuilder
   art/      PlaceholderFactory · AnimRegistry
-  ui/       DialogueBox · Hud · TouchControls · SpeechBubbles · Menu
+  ui/       DialogueBox · Hud · Minimap · NewsFeed · TouchControls · SpeechBubbles · Menu
 public/data/  게임 데이터(JSON)
 public/assets/manifest.json  텍스처 목록
 scripts/validate-data.mjs     데이터 검증

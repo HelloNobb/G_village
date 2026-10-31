@@ -2,13 +2,13 @@ import { dirFromVector } from '../art/AnimRegistry.js';
 
 // 까망이: 주인이 특정 활동(walk_cat)일 때만 밖에 나와서 졸졸 따라다닌다.
 export class Pet {
-  constructor(scene, def, owner) {
+  constructor(scene, def, owner, scale = 1) {
     this.scene = scene;
     this.id = def.id;
     this.def = def;
     this.owner = owner;
     this.key = def.sprite;
-    this.sprite = scene.add.sprite(owner.x, owner.y, this.key, 0).setOrigin(0.5, 0.9).setVisible(false);
+    this.sprite = scene.add.sprite(owner.x, owner.y, this.key, 0).setOrigin(0.5, 0.9).setScale(scale).setVisible(false);
     this.facing = 'down';
     this.trail = [];
     this.paused = false;

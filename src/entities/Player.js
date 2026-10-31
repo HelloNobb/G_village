@@ -1,13 +1,16 @@
 import { dirFromVector } from '../art/AnimRegistry.js';
 
-const SPEED = 150;
+const SPEED = 300; // px/s (예전 150의 2배)
 
 export class Player {
-  constructor(scene, x, y) {
+  /** @param {number} scale 그림 해상도 보정 (고해상도 텍스처 → 월드 크기) */
+  constructor(scene, x, y, scale = 1) {
     this.scene = scene;
     this.key = 'player';
-    this.sprite = scene.physics.add.sprite(x, y, 'player', 0).setOrigin(0.5, 0.92);
-    this.sprite.body.setSize(16, 10).setOffset((this.sprite.width - 16) / 2, this.sprite.height * 0.92 - 10);
+    this.sprite = scene.physics.add.sprite(x, y, 'player', 0).setOrigin(0.5, 0.92).setScale(scale);
+    // 몸통 충돌 상자(발밑 16×10 월드px). 크기는 텍스처 px 단위로 지정
+    const bw = 16 / scale, bh = 10 / scale;
+    this.sprite.body.setSize(bw, bh).setOffset((this.sprite.width - bw) / 2, this.sprite.height * 0.92 - bh);
     this.sprite.setCollideWorldBounds(true);
     this.facing = 'down';
     this.path = null; // 탭 이동 경로 (픽셀 좌표 배열)
@@ -41,7 +44,7 @@ export class Player {
       const p = this.path[0];
       const dx = p.x - this.sprite.x, dy = p.y - this.sprite.y;
       const d = Math.hypot(dx, dy);
-      if (d < 4) {
+      if (d < 8) {
         this.path.shift();
         if (!this.path.length) {
           this.path = null;

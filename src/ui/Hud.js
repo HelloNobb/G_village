@@ -1,4 +1,5 @@
 // 상단 하늘 띠 + 날짜/시간 + 현재 장소
+import { DPR } from '../config.js';
 
 export class Hud {
   constructor() {
@@ -18,7 +19,13 @@ export class Hud {
     if (now - this.lastDraw < 500) return;
     this.lastDraw = now;
     const c = this.canvas, ctx = this.ctx;
-    const W = c.width, H = c.height;
+    const r = c.getBoundingClientRect();
+    if (r.width && c.width !== Math.round(r.width * DPR)) {
+      c.width = Math.round(r.width * DPR);
+      c.height = Math.round(r.height * DPR);
+    }
+    ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
+    const W = c.width / DPR, H = c.height / DPR;
     const g = ctx.createLinearGradient(0, 0, 0, H);
     g.addColorStop(0, sky.skyTop);
     g.addColorStop(1, sky.skyBottom);

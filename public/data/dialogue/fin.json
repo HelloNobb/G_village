@@ -2,54 +2,486 @@
   "_note": "핀 — 밝은 해요체(플레이어), 느낌표 많음, 남 칭찬, 험담 없음. 디 이야기는 짧게, 이유 설명 없이.",
   "npc": "fin",
   "lines": [
-    { "id": "fin.first", "when": { "firstMeet": true }, "pages": ["어? 처음 뵙는 것 같은데… 혹시 새로 이사 오셨어요?", "와아, 반가워요! 저는 핀이에요. 광장 앞 베이커리 카페를 하고 있어요.", "{player} 님이요? 이름 예쁘다~ 앞으로 자주 봐요!"] },
-
-    { "id": "fin.bake.01", "when": { "activity": "bake" }, "pages": ["아, 아직 오픈 전이에요! 지금 쿠키 굽는 중이거든요.", "문 열면 갓 나온 거 드릴게요!"] },
-    { "id": "fin.bake.02", "when": { "activity": "bake" }, "pages": ["반죽 냄새 좋죠? 아침마다 이 냄새 맡으면 기분이 좋아져요!"] },
-    { "id": "fin.bake.03", "when": { "activity": "bake", "dayType": "weekend" }, "pages": ["주말엔 손님이 많아서 쿠키를 두 배로 굽고 있어요!", "오늘은 별 쿠키부터 구워 볼까 해요~"] },
-
-    { "id": "fin.cafe.morning.01", "when": { "place": "cafe", "activity": "work", "timeBand": "morning" }, "pages": ["어서 오세요! 오늘은 곰돌이 쿠키가 제일 먼저 구워졌어요.", "하나 맛보실래요? 아침 첫 손님 서비스예요!"] },
-    { "id": "fin.cafe.morning.02", "when": { "place": "cafe", "activity": "work", "timeBand": "morning" }, "pages": ["좋은 아침이에요! 아침엔 버터 쿠키랑 따뜻한 라떼가 제일 잘 어울려요."] },
-    { "id": "fin.cafe.lunch.01", "when": { "place": "cafe", "activity": "work", "timeBand": "lunch" }, "pages": ["점심시간엔 조금 바빠요! 그래도 {player} 님 오시면 반가워요~"] },
-    { "id": "fin.cafe.lunch.02", "when": { "place": "cafe", "activity": "work", "timeBand": "lunch" }, "pages": ["오늘 고양이 쿠키 귀를 조금 더 뾰족하게 만들어 봤어요.", "어때요? 귀엽죠?"] },
-    { "id": "fin.cafe.afternoon.01", "when": { "place": "cafe", "activity": "work", "timeBand": "afternoon" }, "pages": ["오후엔 별 쿠키가 잘 나가요. 다들 하나씩 사 가시더라고요!"] },
-    { "id": "fin.cafe.afternoon.02", "when": { "place": "cafe", "activity": "work", "timeBand": "afternoon" }, "pages": ["{player} 님, 이 동네 이제 좀 익숙해지셨어요?", "다들 좋은 사람들이라 금방 편해지실 거예요!"] },
-    { "id": "fin.cafe.evening.01", "when": { "place": "cafe", "activity": "work", "timeBand": "evening" }, "pages": ["오늘도 쿠키가 거의 다 나갔어요! 남은 건 내일 더 맛있게 구울게요."] },
-    { "id": "fin.cafe.evening.02", "when": { "place": "cafe", "activity": "work", "timeBand": "evening" }, "pages": ["저녁엔 가게가 조금 조용해져서 좋아요. 하루 정리하는 기분이거든요."] },
-    { "id": "fin.cafe.weekend.01", "when": { "place": "cafe", "activity": "work", "dayType": "weekend" }, "pages": ["주말이라 손님이 정말 많아요! 바빠도 다들 웃으면서 가셔서 신나요!"] },
-    { "id": "fin.cafe.weekend.02", "when": { "place": "cafe", "activity": "work", "dayType": "weekend" }, "pages": ["주말 아침엔 다들 느긋하게 오시더라고요. 저도 덩달아 기분이 좋아져요~"] },
-
-    { "id": "fin.with.di.01", "when": { "place": "cafe", "with": ["di"] }, "pages": ["아, 디 왔네요. 디는 매일 딸기라떼 사 가요. 단골이에요!", "…아, {player} 님은 뭐 드실래요?"] },
-    { "id": "fin.with.di.02", "when": { "place": "cafe", "with": ["di"] }, "pages": ["딸기라떼는 늘 똑같이 만들어요. 그게 제일 좋은 것 같아서요.", "…아, 아니에요! 주문하실 거 있으세요?"] },
-    { "id": "fin.with.som", "when": { "place": "cafe", "with": ["som"] }, "pages": ["솜도 왔네요! 솜은 이 시간에 늘 커피 사 가요.", "하루 종일 일하는데도 늘 씩씩해요. 대단하죠?"] },
-    { "id": "fin.with.daisy", "when": { "place": "cafe", "with": ["daisy"] }, "pages": ["데이지가 제 쿠키 귀엽다고 자주 말해 줘요. 헤헤.", "그 말 들으면 더 귀엽게 만들고 싶어지잖아요!"] },
-
-    { "id": "fin.close.01", "when": { "activity": "close" }, "pages": ["오늘 영업은 끝났어요! 정리만 하고 들어가려고요.", "내일 또 놀러 와 주세요!"] },
-    { "id": "fin.break.01", "when": { "activity": "break" }, "pages": ["잠깐 쉬는 중이에요! 광장 벤치에 앉아 있으면 지나가는 사람들 구경하는 재미가 있어요."] },
-    { "id": "fin.break.02", "when": { "activity": "break" }, "pages": ["햇볕 좋다~ 이따 오후에도 힘내서 구워야지!"] },
-    { "id": "fin.rest.weekend", "when": { "activity": "rest" }, "pages": ["오늘 손님이 정말 많았어요! 피곤한데 기분은 좋아요.", "{player} 님도 주말 잘 보내고 계세요?"] },
-    { "id": "fin.rest.night", "when": { "activity": "rest", "timeBand": "evening" }, "pages": ["저녁 바람 시원하다~ 내일은 무슨 모양 쿠키를 구울까요?"] },
-    { "id": "fin.moving.01", "when": { "moving": true }, "pages": ["어, {player} 님! 산책 중이세요? 오늘 날씨 좋죠?"] },
-    { "id": "fin.moving.morning", "when": { "moving": true, "timeBand": ["dawn", "morning"] }, "pages": ["좋은 아침이에요! 저 지금 가게 가는 길이에요. 이따 들르세요~"] },
-
-    { "id": "fin.fam2.01", "when": { "familiarity": { "min": 2 } }, "pages": ["있잖아요, {player} 님. 저는 사람들이 다 좋은 마음을 갖고 있다고 믿어요.", "그래서 가게 문 열 때마다, 오늘은 어떤 좋은 사람이 올까 기대돼요!"] },
-    { "id": "fin.fam2.02", "when": { "familiarity": { "min": 2 } }, "pages": ["{player} 님이 자주 와 주셔서 요즘 가게가 더 즐거워요. 진짜로요!"] },
-    { "id": "fin.fam3.01", "when": { "familiarity": { "min": 3 }, "place": "cafe" }, "pages": ["{player} 님 몫으로 쿠키 하나 따로 빼 뒀어요!", "오늘 제일 예쁘게 나온 거예요. 짜잔!"] },
-
-    { "id": "fin.season.winter", "when": { "months": [11, 12, 1, 2], "place": "cafe" }, "pages": ["날이 추워지니까 따뜻한 음료가 잘 나가요.", "쿠키에 시나몬을 조금 넣어 볼까 고민 중이에요!"] },
-    { "id": "fin.season.spring", "when": { "months": [3, 4, 5], "place": "cafe" }, "pages": ["봄이라 꽃 모양 쿠키를 만들어 봤어요! 공원 꽃밭 보고 생각났거든요."] },
-    { "id": "fin.season.summer", "when": { "months": [6, 7, 8], "place": "cafe" }, "pages": ["더울 땐 시원한 음료가 최고죠! 쿠키랑 같이 드시면 더 좋고요~"] },
-    { "id": "fin.season.autumn", "when": { "months": [9, 10], "place": "cafe" }, "pages": ["가을엔 나뭇잎 모양 쿠키를 구워요. 색 내는 게 은근 재밌어요!"] },
-
-    { "id": "fin.busy", "when": { "context": "busy" }, "pages": ["아, 잠깐만요! 금방 끝나요~"] },
-
-    { "id": "fin.knock.home.01", "when": { "context": "knock", "activity": "home" }, "pages": ["네~ 누구세요? 아, {player} 님!", "오늘 가게는 끝났어요. 내일 쿠키 맛있게 구워 둘게요!"] },
-    { "id": "fin.knock.home.02", "when": { "context": "knock", "activity": "home" }, "pages": ["아, 지금 내일 만들 쿠키 모양 고민하고 있었어요!", "내일 가게로 놀러 오세요~"] },
-    { "id": "fin.knock.ready", "when": { "context": "knock", "activity": "ready" }, "pages": ["아, 잠깐만요! 지금 가게 나가는 길이에요~ 가게에서 봐요!"] },
-    { "id": "fin.knock.sleep", "when": { "context": "knock", "activity": "sleep" }, "narration": true, "pages": ["(똑똑… 안은 조용하다. 자고 있는 것 같다.)"] }
+    {
+      "id": "fin.first",
+      "when": {
+        "firstMeet": true
+      },
+      "pages": [
+        "어? 처음 뵙는 것 같은데… 혹시 새로 이사 오셨어요?",
+        "와아, 반가워요! 저는 핀이에요. 광장 앞 베이커리 카페를 하고 있어요.",
+        "{player} 님이요? 이름 예쁘다~ 앞으로 자주 봐요!"
+      ]
+    },
+    {
+      "id": "fin.bake.01",
+      "when": {
+        "activity": "bake"
+      },
+      "pages": [
+        "아, 아직 오픈 전이에요! 지금 쿠키 굽는 중이거든요.",
+        "문 열면 갓 나온 거 드릴게요!"
+      ]
+    },
+    {
+      "id": "fin.bake.02",
+      "when": {
+        "activity": "bake"
+      },
+      "pages": [
+        "반죽 냄새 좋죠? 아침마다 이 냄새 맡으면 기분이 좋아져요!"
+      ]
+    },
+    {
+      "id": "fin.bake.03",
+      "when": {
+        "activity": "bake",
+        "dayType": "weekend"
+      },
+      "pages": [
+        "주말엔 손님이 많아서 쿠키를 두 배로 굽고 있어요!",
+        "오늘은 별 쿠키부터 구워 볼까 해요~"
+      ]
+    },
+    {
+      "id": "fin.cafe.morning.01",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "timeBand": "morning"
+      },
+      "pages": [
+        "어서 오세요! 오늘은 곰돌이 쿠키가 제일 먼저 구워졌어요.",
+        "하나 맛보실래요? 아침 첫 손님 서비스예요!"
+      ]
+    },
+    {
+      "id": "fin.cafe.morning.02",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "timeBand": "morning"
+      },
+      "pages": [
+        "좋은 아침이에요! 아침엔 버터 쿠키랑 따뜻한 라떼가 제일 잘 어울려요."
+      ]
+    },
+    {
+      "id": "fin.cafe.lunch.01",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "timeBand": "lunch"
+      },
+      "pages": [
+        "점심시간엔 조금 바빠요! 그래도 {player} 님 오시면 반가워요~"
+      ]
+    },
+    {
+      "id": "fin.cafe.lunch.02",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "timeBand": "lunch"
+      },
+      "pages": [
+        "오늘 고양이 쿠키 귀를 조금 더 뾰족하게 만들어 봤어요.",
+        "어때요? 귀엽죠?"
+      ]
+    },
+    {
+      "id": "fin.cafe.afternoon.01",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "timeBand": "afternoon"
+      },
+      "pages": [
+        "오후엔 별 쿠키가 잘 나가요. 다들 하나씩 사 가시더라고요!"
+      ]
+    },
+    {
+      "id": "fin.cafe.afternoon.02",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "timeBand": "afternoon"
+      },
+      "pages": [
+        "{player} 님, 이 동네 이제 좀 익숙해지셨어요?",
+        "다들 좋은 사람들이라 금방 편해지실 거예요!"
+      ]
+    },
+    {
+      "id": "fin.cafe.evening.01",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "timeBand": "evening"
+      },
+      "pages": [
+        "오늘도 쿠키가 거의 다 나갔어요! 남은 건 내일 더 맛있게 구울게요."
+      ]
+    },
+    {
+      "id": "fin.cafe.evening.02",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "timeBand": "evening"
+      },
+      "pages": [
+        "저녁엔 가게가 조금 조용해져서 좋아요. 하루 정리하는 기분이거든요."
+      ]
+    },
+    {
+      "id": "fin.cafe.weekend.01",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "dayType": "weekend"
+      },
+      "pages": [
+        "주말이라 손님이 정말 많아요! 바빠도 다들 웃으면서 가셔서 신나요!"
+      ]
+    },
+    {
+      "id": "fin.cafe.weekend.02",
+      "when": {
+        "place": "cafe",
+        "activity": "work",
+        "dayType": "weekend"
+      },
+      "pages": [
+        "주말 아침엔 다들 느긋하게 오시더라고요. 저도 덩달아 기분이 좋아져요~"
+      ]
+    },
+    {
+      "id": "fin.with.di.01",
+      "when": {
+        "place": "cafe",
+        "with": [
+          "di"
+        ]
+      },
+      "pages": [
+        "아, 디 왔네요. 디는 매일 딸기라떼 사 가요. 단골이에요!",
+        "…아, {player} 님은 뭐 드실래요?"
+      ]
+    },
+    {
+      "id": "fin.with.di.02",
+      "when": {
+        "place": "cafe",
+        "with": [
+          "di"
+        ]
+      },
+      "pages": [
+        "딸기라떼는 늘 똑같이 만들어요. 그게 제일 좋은 것 같아서요.",
+        "…아, 아니에요! 주문하실 거 있으세요?"
+      ]
+    },
+    {
+      "id": "fin.with.som",
+      "when": {
+        "place": "cafe",
+        "with": [
+          "som"
+        ]
+      },
+      "pages": [
+        "솜도 왔네요! 솜은 이 시간에 늘 커피 사 가요.",
+        "하루 종일 일하는데도 늘 씩씩해요. 대단하죠?"
+      ]
+    },
+    {
+      "id": "fin.with.daisy",
+      "when": {
+        "place": "cafe",
+        "with": [
+          "daisy"
+        ]
+      },
+      "pages": [
+        "데이지가 제 쿠키 귀엽다고 자주 말해 줘요. 헤헤.",
+        "그 말 들으면 더 귀엽게 만들고 싶어지잖아요!"
+      ]
+    },
+    {
+      "id": "fin.close.01",
+      "when": {
+        "activity": "close"
+      },
+      "pages": [
+        "오늘 영업은 끝났어요! 정리만 하고 들어가려고요.",
+        "내일 또 놀러 와 주세요!"
+      ]
+    },
+    {
+      "id": "fin.break.01",
+      "when": {
+        "activity": "walk"
+      },
+      "pages": [
+        "잠깐 쉬는 시간이에요! 한 바퀴 돌고 오면 기운이 나거든요."
+      ]
+    },
+    {
+      "id": "fin.break.02",
+      "when": {
+        "activity": "walk"
+      },
+      "pages": [
+        "햇볕 좋다~ 이따 오후에도 힘내서 구워야지!"
+      ]
+    },
+    {
+      "id": "fin.rest.weekend",
+      "when": {
+        "activity": "night_walk",
+        "dayType": "weekend"
+      },
+      "pages": [
+        "오늘 손님이 정말 많았어요! 피곤한데 기분은 좋아요.",
+        "{player} 님도 주말 잘 보내고 계세요?"
+      ]
+    },
+    {
+      "id": "fin.rest.night",
+      "when": {
+        "activity": "night_walk"
+      },
+      "pages": [
+        "저녁 바람 시원하다~ 내일은 무슨 모양 쿠키를 구울까요?"
+      ]
+    },
+    {
+      "id": "fin.moving.01",
+      "when": {
+        "moving": true
+      },
+      "pages": [
+        "어, {player} 님! 산책 중이세요? 오늘 날씨 좋죠?"
+      ]
+    },
+    {
+      "id": "fin.moving.morning",
+      "when": {
+        "moving": true,
+        "timeBand": [
+          "dawn",
+          "morning"
+        ]
+      },
+      "pages": [
+        "좋은 아침이에요! 저 지금 가게 가는 길이에요. 이따 들르세요~"
+      ]
+    },
+    {
+      "id": "fin.fam2.01",
+      "when": {
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "있잖아요, {player} 님. 저는 사람들이 다 좋은 마음을 갖고 있다고 믿어요.",
+        "그래서 가게 문 열 때마다, 오늘은 어떤 좋은 사람이 올까 기대돼요!"
+      ]
+    },
+    {
+      "id": "fin.fam2.02",
+      "when": {
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "{player} 님이 자주 와 주셔서 요즘 가게가 더 즐거워요. 진짜로요!"
+      ]
+    },
+    {
+      "id": "fin.fam3.01",
+      "when": {
+        "familiarity": {
+          "min": 3
+        },
+        "place": "cafe"
+      },
+      "pages": [
+        "{player} 님 몫으로 쿠키 하나 따로 빼 뒀어요!",
+        "오늘 제일 예쁘게 나온 거예요. 짜잔!"
+      ]
+    },
+    {
+      "id": "fin.season.winter",
+      "when": {
+        "months": [
+          11,
+          12,
+          1,
+          2
+        ],
+        "place": "cafe"
+      },
+      "pages": [
+        "날이 추워지니까 따뜻한 음료가 잘 나가요.",
+        "쿠키에 시나몬을 조금 넣어 볼까 고민 중이에요!"
+      ]
+    },
+    {
+      "id": "fin.season.spring",
+      "when": {
+        "months": [
+          3,
+          4,
+          5
+        ],
+        "place": "cafe"
+      },
+      "pages": [
+        "봄이라 꽃 모양 쿠키를 만들어 봤어요! 공원 꽃밭 보고 생각났거든요."
+      ]
+    },
+    {
+      "id": "fin.season.summer",
+      "when": {
+        "months": [
+          6,
+          7,
+          8
+        ],
+        "place": "cafe"
+      },
+      "pages": [
+        "더울 땐 시원한 음료가 최고죠! 쿠키랑 같이 드시면 더 좋고요~"
+      ]
+    },
+    {
+      "id": "fin.season.autumn",
+      "when": {
+        "months": [
+          9,
+          10
+        ],
+        "place": "cafe"
+      },
+      "pages": [
+        "가을엔 나뭇잎 모양 쿠키를 구워요. 색 내는 게 은근 재밌어요!"
+      ]
+    },
+    {
+      "id": "fin.busy",
+      "when": {
+        "context": "busy"
+      },
+      "pages": [
+        "아, 잠깐만요! 금방 끝나요~"
+      ]
+    },
+    {
+      "id": "fin.knock.home.01",
+      "when": {
+        "context": "knock",
+        "activity": "home"
+      },
+      "pages": [
+        "네~ 누구세요? 아, {player} 님!",
+        "오늘 가게는 끝났어요. 내일 쿠키 맛있게 구워 둘게요!"
+      ]
+    },
+    {
+      "id": "fin.knock.home.02",
+      "when": {
+        "context": "knock",
+        "activity": "home"
+      },
+      "pages": [
+        "아, 지금 내일 만들 쿠키 모양 고민하고 있었어요!",
+        "내일 가게로 놀러 오세요~"
+      ]
+    },
+    {
+      "id": "fin.knock.ready",
+      "when": {
+        "context": "knock",
+        "activity": "ready"
+      },
+      "pages": [
+        "아, 잠깐만요! 지금 가게 나가는 길이에요~ 가게에서 봐요!"
+      ]
+    },
+    {
+      "id": "fin.knock.sleep",
+      "when": {
+        "context": "knock",
+        "activity": "sleep"
+      },
+      "narration": true,
+      "pages": [
+        "(똑똑… 안은 조용하다. 자고 있는 것 같다.)"
+      ]
+    },
+    {
+      "id": "fin.mwalk.01",
+      "when": {
+        "activity": "morning_walk"
+      },
+      "pages": [
+        "좋은 아침이에요! 아침 바다 보면서 걸으면 하루가 반짝반짝해지는 것 같아요."
+      ]
+    },
+    {
+      "id": "fin.mwalk.02",
+      "when": {
+        "activity": "morning_walk"
+      },
+      "pages": [
+        "이따 가게 문 열면 놀러 오세요!",
+        "오늘은 별 쿠키부터 구울 거예요~"
+      ]
+    },
+    {
+      "id": "fin.walk.03",
+      "when": {
+        "activity": "walk"
+      },
+      "pages": [
+        "{player} 님도 산책 중이세요? 같이 조금 걸어요!"
+      ]
+    },
+    {
+      "id": "fin.nwalk.01",
+      "when": {
+        "activity": "night_walk"
+      },
+      "pages": [
+        "가게 끝나고 바닷바람 쐬는 게 제일 좋아요~"
+      ]
+    },
+    {
+      "id": "fin.nwalk.02",
+      "when": {
+        "activity": "night_walk"
+      },
+      "pages": [
+        "밤바다 예쁘죠? 오늘도 고마운 손님이 정말 많았어요."
+      ]
+    }
   ],
   "fallback": [
-    { "id": "fin.fb.01", "pages": ["오늘도 좋은 하루예요!"] },
-    { "id": "fin.fb.02", "pages": ["다음에 또 놀러 오세요! 쿠키 맛있게 구워 둘게요~"] }
+    {
+      "id": "fin.fb.01",
+      "pages": [
+        "오늘도 좋은 하루예요!"
+      ]
+    },
+    {
+      "id": "fin.fb.02",
+      "pages": [
+        "다음에 또 놀러 오세요! 쿠키 맛있게 구워 둘게요~"
+      ]
+    }
   ]
 }
