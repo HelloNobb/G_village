@@ -468,6 +468,20 @@
       "pages": [
         "밤바다 예쁘죠? 오늘도 고마운 손님이 정말 많았어요."
       ]
+    },
+    {
+      "id": "fin.bake.dawn",
+      "when": {
+        "activity": "bake",
+        "timeBand": [
+          "latenight",
+          "dawn"
+        ]
+      },
+      "pages": [
+        "어? 이 시간에 깨어 계셨어요?",
+        "저는 새벽에 반죽부터 해요! 아침에 갓 구운 거 드리려고요."
+      ]
     }
   ],
   "fallback": [

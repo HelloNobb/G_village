@@ -93,7 +93,7 @@ for (const id of residents) {
 }
 
 // ── 활동 시간 목표 검사 (경고) ──
-// 06:00~21:00: 누군가 한 명은 밖을 걸어 다님(route/follow) / 21:00~24:00: 주민 절반(2명 이상)이 밖에 있음
+// 06:00~21:00: 누군가 한 명은 밖을 걸어 다님(route/follow) / 21:00~다음 날 07:00: 2명 이상 밖에 있음
 if (!errors.length) {
   const ss = new ScheduleSystem(sched);
   const fmt = (m) => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(m % 60).padStart(2, '0')}`;
@@ -108,15 +108,15 @@ if (!errors.length) {
   for (const day of DAYS) {
     const t = { day, dayType: DAYSETS.weekend.includes(day) ? 'weekend' : 'weekday' };
     const noWalker = [], fewOutside = [];
-    for (let m = 6 * 60; m < 24 * 60; m++) {
+    for (let m = 5 * 60; m < 29 * 60; m++) {
       const res = residents.map((id) => ss.resolve(id, { ...t, dayMin: m }));
       const walking = res.filter((r) => r.target.type !== 'spot').length;
       const outside = res.filter((r) => r.target.type !== 'spot' || !map.spots[r.target.spot]?.inside).length;
-      if (m < 21 * 60 && walking === 0) noWalker.push(m);
-      if (m >= 21 * 60 && outside < 2) fewOutside.push(m);
+      if (m >= 6 * 60 && m < 21 * 60 && walking === 0) noWalker.push(m);
+      if ((m < 7 * 60 || m >= 21 * 60) && outside < 2) fewOutside.push(m);
     }
     if (noWalker.length) warn(`schedules.json ${day}: 밖을 걷는 주민이 없는 시간 ${ranges(noWalker)}`);
-    if (fewOutside.length) warn(`schedules.json ${day}: 밤에 밖에 있는 주민이 2명 미만인 시간 ${ranges(fewOutside)}`);
+    if (fewOutside.length) warn(`schedules.json ${day}: 밤·새벽에 밖에 있는 주민이 2명 미만인 시간 ${ranges(fewOutside)}`);
   }
 }
 

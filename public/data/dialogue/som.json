@@ -376,7 +376,8 @@
     {
       "id": "som.wdaisy.01",
       "when": {
-        "activity": "walk_with_daisy"
+        "activity": "walk_with_daisy",
+        "dayType": "weekend"
       },
       "pages": [
         "데이지랑 바다 보러 나왔어. 주말엔 이 정도 외출이면 충분해."
@@ -385,7 +386,8 @@
     {
       "id": "som.wdaisy.02",
       "when": {
-        "activity": "walk_with_daisy"
+        "activity": "walk_with_daisy",
+        "dayType": "weekend"
       },
       "pages": [
         "파도 소리 들으니까 머리가 좀 비워진다. 아, 좋다."
@@ -400,6 +402,49 @@
       "pages": [
         "오늘 끝! 이제 집 가서 바로 잘 거야.",
         "데이지가 집 앞까지 같이 가 준대. 고맙지 뭐."
+      ]
+    },
+    {
+      "id": "som.close.01",
+      "when": {
+        "activity": "close"
+      },
+      "pages": [
+        "마감 정리 중이야. 의자 올리고 잔 닦고…",
+        "이것만 하면 오늘 진짜 끝!"
+      ]
+    },
+    {
+      "id": "som.close.02",
+      "when": {
+        "activity": "close",
+        "with": [
+          "daisy"
+        ]
+      },
+      "pages": [
+        "데이지가 끝까지 기다려 주네. 다 치우면 같이 갈 거야."
+      ]
+    },
+    {
+      "id": "som.wdaisy.wd",
+      "when": {
+        "activity": "walk_with_daisy",
+        "dayType": "weekday"
+      },
+      "pages": [
+        "데이지가 집까지 같이 걸어 준대.",
+        "오늘도 길었다… 그래도 다 벌었으니까 됐어!"
+      ]
+    },
+    {
+      "id": "som.commute",
+      "when": {
+        "activity": "walk"
+      },
+      "pages": [
+        "출근길이야! 오늘도 꽉 찬 하루다.",
+        "미용실 갔다가 바까지, 오케이!"
       ]
     }
   ],

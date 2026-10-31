@@ -400,6 +400,37 @@
         "이 시간에 깨어 있는 사람은 별로 없죠.",
         "…그쪽도 그렇고요."
       ]
+    },
+    {
+      "id": "di.nwalk.park",
+      "when": {
+        "activity": "night_walk",
+        "place": "park"
+      },
+      "pages": [
+        "새벽 꽃밭은 이슬 냄새가 나요.",
+        "…까망이는 집에서 자요."
+      ]
+    },
+    {
+      "id": "di.nwalk.dawn",
+      "when": {
+        "activity": "night_walk",
+        "timeBand": "dawn"
+      },
+      "pages": [
+        "곧 해 뜨네요. 이거 보고 자려고요."
+      ]
+    },
+    {
+      "id": "di.star.late",
+      "when": {
+        "activity": "stargaze",
+        "timeBand": "latenight"
+      },
+      "pages": [
+        "이 시간이 제일 잘 보여요. 사람 불빛이 다 꺼지니까."
+      ]
     }
   ],
   "fallback": [

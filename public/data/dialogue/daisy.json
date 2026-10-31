@@ -772,6 +772,92 @@
       "pages": [
         "솜이랑 바다 좀 보는 중. 오늘은 솜이 좀 웃네."
       ]
+    },
+    {
+      "id": "daisy.nwalk.late.f0",
+      "when": {
+        "activity": "night_walk",
+        "timeBand": [
+          "latenight",
+          "dawn"
+        ],
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "이 시간 동네는 조용해서 좋아요. 생각이 좀 정리되거든요."
+      ]
+    },
+    {
+      "id": "daisy.nwalk.late.f2",
+      "when": {
+        "activity": "night_walk",
+        "timeBand": [
+          "latenight",
+          "dawn"
+        ],
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "새벽엔 동네가 좀 달라 보여.",
+        "…낮엔 평범한 길인데, 이 시간엔 괜찮거든."
+      ]
+    },
+    {
+      "id": "daisy.nwalk.sea.f0",
+      "when": {
+        "activity": "night_walk",
+        "place": "beach",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "밤바다 색은 그대로 반지에 넣고 싶은데. 잘 안 돼요."
+      ]
+    },
+    {
+      "id": "daisy.nwalk.sea.f2",
+      "when": {
+        "activity": "night_walk",
+        "place": "beach",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "밤바다 색, 이거 그대로 돌에 담고 싶은데.",
+        "…내 실력으론 아직이야."
+      ]
+    },
+    {
+      "id": "daisy.closewait.f0",
+      "when": {
+        "place": "bar",
+        "timeBand": "latenight",
+        "familiarity": {
+          "max": 1
+        }
+      },
+      "pages": [
+        "솜 마감할 때까지 기다리는 중이에요. 집까지 같이 가려고."
+      ]
+    },
+    {
+      "id": "daisy.closewait.f2",
+      "when": {
+        "place": "bar",
+        "timeBand": "latenight",
+        "familiarity": {
+          "min": 2
+        }
+      },
+      "pages": [
+        "솜 마감 기다리는 중. 이 시간에 혼자 보내긴 좀 그렇잖아."
+      ]
     }
   ],
   "fallback": [

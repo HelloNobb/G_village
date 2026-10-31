@@ -646,7 +646,8 @@
       ],
       "allowMoving": true,
       "when": {
-        "activity": "walk_with_daisy"
+        "activity": "walk_with_daisy",
+        "dayType": "weekend"
       },
       "cooldownMin": 20,
       "lines": [
@@ -672,7 +673,8 @@
       ],
       "allowMoving": true,
       "when": {
-        "activity": "walk_with_daisy"
+        "activity": "walk_with_daisy",
+        "dayType": "weekend"
       },
       "cooldownMin": 20,
       "lines": [
@@ -713,6 +715,32 @@
         {
           "s": "daisy",
           "t": "내가 좋아서 있는 거야."
+        }
+      ]
+    },
+    {
+      "id": "amb.som_daisy.close",
+      "participants": [
+        "som",
+        "daisy"
+      ],
+      "when": {
+        "place": "bar",
+        "timeBand": "latenight"
+      },
+      "cooldownMin": 30,
+      "lines": [
+        {
+          "s": "som",
+          "t": "먼저 가도 되는데."
+        },
+        {
+          "s": "daisy",
+          "t": "됐어. 다 치우면 같이 가."
+        },
+        {
+          "s": "som",
+          "t": "…응. 금방 끝낼게."
         }
       ]
     }

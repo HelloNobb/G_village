@@ -123,7 +123,7 @@ npm run validate
 - `days`: `all` / `weekday` / `weekend` / `mon`… / `["tue","thu"]`. 겹치면 더 구체적인 요일 지정이 이깁니다.
 - `at`: `map.json`의 `spots` 이름. `home.<집>`은 집 안(화면에서 사라짐). 배열 + `every`(분)면 번갈아 이동.
 - `route`: `map.json`의 `routes` 이름(반복해서 걷기) / `follow`: 다른 주민 따라가기.
-- `npm run validate`가 **06~21시엔 누군가 밖을 걷고 있는지, 21~24시엔 2명 이상 밖에 있는지** 확인해서 빈 시간을 경고로 알려 줍니다.
+- `npm run validate`가 **06~21시엔 누군가 밖을 걷고 있는지, 21시~다음 날 07시(밤·새벽)엔 2명 이상 밖에 있는지** 확인해서 빈 시간을 경고로 알려 줍니다.
 
 ### 반드시 지킬 것 (docs/characters.md "구현 시 주의")
 
