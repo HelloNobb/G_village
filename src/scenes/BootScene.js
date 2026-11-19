@@ -11,8 +11,10 @@ export class BootScene extends Phaser.Scene {
   }
 
   preload() {
-    for (const k of DATA) this.load.json(k, `data/${k}.json`);
-    this.load.json('manifest', 'assets/manifest.json');
+    // 빌드 번호를 붙여서 이 코드와 같은 시점의 데이터를 받음 (캐시 섞임 방지)
+    const v = typeof __BUILD_ID__ !== 'undefined' ? __BUILD_ID__ : Date.now();
+    for (const k of DATA) this.load.json(k, `data/${k}.json?v=${v}`);
+    this.load.json('manifest', `assets/manifest.json?v=${v}`);
   }
 
   create() {

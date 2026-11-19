@@ -34,6 +34,7 @@ export class Sim {
       const r = state.residents[def.id];
       if (r && def.pet && !r.pet) r.pet = { ...def.pet };
     }
+    this.migrate();
     for (const r of this.list()) this.refreshFocus(r);
   }
 
@@ -81,6 +82,28 @@ export class Sim {
       rng: rng.s, residents, rel, news: [], stats: {}, talkCool: {}, timers: { social: 0, hour: 0, aura: {} },
       lastDay: 0, savedAt: now,
     };
+  }
+
+  /** 맵이 바뀐 뒤 예전 저장 파일을 불러와도 멈추지 않도록 정리 */
+  migrate() {
+    for (const r of this.list()) {
+      const a = r.action;
+      const badAction = a && (!this.actions[a.id] || (a.spot && !this.grid.spots[a.spot]) || (a.route && !this.grid.routes[a.route]) || (a.partner && !this.get(a.partner)) || (a.person && !this.get(a.person)));
+      const t = this.grid.tileOf(r.pos.x, r.pos.y);
+      const stuck = !this.grid.walkable[t.y]?.[t.x];
+      if (stuck) {
+        const bed = this.grid.spots[`home.${r.id}.bed`];
+        r.pos = this.grid.center(bed.x, bed.y);
+        r.hidden = r.house;
+      }
+      if (badAction || stuck) { r.action = null; r.path = []; continue; }
+      // 저장된 경로는 예전 맵 기준일 수 있으니 다시 계산
+      if (r.path?.length) {
+        r.path = [];
+        if (a?.spot && a.phase === 'travel') this.setPath(r, this.grid.spots[a.spot]);
+      }
+    }
+    for (const r of this.list()) if (r.lover && !this.get(r.lover)) r.lover = null;
   }
 
   // ───────────────────────────── 조회

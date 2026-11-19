@@ -85,10 +85,17 @@ export class WorldMap {
     // 분수: 'fountain' 타일 영역마다 둥근 분수 하나 (벡터라 확대해도 선명)
     this.drawFountains();
 
-    // 집: 시설처럼 지붕 없이 안이 보이고, 위쪽 벽에 문패
+    // 집: 원래 집 모양(지붕·벽)을 반투명으로 씌워서 집처럼 보이면서 안도 비쳐 보이게
     for (const b of this.houses) {
       b.interior = { x: b.x + 1, y: b.y + 1, w: b.w - 2, h: b.h - 2 };
       b.windows = [];
+      const key = `bld.${b.id}`;
+      if (s.textures.exists(key)) {
+        const img = s.add.image(b.x * T, (b.y + b.h) * T, key).setOrigin(0, 1);
+        img.setDisplaySize(b.w * T, img.height * ((b.w * T) / img.width));
+        img.setAlpha(0.45).setDepth(DEPTH.decor + 0.4);
+        b.sprite = img;
+      }
       b.sign = s.add.text((b.x + b.w / 2) * T, b.y * T + T / 2, b.label, {
         fontFamily: "'Gowun Dodum','Apple SD Gothic Neo','Noto Sans KR',sans-serif", fontSize: '12px', color: '#2d2a32',
         backgroundColor: '#f6e7c9', padding: { x: 6, y: 1 }, resolution: (window.devicePixelRatio || 1) * 2.5,

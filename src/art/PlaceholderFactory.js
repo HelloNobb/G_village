@@ -335,10 +335,7 @@ export class PlaceholderFactory {
     const wy = wallTop + 12;
     const win = [dx - 9 - 30, dx + 9 + 12].filter((x) => x > 8 && x + 18 < W - 8);
     for (const x of win) { ctx.fillRect(x, wy, 18, 14); ctx.strokeRect(x, wy, 18, 14); }
-    // 이름표
-    ctx.font = `bold 13px ${FONT}`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'rgba(255,255,255,0.95)';
-    ctx.fillText(b.label, W / 2, wallTop * 0.55);
+    // 이름은 맵의 문패(MapBuilder)로 따로 표시
     tex.refresh();
     tex.customData = { windows: win.map((x) => ({ x: (x + 9) * TEX, y: (wy + 7) * TEX })) };
   }

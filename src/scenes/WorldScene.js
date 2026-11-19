@@ -31,14 +31,20 @@ export class WorldScene extends Phaser.Scene {
     // ── 시뮬레이션 불러오기 + 접속 안 한 동안 계산
     let state = this.store.load();
     let brief = null;
-    if (!state) state = Sim.newState(this.data_, Date.now());
-    this.sim = new Sim(this.data_, state);
-    const away = Date.now() - (state.savedAt ?? Date.now());
-    if (away > 60 * 1000 && state.speed > 0) {
-      const res = this.sim.catchUp(away);
-      brief = { ...res, days: buildBriefing(this.sim, res.events, res.fromDay, res.toDay) };
+    try {
+      if (!state) state = Sim.newState(this.data_, Date.now());
+      this.sim = new Sim(this.data_, state);
+      const away = Date.now() - (state.savedAt ?? Date.now());
+      if (away > 60 * 1000 && state.speed > 0) {
+        const res = this.sim.catchUp(away);
+        brief = { ...res, days: buildBriefing(this.sim, res.events, res.fromDay, res.toDay) };
+      }
+      this.sim.out = [];
+    } catch (e) {
+      console.error(e);
+      this.showFatal(e, state);
+      return;
     }
-    this.sim.out = [];
 
     // ── 맵
     this.world = new WorldMap(this, this.data_.map).build();
@@ -323,6 +329,17 @@ export class WorldScene extends Phaser.Scene {
     document.getElementById('brief-close').addEventListener('click', () => document.getElementById('brief-modal').classList.add('hidden'));
   }
 
+  /** 저장된 마을을 못 불러올 때: 빈 화면 대신 백업·새로 시작 버튼 */
+  showFatal(e, state) {
+    const el = document.getElementById('loading');
+    el.classList.remove('hidden');
+    el.innerHTML = `<div style="max-width:420px;line-height:1.6">저장된 마을을 불러오다가 문제가 생겼어요.<br><small style="opacity:.7">${esc(e?.message ?? e)}</small><br><br>
+      <button id="fatal-export" style="padding:8px 14px;margin:4px">저장된 마을 백업(내보내기)</button>
+      <button id="fatal-reset" style="padding:8px 14px;margin:4px">새 마을로 시작</button></div>`;
+    document.getElementById('fatal-export').onclick = () => state && this.store.exportFile(state, 'backup');
+    document.getElementById('fatal-reset').onclick = () => { this.store.clear(); location.reload(); };
+  }
+
   showBriefing(b) {
     const hrs = Math.round(b.span / 3600000);
     document.getElementById('brief-sub').textContent = `${hrs >= 24 ? `${Math.floor(hrs / 24)}일 ${hrs % 24}시간` : `${hrs}시간`} 동안 마을에 이런 일이 있었어요.${b.capped ? ' (최대 3일까지만 계산해요)' : ''}`;
@@ -338,13 +355,23 @@ export class WorldScene extends Phaser.Scene {
 
   // ───────────────────────────── 루프
   update(time, delta) {
+    if (!this.sim || !this.views) return;
     const dt = Math.min(0.25, delta / 1000);
     const speed = this.sim.state.speed;
-    if (speed > 0) {
-      // 빠른 배속에서도 계산이 촘촘하도록 한 프레임을 여러 번으로 쪼개서 진행
-      this.sim.advance(dt * speed, speed >= 300 ? 5 : 2);
-    } else {
-      this.sim.state.savedAt = Date.now();
+    try {
+      if (speed > 0) {
+        // 빠른 배속에서도 계산이 촘촘하도록 한 프레임을 여러 번으로 쪼개서 진행
+        this.sim.advance(dt * speed, speed >= 300 ? 5 : 2);
+      } else {
+        this.sim.state.savedAt = Date.now();
+      }
+    } catch (e) {
+      // 멈춘 화면 대신 백업·새로 시작 안내
+      console.error(e);
+      const st = this.sim.state;
+      this.sim = null;
+      this.showFatal(e, st);
+      return;
     }
     // 시뮬레이션이 보낸 이벤트
     const busy = speed >= 300; // 아주 빠를 땐 말풍선을 일부만 (소식에는 전부 남음)
