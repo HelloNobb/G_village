@@ -1,5 +1,5 @@
 {
-  "_note": "말풍선 대사. kind = 상황(greet 첫인사 / chat 대화 / brushoff 대화 거절 / comfort 위로 / jealous 끼어들기 / invite_<행동> 같이 하자 / invite_yes·invite_no 대답 / confess 고백(b = 수락 대답) / confess_no 고백 거절). a = 말 거는 사람, b = 대답. {a}{b} = 이름, {b:아} = 부를 때(솜아/슈야). when 조건: outcome(good/neutral/bad) · register(formal 모르는·아는 사이 해요체 / casual 친구·연인 반말) · aTrait/bTrait(특성) · aAction(말 거는 사람이 하던 행동) · aNeed(30 아래인 욕구) · aMood · place · timeBand · lovers. 조건이 많이 맞는 줄이 우선.",
+  "_note": "말풍선 대사. kind = 상황(greet 첫인사 / chat 대화 / brushoff 대화 거절 / comfort 위로 / jealous 끼어들기 / invite_<행동> 같이 하자 / invite_yes·invite_no / confess 고백(b = 수락) / confess_no). a = 말 거는 사람, b = 대답, c·d = 이어지는 말(a, b 순서). {a}{b} = 이름, {c} = 소문 대상, {act} = 상대가 하던 일, {place} = 장소. {b:아} 처럼 쓰면 조사 자동. when 조건: outcome · register(formal/casual) · aTrait/bTrait · aAction/bAction(행동) · aNeed(30 아래 욕구) · aMood · aFlag(promoted 승진 / skillUp / newLove 막 연인이 됨 / jealous / insulted 독설 들음 / heartbroken 고백 거절당함 / breakup / rejected / lonely / tired / broke 돈 없음) · memory(최근 2일 상대에 대한 기억: together, date, talk_good, talk_bad, insulted, comforted, rejected, cheered) · gossip(pos 좋게 / neg 나쁘게 제3자 얘기) · place · timeBand · lovers. 조건에 맞는 줄 중에서 무작위(상황 조건이 맞을수록 자주), 최근 쓴 40문장은 거의 다시 안 씀.",
   "lines": [
     {
       "kind": "greet",
@@ -693,6 +693,669 @@
       },
       "a": "안녕하세요, {a:예요}. 얘는 까망이고요.",
       "b": "아, 안녕하세요! {b:예요}. 까망이도 반가워."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "together",
+        "register": "casual"
+      },
+      "a": "어제 같이 걸었던 거 좋더라.",
+      "b": "나도. 또 가자."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "together",
+        "register": "formal"
+      },
+      "a": "지난번에 같이 다닌 거 즐거웠어요.",
+      "b": "저도요! 다음에 또 해요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "date",
+        "lovers": true
+      },
+      "a": "어제 데이트 생각하면 아직도 좋아.",
+      "b": "나도 계속 생각났어.",
+      "c": "다음엔 바다 보러 가자.",
+      "d": "응, 약속."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "talk_good",
+        "register": "casual"
+      },
+      "a": "너랑 얘기하면 하루가 금방 가.",
+      "b": "그치? 우리 잘 맞나 봐."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "comforted"
+      },
+      "a": "지난번에 위로해 준 거, 진짜 고마웠어요.",
+      "b": "에이, 당연한 걸요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "insulted",
+        "register": "formal"
+      },
+      "a": "…지난번에 하신 말, 좀 서운했어요.",
+      "b": "아, 그랬어요? 그런 뜻은 아니었는데."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "insulted",
+        "register": "casual"
+      },
+      "a": "너 저번에 한 말 아직 기억나.",
+      "b": "…그건 좀 심했지. 미안."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "rejected"
+      },
+      "a": "저번엔 바빴던 거죠?",
+      "b": "아, 네… 그날은 좀 그랬어요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "talk_bad",
+        "outcome": "good"
+      },
+      "a": "우리 저번엔 좀 어색했죠.",
+      "b": "그러게요. 오늘은 괜찮네요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "memory": "cheered"
+      },
+      "a": "{b} 덕분에 요즘 자주 웃어요.",
+      "b": "하하, 그거 좋은데요?"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "pos",
+        "register": "formal"
+      },
+      "a": "{c} 씨 알죠? 진짜 괜찮은 사람이에요.",
+      "b": "아, 그래요? 몰랐네요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "pos",
+        "register": "casual"
+      },
+      "a": "{c} 있잖아, 요즘 좀 멋있지 않아?",
+      "b": "어? 그런가. 다시 봐야겠다."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "pos"
+      },
+      "a": "{c:이랑} 얘기하면 기분이 좋아져요.",
+      "b": "{c:이} 그렇게 좋은 사람이에요?",
+      "c": "네, 한번 얘기해 보세요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "neg",
+        "register": "formal"
+      },
+      "a": "솔직히 {c} 씨랑은 좀 안 맞아요.",
+      "b": "그래요? 무슨 일 있었어요?",
+      "c": "그냥… 말이 좀 세서요.",
+      "d": "아, 조심해야겠네요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "neg",
+        "register": "casual"
+      },
+      "a": "{c} 말이야, 요즘 좀 이상하지 않아?",
+      "b": "음… 너도 그렇게 느꼈어?"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "neg",
+        "register": "casual"
+      },
+      "a": "나 {c} 피하고 있어.",
+      "b": "왜? 무슨 일인데?",
+      "c": "그냥, 같이 있으면 피곤해.",
+      "d": "그럴 수 있지."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "neg",
+        "aTrait": "toxic"
+      },
+      "a": "{c:은} 왜 맨날 그 모양이야?",
+      "b": "에이, 그렇게까지…"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "pos",
+        "aTrait": "cheerful"
+      },
+      "a": "{c:이} 오늘 나한테 웃어 줬어! 하하!",
+      "b": "{a}는 아무나 다 좋아하는구나."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "neg",
+        "aTrait": "jealous"
+      },
+      "a": "{c:이} 요즘 자꾸 신경 쓰여.",
+      "b": "…왜? 무슨 일 있어?",
+      "c": "아니, 그냥."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "gossip": "pos",
+        "aTrait": "kind"
+      },
+      "a": "{c:은} 겉보기보다 따뜻한 사람이에요.",
+      "b": "그래요? 다음에 말 걸어 봐야겠다."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "read"
+      },
+      "a": "뭐 읽어요?",
+      "b": "요즘 읽는 책이에요. 꽤 재밌어요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "read",
+        "register": "casual"
+      },
+      "a": "또 책이야? 무슨 책인데?",
+      "b": "비밀. 다 읽으면 빌려줄게."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "draw"
+      },
+      "a": "우와, 뭐 그리는 거예요?",
+      "b": "아직 비밀이에요. 다 그리면 보여 줄게요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "draw",
+        "aTrait": "toxic"
+      },
+      "a": "그림… 선이 좀 삐뚤다?",
+      "b": "…지금 그리는 중이거든."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "game"
+      },
+      "a": "무슨 게임 해요?",
+      "b": "이거 은근 어려워요. 해 볼래요?"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "work"
+      },
+      "a": "일 많아요?",
+      "b": "끝이 안 보여요… 그래도 해야죠."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "work",
+        "register": "casual"
+      },
+      "a": "오늘도 열심히네.",
+      "b": "레벨 올리려면 어쩔 수 없지."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "study"
+      },
+      "a": "공부해요? 대단하다.",
+      "b": "조금씩이라도 하려고요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "exercise"
+      },
+      "a": "운동하세요? 멋있다.",
+      "b": "헉헉… 같이 할래요?"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": [
+          "cafe_rest",
+          "snack"
+        ]
+      },
+      "a": "여기 자주 와요?",
+      "b": "네, 여기 앉아 있으면 마음이 편해요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "walk_cat"
+      },
+      "a": "까망이도 같이 나왔네요!",
+      "b": "얘가 나가자고 졸라서요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "stargaze"
+      },
+      "a": "별 보는 중이에요?",
+      "b": "네. 오늘 유난히 잘 보여요.",
+      "c": "저 별 이름 알아요?",
+      "d": "…그건 저도 몰라요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "sea_view"
+      },
+      "a": "바다 보는 거 좋죠.",
+      "b": "네, 아무 생각 안 하게 돼요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "bAction": "buy_groceries"
+      },
+      "a": "장 보러 오셨어요?",
+      "b": "네, 먹을 게 다 떨어져서요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "promoted",
+        "register": "formal"
+      },
+      "a": "저 일터에서 레벨 올랐어요!",
+      "b": "우와, 축하해요!"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "promoted",
+        "register": "casual"
+      },
+      "a": "나 레벨 올랐다!",
+      "b": "진짜? 오늘 한턱내!",
+      "c": "하하, 알았어."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "skillUp"
+      },
+      "a": "요즘 실력이 좀 늘었어요.",
+      "b": "티 나요. 대단해요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "newLove",
+        "register": "casual"
+      },
+      "a": "있잖아… 나 요즘 너무 행복해.",
+      "b": "얼굴에 다 쓰여 있어. 무슨 일인데?",
+      "c": "비밀!"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "heartbroken"
+      },
+      "a": "…오늘은 그냥 좀 쉬고 싶어요.",
+      "b": "무슨 일 있었어요? 괜찮아요?"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "breakup"
+      },
+      "a": "요즘 좀 힘들어요.",
+      "b": "…천천히 괜찮아질 거예요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "insulted",
+        "register": "casual"
+      },
+      "a": "오늘 누가 나한테 막말했어.",
+      "b": "헐, 누가? 괜찮아?",
+      "c": "그냥… 좀 속상해.",
+      "d": "내가 들어 줄게."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "insulted",
+        "register": "formal"
+      },
+      "a": "오늘 좀 속상한 일이 있었어요.",
+      "b": "무슨 일이요? 말해 봐요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "jealous",
+        "register": "casual"
+      },
+      "a": "…아니야, 아무것도.",
+      "b": "표정이 아무것도 아닌 게 아닌데?"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "rejected"
+      },
+      "a": "다들 오늘 바쁜가 봐요.",
+      "b": "그런 날도 있죠. 저랑 얘기해요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "lonely"
+      },
+      "a": "요즘 좀 외로웠어요. 말 걸어 줘서 고마워요.",
+      "b": "에이, 언제든지요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "tired"
+      },
+      "a": "하아… 오늘 너무 피곤해요.",
+      "b": "얼른 들어가서 쉬어요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "broke",
+        "register": "casual"
+      },
+      "a": "돈이 하나도 없어… 일하러 가야 해.",
+      "b": "힘내. 금방 모일 거야."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "aFlag": "broke",
+        "register": "formal"
+      },
+      "a": "이번 달은 좀 아껴야 해요.",
+      "b": "저도요. 장 보는 것도 부담이네요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "timeBand": "morning",
+        "register": "formal"
+      },
+      "a": "좋은 아침이에요!",
+      "b": "아, 좋은 아침이에요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "timeBand": "morning",
+        "register": "casual"
+      },
+      "a": "일찍 일어났네?",
+      "b": "응, 오늘은 눈이 번쩍 떠졌어."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "timeBand": [
+          "night",
+          "latenight"
+        ],
+        "register": "casual"
+      },
+      "a": "아직 안 자?",
+      "b": "잠이 안 와서. 너는?",
+      "c": "나도 그래."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "timeBand": "lunch"
+      },
+      "a": "점심 드셨어요?",
+      "b": "아직요. 뭐 먹을지 고민 중이에요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "place": "mart"
+      },
+      "a": "오늘 뭐가 싸요?",
+      "b": "글쎄요, 다 비슷한 것 같아요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "place": "park",
+        "outcome": "good"
+      },
+      "a": "공원 꽃이 예쁘게 폈네요.",
+      "b": "여기 벤치 자리가 제일 좋아요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "place": "beach",
+        "register": "casual"
+      },
+      "a": "파도 소리 좋다.",
+      "b": "여기 오면 다 잊혀."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "place": "library"
+      },
+      "a": "(속삭이며) 여기 조용해서 좋죠.",
+      "b": "(속삭이며) 네, 집중이 잘 돼요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "outcome": "good",
+        "register": "casual"
+      },
+      "a": "주말에 뭐 할 거야?",
+      "b": "아직 몰라. 너는?",
+      "c": "그냥 동네 산책?",
+      "d": "그럼 같이 하자."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "outcome": "good",
+        "register": "formal"
+      },
+      "a": "요즘 취미 있어요?",
+      "b": "그림을 조금 그려요.",
+      "c": "오, 다음에 보여 주세요.",
+      "d": "잘 못 그려도 웃지 마세요!"
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "outcome": "neutral",
+        "register": "formal"
+      },
+      "a": "이 동네 산 지 얼마나 됐어요?",
+      "b": "글쎄요, 꽤 됐어요.",
+      "c": "저도 이제 좀 익숙해졌어요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "outcome": "bad",
+        "register": "casual"
+      },
+      "a": "너는 왜 맨날 늦어?",
+      "b": "내가 언제?",
+      "c": "지금도 그렇잖아.",
+      "d": "…알았어, 미안."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "outcome": "bad",
+        "register": "formal"
+      },
+      "a": "그 얘기는 그만하죠.",
+      "b": "…네, 알겠어요."
+    },
+    {
+      "kind": "chat",
+      "when": {
+        "outcome": "good",
+        "lovers": true
+      },
+      "a": "오늘 뭐 먹고 싶어?",
+      "b": "너랑 먹으면 다 좋아.",
+      "c": "그런 말 하지 마, 부끄러워.",
+      "d": "하하, 진심인데."
+    },
+    {
+      "kind": "brushoff",
+      "when": {
+        "register": "casual"
+      },
+      "a": "미안, 지금은 좀."
+    },
+    {
+      "kind": "brushoff",
+      "when": {
+        "register": "casual"
+      },
+      "a": "이따 얘기하자!"
+    },
+    {
+      "kind": "brushoff",
+      "when": {},
+      "a": "(못 들은 척한다)"
+    },
+    {
+      "kind": "brushoff",
+      "when": {
+        "aAction": "work"
+      },
+      "a": "일하는 중이라서요…"
+    },
+    {
+      "kind": "brushoff",
+      "when": {
+        "aAction": [
+          "read",
+          "study"
+        ]
+      },
+      "a": "이 부분만 마저 읽고요."
+    },
+    {
+      "kind": "brushoff",
+      "when": {
+        "aMood": "bad"
+      },
+      "a": "오늘은 말할 기분이 아니에요."
+    },
+    {
+      "kind": "invite_yes",
+      "when": {
+        "register": "formal"
+      },
+      "a": "그래요, 같이 가요."
+    },
+    {
+      "kind": "invite_yes",
+      "when": {
+        "register": "casual"
+      },
+      "a": "오, 마침 심심했어!"
+    },
+    {
+      "kind": "invite_yes",
+      "when": {
+        "aTrait": "cheerful"
+      },
+      "a": "좋아좋아! 가자~!"
+    },
+    {
+      "kind": "invite_no",
+      "when": {
+        "aAction": "work"
+      },
+      "a": "일 끝나고 해요."
+    },
+    {
+      "kind": "invite_no",
+      "when": {
+        "aMood": "bad"
+      },
+      "a": "오늘은 그냥 혼자 있을래요."
+    },
+    {
+      "kind": "invite_hobby_together",
+      "when": {
+        "lovers": true
+      },
+      "a": "우리 같이 게임 한 판 할까?"
+    },
+    {
+      "kind": "invite_hobby_together",
+      "when": {
+        "register": "casual"
+      },
+      "a": "그림 같이 그릴래?"
+    },
+    {
+      "kind": "invite_cafe_together",
+      "when": {
+        "lovers": true
+      },
+      "a": "카페 가서 같이 쉬자."
     }
   ]
 }

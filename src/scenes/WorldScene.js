@@ -85,32 +85,39 @@ export class WorldScene extends Phaser.Scene {
   makeView(r) {
     const scale = (1 / texResolution(this.manifest[r.sprite])) * CHAR_SCALE;
     const sprite = this.add.sprite(r.pos.x, r.pos.y, r.sprite, 0).setOrigin(0.5, 0.92).setScale(scale);
-    const mood = this.add.text(r.pos.x, r.pos.y, '', { fontSize: '15px', resolution: DPR * 3 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble - 1);
-    const heart = this.add.text(r.pos.x, r.pos.y, '💕', { fontSize: '12px', resolution: DPR * 3 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble - 1).setVisible(false);
-    const homeDot = this.add.circle(0, 0, 6, Phaser.Display.Color.HexStringToColor(r.color).color).setStrokeStyle(2, 0xffffff).setDepth(DEPTH.bubble - 2).setVisible(false);
-    const homeZ = this.add.text(0, 0, 'z', { fontFamily: FONT, fontSize: '11px', color: '#fff', resolution: DPR * 3 }).setOrigin(0.5).setDepth(DEPTH.bubble - 2).setVisible(false);
+    const mood = this.add.text(r.pos.x, r.pos.y, '', { fontSize: '13px', resolution: DPR * 3 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble - 1);
+    const act = this.add.text(r.pos.x, r.pos.y, '', { fontSize: '13px', resolution: DPR * 3 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble - 1);
+    const heart = this.add.text(r.pos.x, r.pos.y, '💕', { fontSize: '11px', resolution: DPR * 3 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble - 1).setVisible(false);
     const ring = this.add.ellipse(0, 0, 30, 12).setStrokeStyle(2.5, 0xffe28a).setDepth(1.5).setVisible(false);
-    const view = { id: r.id, sprite, mood, heart, homeDot, homeZ, ring, x: r.pos.x, y: r.pos.y, top: r.pos.y - 60, visible: true };
+    const view = { id: r.id, sprite, mood, act, heart, ring, x: r.pos.x, y: r.pos.y, top: r.pos.y - 60, visible: true };
     this.views.set(r.id, view);
     return view;
   }
 
-  // 반려동물: 주인이 같이 산책할 때만 밖에 나와 주인이 지나간 자리를 따라감
+  // 반려동물: 주인이 산책할 때 따라가고, 아니면 집 안에서 쉼
   makePet(owner) {
     const p = owner.pet;
     const scale = (1 / texResolution(this.manifest[p.sprite])) * CHAR_SCALE;
-    const sprite = this.add.sprite(owner.pos.x, owner.pos.y, p.sprite, 0).setOrigin(0.5, 0.9).setScale(scale).setVisible(false);
-    return { owner: owner.id, pet: p, sprite, trail: [], facing: 'down', x: owner.pos.x, y: owner.pos.y, top: owner.pos.y, visible: false };
+    const sprite = this.add.sprite(owner.pos.x, owner.pos.y, p.sprite, 0).setOrigin(0.5, 0.9).setScale(scale);
+    const house = this.world.houseById(owner.house);
+    const home = this.world.center(house.door.x, house.y + 1); // 집 안 문 위쪽 칸
+    return { owner: owner.id, pet: p, sprite, trail: [], facing: 'down', x: home.x, y: home.y, top: home.y, visible: true, home };
   }
 
-  syncPets(dt) {
+  syncPets(dt, time) {
     for (const v of this.pets) {
       const o = this.sim.get(v.owner);
-      const out = !o.hidden && o.action?.id === 'walk_cat';
-      if (!out) { v.sprite.setVisible(false); v.visible = false; v.trail = []; continue; }
-      if (!v.visible) { v.sprite.setPosition(o.pos.x + 16, o.pos.y + 2); v.trail = []; }
-      v.visible = true;
-      v.sprite.setVisible(true);
+      const out = o.action?.id === 'walk_cat';
+      if (!out) {
+        // 집에서 쉼 (가끔 꼬리만 살랑)
+        v.trail = [];
+        v.walking = false;
+        v.sprite.setPosition(v.home.x, v.home.y).setDepth(v.home.y);
+        v.sprite.anims.play(`${v.pet.sprite}.idle.down`, true);
+        v.x = v.home.x; v.y = v.home.y; v.top = v.home.y - v.sprite.displayHeight; v.visible = true;
+        continue;
+      }
+      if (!v.walking) { v.sprite.setPosition(o.pos.x + 12, o.pos.y + 2); v.trail = []; v.walking = true; }
       const last = v.trail[v.trail.length - 1];
       if (!last || Math.hypot(last.x - o.pos.x, last.y - o.pos.y) > 6) v.trail.push({ x: o.pos.x, y: o.pos.y });
       // 발자취를 짧게(주인 뒤 약 1.5칸) 유지 → 바로 뒤를 따라다님
@@ -130,42 +137,57 @@ export class WorldScene extends Phaser.Scene {
       }
       v.sprite.anims.play(`${v.pet.sprite}.${moving ? 'walk' : 'idle'}.${v.facing}`, true);
       v.sprite.setDepth(v.sprite.y);
-      v.x = v.sprite.x; v.y = v.sprite.y; v.top = v.sprite.y - v.sprite.displayHeight;
+      v.x = v.sprite.x; v.y = v.sprite.y; v.top = v.sprite.y - v.sprite.displayHeight; v.visible = true;
     }
   }
 
-  syncViews() {
+  /** 활동별 간단한 모션: [x 흔들림, y 흔들림] */
+  motion(id, t) {
+    switch (id) {
+      case 'exercise': return [0, -Math.abs(Math.sin(t * 9)) * 6];
+      case 'work': case 'study': return [Math.sin(t * 28) * 0.7, -Math.abs(Math.sin(t * 14)) * 1.2];
+      case 'game': case 'hobby_together': return [0, -Math.abs(Math.sin(t * 12)) * 1.6];
+      case 'draw': return [Math.sin(t * 4) * 1.6, 0];
+      case 'eat_home': case 'snack': return [0, -Math.abs(Math.sin(t * 7)) * 1.8];
+      case 'read': return [0, Math.sin(t * 1.6) * 0.8];
+      case 'buy_groceries': return [Math.sin(t * 3) * 2, 0];
+      default: return [0, Math.sin(t * 1.4) * 0.5];
+    }
+  }
+
+  syncViews(time) {
     const sim = this.sim;
     const icons = sim.needsCfg.mood.icons;
+    const t = time / 1000;
+    const k = Math.min(1.8, Math.max(0.8, DPR / this.cameras.main.zoom));
     for (const r of sim.list()) {
       const v = this.views.get(r.id);
       const s = v.sprite;
-      const visible = !r.hidden;
-      s.setVisible(visible);
-      s.setPosition(r.pos.x, r.pos.y);
-      s.setDepth(r.pos.y);
-      const moving = r.path.length > 0 && !sim.inTalk(r) && this.sim.state.speed > 0;
-      const facing = sim.inTalk(r) || r.action?.phase === 'do' ? (r.facing ?? 'down') : r.facing ?? 'down';
-      s.anims.play(`${r.sprite}.${moving ? 'walk' : 'idle'}.${facing}`, true);
-      v.x = r.pos.x; v.y = r.pos.y; v.visible = visible;
-      v.top = r.pos.y - s.displayHeight * 0.92;
-      v.mood.setText(icons[sim.moodLevel(r)]).setPosition(r.pos.x + s.displayWidth * 0.35, v.top + 4).setVisible(visible);
-      const k = Math.min(1.8, Math.max(0.8, DPR / this.cameras.main.zoom));
-      v.mood.setScale(k);
-      v.heart.setVisible(visible && !!r.action?.date).setPosition(r.pos.x - s.displayWidth * 0.35, v.top + 4).setScale(k);
-      // 집 안이면 집 위에 색 점 (자는 중이면 z)
-      if (r.hidden) {
-        const h = this.world.houseById(r.hidden);
-        const inside = sim.list().filter((x) => x.hidden === r.hidden);
-        const i = inside.indexOf(r);
-        const T = this.world.T;
-        const cx = (h.x + h.w / 2) * T + (i - (inside.length - 1) / 2) * 16;
-        const cy = (h.y + h.h) * T - 8;
-        v.homeDot.setPosition(cx, cy).setVisible(true).setAlpha(sim.asleep(r) ? 0.55 : 1);
-        v.homeZ.setPosition(cx, cy - 1).setVisible(sim.asleep(r));
-        v.x = cx; v.y = cy + 8; v.top = cy - 8;
-      } else { v.homeDot.setVisible(false); v.homeZ.setVisible(false); }
-      v.ring.setVisible(this.panels.expanded.has(r.id) && visible).setPosition(r.pos.x, r.pos.y - 2);
+      const a = r.action;
+      const doing = a?.phase === 'do' && !r.path.length ? a.id : null;
+      const moving = r.path.length > 0 && !sim.inTalk(r) && sim.state.speed > 0;
+      const asleep = sim.asleep(r);
+      const facing = r.facing ?? 'down';
+      s.anims.play(`${r.sprite}.${moving ? 'walk' : 'idle'}.${asleep ? 'down' : facing}`, true);
+      if (asleep) {
+        // 침대에 누움
+        s.setAngle(-90).setPosition(r.pos.x + s.displayHeight * 0.3, r.pos.y - 10).setDepth(r.pos.y - 8);
+        v.top = r.pos.y - 26;
+      } else {
+        const [mx, my] = doing && sim.state.speed > 0 ? this.motion(doing, t) : [0, 0];
+        s.setAngle(0).setPosition(r.pos.x + mx, r.pos.y + my).setDepth(r.pos.y);
+        v.top = r.pos.y - s.displayHeight * 0.92 + my;
+      }
+      s.setVisible(true);
+      v.x = r.pos.x; v.y = r.pos.y; v.visible = true;
+      // 머리 위: 왼쪽 = 지금 하는 일, 오른쪽 = 기분
+      const actIcon = asleep ? '💤' : doing ? sim.actions[doing].icon : '';
+      if (v.act.text !== actIcon) v.act.setText(actIcon);
+      const pulse = 1 + Math.sin(t * 3 + r.pos.x) * 0.06;
+      v.act.setPosition(r.pos.x - s.displayWidth * 0.45, v.top + 4 - (asleep ? Math.abs(Math.sin(t * 1.5)) * 4 : 0)).setScale(k * pulse).setVisible(!!actIcon);
+      v.mood.setText(icons[sim.moodLevel(r)]).setPosition(r.pos.x + s.displayWidth * 0.45, v.top + 4).setScale(k);
+      v.heart.setVisible(!!a?.date).setPosition(r.pos.x, v.top - 2).setScale(k);
+      v.ring.setVisible(this.panels.expanded.has(r.id)).setPosition(r.pos.x, r.pos.y - 2);
       const label = this.deskLabels.get(r.id);
       const txt = `${r.name} Lv.${r.lv}`;
       if (label.text !== txt) label.setText(txt);
@@ -187,7 +209,7 @@ export class WorldScene extends Phaser.Scene {
       this.add.circle(c.x, c.y - 30, 5, 0xfff1c4).setDepth(c.y);
       add(c.x, c.y - 26, 1.3, 0xffd89a, 'lamp');
     }
-    for (const h of this.world.houses) for (const w of h.windows) add(w.x, w.y + 4, 0.6, 0xffc870, 'window', h.id);
+    for (const h of this.world.houses) add((h.x + h.w / 2) * T, (h.y + h.h / 2) * T, 1.3, 0xffc870, 'window', h.id);
     for (const b of this.world.shops) add((b.x + b.w / 2) * T, (b.y + b.h / 2) * T, 2.2, 0xffd08a, 'facility', b.id);
     const seaTop = this.world.seaRect.y;
     this.stars = [];
@@ -220,7 +242,7 @@ export class WorldScene extends Phaser.Scene {
     let best = null, bd = 30;
     for (const r of this.sim.list()) {
       const v = this.views.get(r.id);
-      const d = r.hidden ? Math.hypot(w.x - v.homeDot.x, w.y - v.homeDot.y) * 2.2 : Math.hypot(w.x - r.pos.x, w.y - (r.pos.y - v.sprite.displayHeight * 0.45));
+      const d = Math.hypot(w.x - r.pos.x, w.y - (r.pos.y - v.sprite.displayHeight * 0.45));
       if (d < Math.max(bd, v.sprite.displayHeight * 0.5) && d < (best?.d ?? Infinity)) best = { id: r.id, d };
     }
     return best?.id ?? null;
@@ -336,8 +358,8 @@ export class WorldScene extends Phaser.Scene {
     }
     this.sim.out.length = 0;
 
-    this.syncViews();
-    this.syncPets(dt);
+    this.syncViews(time);
+    this.syncPets(dt, time);
     this.bubbles.update(dt);
     this.skyTimer -= dt;
     if (this.skyTimer <= 0) { this.skyTimer = 1; this.updateSky(); }

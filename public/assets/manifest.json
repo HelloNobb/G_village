@@ -51,26 +51,6 @@
     "type": "placeholder-tileset",
     "_note": "map.json legend 순서대로 32px 타일이 가로로 나열된 그림. 교체 시 { \"type\": \"image\", \"url\": \"assets/tiles.png\" }"
   },
-  "bld.di": {
-    "type": "placeholder-house",
-    "roof": "#4f5d75",
-    "wall": "#e6e2da"
-  },
-  "bld.fin": {
-    "type": "placeholder-house",
-    "roof": "#9ab34a",
-    "wall": "#fff3d6"
-  },
-  "bld.daisy": {
-    "type": "placeholder-house",
-    "roof": "#b04a8a",
-    "wall": "#efe6f0"
-  },
-  "bld.somshu": {
-    "type": "placeholder-house",
-    "roof": "#d9734f",
-    "wall": "#f7e6d2"
-  },
   "pet.kkamangi": {
     "type": "placeholder-character",
     "shape": "cat",

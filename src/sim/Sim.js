@@ -47,8 +47,8 @@ export class Sim {
     for (const def of data.residents.residents) {
       const chrono = data.needs.chronotypes[def.chrono];
       const asleep = inHours(t.h, chrono.sleepWindow);
-      const home = grid.houses[def.house];
-      const c = grid.center(home.front.x, home.front.y);
+      const bed = grid.spots[`home.${def.id}.bed`];
+      const c = grid.center(bed.x, bed.y);
       residents[def.id] = {
         id: def.id, name: def.name, color: def.color, sprite: def.sprite, house: def.house, desk: def.desk,
         traits: randomTraits ? traits.randomSet(rng) : [...def.traits],
@@ -232,10 +232,13 @@ export class Sim {
   }
 
   leaveHouse(r) {
-    if (!r.hidden) return;
-    const h = this.grid.houses[r.hidden];
-    r.hidden = null;
-    r.pos = this.grid.center(h.front.x, h.front.y);
+    r.hidden = null; // 집 안이 보이므로 그냥 문으로 걸어 나감
+  }
+
+  /** 집 안 자리: 잠 → 침대, 식사 → 식탁, 나머지 → 취미 자리 */
+  homeSpot(r, actionId) {
+    const kind = actionId === 'sleep' ? 'bed' : actionId === 'eat_home' ? 'table' : 'hobby';
+    return `home.${r.id}.${kind}`;
   }
 
   move(r, dt) {
@@ -262,8 +265,8 @@ export class Sim {
   }
 
   /** 행동의 자리 후보 → 실제 목적지 */
-  resolveAt(r, at, occupied) {
-    if (at === 'home') return { spot: `home.${r.house}` };
+  resolveAt(r, at, occupied, actionId = null) {
+    if (at === 'home') return { spot: this.homeSpot(r, actionId) };
     if (at === 'desk') return { spot: r.desk };
     if (at.startsWith('route:')) {
       const route = at.slice(6);
@@ -436,7 +439,7 @@ export class Sim {
         if (def.partner && !partner) continue;
         for (const at of def.at) {
           if (at === 'home' && def.partner && (!partner || partner.house !== r.house)) continue;
-          const dest = this.resolveAt(r, at, occupied);
+          const dest = this.resolveAt(r, at, occupied, id);
           if (!dest) continue;
           const res = this.score(r, id, def, dest, clock, { partner });
           if (!res) continue;
@@ -446,7 +449,7 @@ export class Sim {
     }
     cands.sort((a, b) => b.s - a.s);
     const top = cands.slice(0, 3).filter((c) => c.s > 0);
-    const pick = top.length ? this.rng.weighted(top.map((c) => ({ item: c, w: c.s * c.s }))) : { id: 'rest_home', dest: { spot: `home.${r.house}` }, by: [], needs: [] };
+    const pick = top.length ? this.rng.weighted(top.map((c) => ({ item: c, w: c.s * c.s }))) : { id: 'rest_home', dest: { spot: this.homeSpot(r, 'rest_home') }, by: [], needs: [] };
     this.start(r, pick);
   }
 
@@ -487,8 +490,12 @@ export class Sim {
     // 목적지로 출발
     if (a.spot) {
       const s = this.grid.spots[a.spot];
-      if (s.inside && r.hidden === s.house) this.beginDo(r);
-      else { this.leaveHouse(r); if (!this.setPath(r, s) || !r.path.length) this.arrive(r); }
+      const here = this.grid.tileOf(r.pos.x, r.pos.y);
+      if (here.x === s.x && here.y === s.y) this.arrive(r);
+      else {
+        if (!(s.inside && r.hidden === s.house)) this.leaveHouse(r);
+        if (!this.setPath(r, s) || !r.path.length) this.arrive(r);
+      }
     } else if (a.route && !a.follower) {
       this.leaveHouse(r);
       const pts = this.grid.routes[a.route];
@@ -987,6 +994,14 @@ export class Sim {
     const L = this.line(firstMeet ? 'greet' : kind === 'chat' ? 'chat' : kind, r, s, { outcome });
     this.say(r, L?.a);
     this.say(s, L?.b, 2.2);
+    this.say(r, L?.c, 4.4);
+    this.say(s, L?.d, 6.6);
+    // 소문: 들은 쪽의 제3자에 대한 호감도가 말한 쪽 생각 쪽으로 조금 움직임
+    if (L?.gossip && outcome !== 'bad') {
+      const { c, sign } = L.gossip;
+      this.changeAffinity(s, c, sign === 'pos' ? 2.5 : -3);
+      this.emit('gossip', { a: r.name, b: s.name, c: c.name }, { actors: [r.id, s.id, c.id], importance: 16 });
+    }
     const secs = this.rng.range(60, 120);
     r.talkUntil = s.talkUntil = this.now + secs * 1000;
     r.path = []; if (!s.action?.route) s.path = [];
@@ -996,7 +1011,8 @@ export class Sim {
     // 소식
     const type = firstMeet ? 'first_meet' : outcome === 'bad' && this.hasBehavior(r, 'insult') ? 'insult' : `talk_${outcome}`;
     const imp = { first_meet: 22, insult: 30, talk_bad: 20, talk_good: 8, talk_neutral: 3 }[type];
-    this.emit(type, { a: r.name, b: s.name }, { actors: [r.id, s.id], trait: by[0] ?? null, importance: imp, lines: L ? [{ s: r.id, t: L.a }, { s: s.id, t: L.b }] : null });
+    const said = L ? [[r, L.a], [s, L.b], [r, L.c], [s, L.d]].filter(([, t]) => t).map(([x, t]) => ({ s: x.id, t })) : null;
+    this.emit(type, { a: r.name, b: s.name }, { actors: [r.id, s.id], trait: by[0] ?? null, importance: imp, lines: said });
     this.onInteraction(r, s, 'talk');
   }
 
@@ -1059,7 +1075,7 @@ export class Sim {
       if (c.dest.spot) occupied.add(c.dest.spot);
       const s = this.grid.spots[c.dest.spot];
       let seat = null;
-      if (s?.inside) seat = c.dest.spot;
+      if (s?.inside) seat = this.homeSpot(p, c.id);
       else {
         const prefix = c.dest.spot.replace(/\d+[ab]?$/, '');
         const free = this.grid.group(prefix).filter((k) => !occupied.has(k));
@@ -1201,34 +1217,84 @@ export class Sim {
     return ['friend', 'close', 'lover'].includes(st) ? 'casual' : 'formal';
   }
 
+  /** a 가 b 에게 꺼낼 만한 제3자(소문 대상): a 가 확실히 좋아하거나 싫어하는, b 도 아는 사람 */
+  gossipTarget(a, b) {
+    const cands = [];
+    for (const c of this.list()) {
+      if (c === a || c === b || !this.rel(a.id, c.id).known || !this.rel(b.id, c.id).known) continue;
+      const att = this.memory.attitude(a, `person:${c.id}`, this.now) + this.rel(a.id, c.id).affinity / 2;
+      if (Math.abs(att) >= 25) cands.push({ item: { c, sign: att > 0 ? 'pos' : 'neg' }, w: Math.abs(att) });
+    }
+    return cands.length ? this.rng.weighted(cands) : null;
+  }
+
+  /** a 의 최근 일 (대사 조건 aFlag) */
+  flags(a) {
+    const ids = new Set(a.moodlets.map((m) => m.id));
+    const f = [];
+    if (ids.has('promotion')) f.push('promoted');
+    if (ids.has('skill')) f.push('skillUp');
+    if (ids.has('romance')) f.push('newLove');
+    if (ids.has('jealous')) f.push('jealous');
+    if (ids.has('insulted')) f.push('insulted');
+    if (ids.has('confess_no')) f.push('heartbroken');
+    if (ids.has('breakup')) f.push('breakup');
+    if (ids.has('rejected')) f.push('rejected');
+    if (a.needs.social < 30) f.push('lonely');
+    if (a.needs.energy < 25) f.push('tired');
+    if (a.money < 30) f.push('broke');
+    return f;
+  }
+
+  /** a 가 b 에 대해 최근(2일) 가진 기억 종류 */
+  memKinds(a, b) {
+    const subj = `person:${b.id}`;
+    return [...a.memory.short, ...a.memory.long].filter((m) => m.s === subj && this.now - m.t < 2 * DAY).map((m) => m.k);
+  }
+
   line(kind, a, b, { outcome = null } = {}) {
-    const lines = this.data.talk.lines.filter((l) => l.kind === kind);
+    const all = this.data.talk.lines;
+    this._lineIds ??= new Map(all.map((l, i) => [l, `${l.kind}#${i}`]));
+    const lines = all.filter((l) => l.kind === kind);
     if (!lines.length) return null;
-    const reg = this.register(a, b);
-    const ctx = { outcome, register: reg, place: this.area(a), timeBand: this.clock().timeBand, lovers: a.lover === b.id };
-    let best = [], bs = -1;
+    const gossip = kind === 'chat' && this.rng.chance(0.45) ? this.gossipTarget(a, b) : null;
+    const ctx = {
+      outcome, register: this.register(a, b), place: this.area(a), timeBand: this.clock().timeBand, lovers: a.lover === b.id,
+      flags: this.flags(a), mem: this.memKinds(a, b), bAct: b.action?.id ?? b.lastAction, gossip: gossip?.sign ?? null,
+    };
+    const recent = (this.state.recentLines ??= []);
+    const cands = [];
     for (const l of lines) {
       const w = l.when ?? {};
-      let s = 0, ok = true;
+      let score = 0, ok = true, ctxHit = false;
       for (const [k, v] of Object.entries(w)) {
         const vals = Array.isArray(v) ? v : [v];
         let hit;
         if (k === 'aTrait') hit = vals.some((t) => a.traits.includes(t));
         else if (k === 'bTrait') hit = vals.some((t) => b.traits.includes(t));
         else if (k === 'aAction') hit = vals.includes(a.action?.id ?? a.lastAction);
+        else if (k === 'bAction') hit = vals.includes(ctx.bAct);
         else if (k === 'aNeed') hit = vals.some((n) => a.needs[n] < 30);
         else if (k === 'aMood') hit = vals.includes(this.moodLevel(a));
+        else if (k === 'aFlag') hit = vals.some((x) => ctx.flags.includes(x));
+        else if (k === 'memory') hit = vals.some((x) => ctx.mem.includes(x));
         else hit = vals.includes(ctx[k]);
         if (!hit) { ok = false; break; }
-        s += k === 'register' || k === 'outcome' ? 1 : 2;
+        score += k === 'register' || k === 'outcome' ? 1 : 2;
+        if (['aFlag', 'memory', 'gossip', 'bAction', 'aAction', 'aNeed'].includes(k)) ctxHit = true;
       }
       if (!ok) continue;
-      if (s > bs) { bs = s; best = [l]; } else if (s === bs) best.push(l);
+      const id = this._lineIds.get(l);
+      // 최근에 쓴 문장은 거의 안 씀, 상황에 맞는 문장(기억·소문·최근 일)은 자주
+      const weight = (1 + score) * (ctxHit ? 3 : 1) * (recent.includes(id) ? 0.03 : 1);
+      cands.push({ item: { l, id }, w: weight });
     }
-    if (!best.length) return null;
-    const l = this.rng.pick(best);
-    const v = { a: a.name, b: b.name };
-    return { a: fill(l.a, v), b: l.b ? fill(l.b, v) : null };
+    if (!cands.length) return null;
+    const { l, id } = this.rng.weighted(cands);
+    recent.push(id);
+    if (recent.length > 40) recent.splice(0, recent.length - 40);
+    const v = { a: a.name, b: b.name, c: gossip?.c.name ?? '', act: this.actions[ctx.bAct]?.name ?? '', place: this.areaName(this.area(a)) };
+    return { a: fill(l.a, v), b: l.b ? fill(l.b, v) : null, c: l.c ? fill(l.c, v) : null, d: l.d ? fill(l.d, v) : null, gossip: l.when?.gossip ? gossip : null };
   }
 
   // ───────────────────────────── 화면용 요약

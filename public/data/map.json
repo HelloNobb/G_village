@@ -1,5 +1,5 @@
 {
- "_note": "rows: 한 글자 = 한 타일(32px). 좌표는 타일 단위. spots = 주민이 서거나 앉는 자리(inside = 집 안이라 안 보임). 시설은 지붕 없이 안이 보임.",
+ "_note": "rows: 한 글자 = 한 타일(32px). 좌표는 타일 단위. spots = 주민이 서거나 앉는 자리. home.<주민>.bed/table/hobby = 집 안 침대·식탁·취미 자리(inside = 집 안). 집과 시설은 지붕 없이 안이 보임.",
  "tileSize": 32,
  "width": 32,
  "height": 25,
@@ -48,21 +48,21 @@
    "name": "furniture",
    "walkable": false
   },
-  "H": {
-   "name": "house",
-   "walkable": false
-  },
   "b": {
    "name": "bench",
+   "walkable": true
+  },
+  "B": {
+   "name": "bed",
    "walkable": true
   }
  },
  "rows": [
   "TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT",
-  "T,HHH,,HHH,,HHH,,HHHH,T,,,,T,,,T",
-  "T,HHH,,HHH,,HHH,,HHHH,,,T,,,,,,T",
-  "T,HHH,,HHH,,HHH,,HHHH,,,,,,,,T,T",
-  "T,,=,,,,=,,,,=,,,,,=,,,,,T,,,,,T",
+  "TWWWWW,WWWWW,WWWWW,WWWWWW,,,,,,T",
+  "TWB_XW,WB_XW,WB_XW,WBB_XW,,T,,,T",
+  "TW___W,W___W,W___W,W____W,,,,T,T",
+  "TWW+WW,WW+WW,WW+WW,WWW+WW,T,,,,T",
   "T==============================T",
   "TWWWWW+WWWWW=WWW+WWW=WWWW+WWWWWT",
   "TW_________W=W____XW=WXX___XXXWT",
@@ -89,18 +89,21 @@
    "id": "di",
    "kind": "house",
    "label": "디네 집",
-   "x": 2,
+   "x": 1,
    "y": 1,
-   "w": 3,
-   "h": 3,
+   "w": 5,
+   "h": 4,
    "door": {
     "x": 3,
-    "y": 3
+    "y": 4
    },
    "front": {
     "x": 3,
-    "y": 4
-   }
+    "y": 5
+   },
+   "residents": [
+    "di"
+   ]
   },
   {
    "id": "fin",
@@ -108,50 +111,60 @@
    "label": "핀네 집",
    "x": 7,
    "y": 1,
-   "w": 3,
-   "h": 3,
+   "w": 5,
+   "h": 4,
    "door": {
-    "x": 8,
-    "y": 3
+    "x": 9,
+    "y": 4
    },
    "front": {
-    "x": 8,
-    "y": 4
-   }
+    "x": 9,
+    "y": 5
+   },
+   "residents": [
+    "fin"
+   ]
   },
   {
    "id": "daisy",
    "kind": "house",
    "label": "데이지네 집",
-   "x": 12,
+   "x": 13,
    "y": 1,
-   "w": 3,
-   "h": 3,
+   "w": 5,
+   "h": 4,
    "door": {
-    "x": 13,
-    "y": 3
+    "x": 15,
+    "y": 4
    },
    "front": {
-    "x": 13,
-    "y": 4
-   }
+    "x": 15,
+    "y": 5
+   },
+   "residents": [
+    "daisy"
+   ]
   },
   {
    "id": "somshu",
    "kind": "house",
    "label": "솜·슈네 집",
-   "x": 17,
+   "x": 19,
    "y": 1,
-   "w": 4,
-   "h": 3,
+   "w": 6,
+   "h": 4,
    "door": {
-    "x": 19,
-    "y": 3
+    "x": 22,
+    "y": 4
    },
    "front": {
-    "x": 19,
-    "y": 4
-   }
+    "x": 22,
+    "y": 5
+   },
+   "residents": [
+    "som",
+    "shu"
+   ]
   },
   {
    "id": "work",
@@ -252,6 +265,34 @@
    "h": 4
   },
   {
+   "id": "home:di",
+   "x": 2,
+   "y": 2,
+   "w": 3,
+   "h": 2
+  },
+  {
+   "id": "home:fin",
+   "x": 8,
+   "y": 2,
+   "w": 3,
+   "h": 2
+  },
+  {
+   "id": "home:daisy",
+   "x": 14,
+   "y": 2,
+   "w": 3,
+   "h": 2
+  },
+  {
+   "id": "home:somshu",
+   "x": 20,
+   "y": 2,
+   "w": 4,
+   "h": 2
+  },
+  {
    "id": "park",
    "x": 10,
    "y": 13,
@@ -267,29 +308,110 @@
   }
  ],
  "spots": {
-  "home.di": {
-   "x": 3,
-   "y": 4,
+  "home.di.bed": {
+   "x": 2,
+   "y": 2,
    "inside": true,
-   "house": "di"
+   "house": "di",
+   "facing": "down"
   },
-  "home.fin": {
+  "home.di.hobby": {
+   "x": 2,
+   "y": 3,
+   "inside": true,
+   "house": "di",
+   "facing": "down"
+  },
+  "home.di.table": {
+   "x": 4,
+   "y": 3,
+   "inside": true,
+   "house": "di",
+   "facing": "up"
+  },
+  "home.fin.bed": {
    "x": 8,
-   "y": 4,
+   "y": 2,
    "inside": true,
-   "house": "fin"
+   "house": "fin",
+   "facing": "down"
   },
-  "home.daisy": {
-   "x": 13,
-   "y": 4,
+  "home.fin.hobby": {
+   "x": 8,
+   "y": 3,
    "inside": true,
-   "house": "daisy"
+   "house": "fin",
+   "facing": "down"
   },
-  "home.somshu": {
-   "x": 19,
-   "y": 4,
+  "home.fin.table": {
+   "x": 10,
+   "y": 3,
    "inside": true,
-   "house": "somshu"
+   "house": "fin",
+   "facing": "up"
+  },
+  "home.daisy.bed": {
+   "x": 14,
+   "y": 2,
+   "inside": true,
+   "house": "daisy",
+   "facing": "down"
+  },
+  "home.daisy.hobby": {
+   "x": 14,
+   "y": 3,
+   "inside": true,
+   "house": "daisy",
+   "facing": "down"
+  },
+  "home.daisy.table": {
+   "x": 16,
+   "y": 3,
+   "inside": true,
+   "house": "daisy",
+   "facing": "up"
+  },
+  "home.som.bed": {
+   "x": 20,
+   "y": 2,
+   "inside": true,
+   "house": "somshu",
+   "facing": "down"
+  },
+  "home.som.hobby": {
+   "x": 20,
+   "y": 3,
+   "inside": true,
+   "house": "somshu",
+   "facing": "down"
+  },
+  "home.shu.bed": {
+   "x": 21,
+   "y": 2,
+   "inside": true,
+   "house": "somshu",
+   "facing": "down"
+  },
+  "home.shu.hobby": {
+   "x": 21,
+   "y": 3,
+   "inside": true,
+   "house": "somshu",
+   "facing": "down"
+  },
+  "home.som.table": {
+   "x": 23,
+   "y": 3,
+   "inside": true,
+   "house": "somshu",
+   "facing": "up"
+  },
+  "home.shu.table": {
+   "x": 22,
+   "y": 2,
+   "inside": true,
+   "house": "somshu",
+   "facing": "right"
   },
   "work.desk1": {
    "x": 2,
@@ -518,8 +640,8 @@
   ]
  },
  "lamps": [
-  [11, 4],
-  [21, 4],
+  [6, 4],
+  [18, 4],
   [12, 13],
   [20, 13],
   [9, 19],

@@ -109,7 +109,7 @@ export class InfoCard {
     const p = owner.pet;
     this.el.innerHTML = `<button class="close" aria-label="닫기">✕</button>
       <div class="m-top">🐈‍⬛ <b>${esc(p.name)}</b></div><div class="m-sub">${esc(p.desc ?? `${owner.name}의 반려동물`)}</div>
-      <div class="m-what">${esc(owner.name)}와 산책 중</div>`;
+      <div class="m-what">${owner.action?.id === 'walk_cat' ? `${esc(owner.name)}와 산책 중` : '집에서 쉬는 중'}</div>`;
     this.place(x, y);
   }
 

@@ -1,7 +1,7 @@
 // public/data/map.json → 타일맵(바닥/장식), 충돌, 건물, 구역 조회
 
-const DECOR = new Set(['tree', 'flowers', 'bench', 'furniture', 'fountain', 'house']);
-const BASE_OF = { furniture: 'floor', fountain: 'plaza', tree: 'grass', flowers: 'grass', house: 'grass' };
+const DECOR = new Set(['tree', 'flowers', 'bench', 'furniture', 'fountain', 'house', 'bed']);
+const BASE_OF = { furniture: 'floor', fountain: 'plaza', tree: 'grass', flowers: 'grass', house: 'grass', bed: 'floor' };
 
 export const DEPTH = {
   sea: -10,
@@ -85,17 +85,14 @@ export class WorldMap {
     // 분수: 'fountain' 타일 영역마다 둥근 분수 하나 (벡터라 확대해도 선명)
     this.drawFountains();
 
-    // 집 (스프라이트, y정렬)
+    // 집: 시설처럼 지붕 없이 안이 보이고, 위쪽 벽에 문패
     for (const b of this.houses) {
-      const key = `bld.${b.id}`;
-      const img = s.add.image(b.x * T, (b.y + b.h) * T, key).setOrigin(0, 1);
-      img.setDisplaySize(b.w * T, img.height * ((b.w * T) / img.width));
-      img.setDepth((b.y + b.h) * T - 1);
-      b.sprite = img;
-      const spec = s.cache.json.get('manifest')[key] ?? {};
-      const wins = spec.windows ?? s.textures.get(key).customData?.windows ?? [];
-      const sx = (b.w * T) / img.width;
-      b.windows = wins.map((w) => ({ x: b.x * T + w.x * sx, y: (b.y + b.h) * T - img.displayHeight + w.y * sx }));
+      b.interior = { x: b.x + 1, y: b.y + 1, w: b.w - 2, h: b.h - 2 };
+      b.windows = [];
+      b.sign = s.add.text((b.x + b.w / 2) * T, b.y * T + T / 2, b.label, {
+        fontFamily: "'Gowun Dodum','Apple SD Gothic Neo','Noto Sans KR',sans-serif", fontSize: '12px', color: '#2d2a32',
+        backgroundColor: '#f6e7c9', padding: { x: 6, y: 1 }, resolution: (window.devicePixelRatio || 1) * 2.5,
+      }).setOrigin(0.5).setDepth((b.y + 1) * T + 1);
     }
     // 시설: 지붕 없이 안이 보이고, 위쪽 벽에 간판
     for (const b of this.shops) {

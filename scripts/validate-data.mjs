@@ -79,7 +79,8 @@ for (const [k, m] of Object.entries(memory.kinds)) {
   if (!(m.valence >= -1 && m.valence <= 1)) err(`memory.json ${k}: valence 는 -1~1`);
 }
 const KINDS = new Set(['greet', 'chat', 'brushoff', 'comfort', 'jealous', 'invite_yes', 'invite_no', 'confess', 'confess_no', ...Object.keys(ACT).filter((k) => ACT[k].partner).map((k) => `invite_${k}`)]);
-const WHEN = ['outcome', 'register', 'aTrait', 'bTrait', 'aAction', 'aNeed', 'aMood', 'place', 'timeBand', 'lovers'];
+const WHEN = ['outcome', 'register', 'aTrait', 'bTrait', 'aAction', 'bAction', 'aNeed', 'aMood', 'aFlag', 'memory', 'gossip', 'place', 'timeBand', 'lovers'];
+const FLAGS = ['promoted', 'skillUp', 'newLove', 'jealous', 'insulted', 'heartbroken', 'breakup', 'rejected', 'lonely', 'tired', 'broke'];
 const ids = new Set();
 talk.lines.forEach((l, i) => {
   const w = `talk.json lines[${i}]`;
@@ -89,7 +90,11 @@ talk.lines.forEach((l, i) => {
     if (!WHEN.includes(k)) err(`${w}: when.${k} 는 지원하지 않는 조건`);
     for (const x of [v].flat()) {
       if ((k === 'aTrait' || k === 'bTrait') && !TR[x]) err(`${w}: 특성 '${x}' 없음`);
-      if (k === 'aAction' && !ACT[x]) err(`${w}: 행동 '${x}' 없음`);
+      if ((k === 'aAction' || k === 'bAction') && !ACT[x]) err(`${w}: 행동 '${x}' 없음`);
+      if (k === 'aFlag' && !FLAGS.includes(x)) err(`${w}: aFlag '${x}' 없음 (${FLAGS.join(', ')})`);
+      if (k === 'memory' && !memory.kinds[x]) err(`${w}: 기억 종류 '${x}' 없음`);
+      if (k === 'gossip' && !['pos', 'neg'].includes(x)) err(`${w}: gossip 은 pos/neg`);
+      if (k === 'gossip' && !/\{c/.test(l.a + (l.b ?? '') + (l.c ?? ''))) warn(`${w}: gossip 대사인데 {c}(소문 대상)를 안 씀`);
       if (k === 'aNeed' && !NEEDS.includes(x)) err(`${w}: 욕구 '${x}' 없음`);
     }
   }

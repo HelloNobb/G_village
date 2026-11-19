@@ -292,6 +292,13 @@ export class PlaceholderFactory {
         // 분수 모양은 MapBuilder 가 영역 전체에 하나로 그린다. 타일은 바닥만.
         ctx.fillStyle = '#ddd5c6'; ctx.fillRect(0, 0, T, T);
         break;
+      case 'bed':
+        ctx.fillStyle = 'rgba(0,0,0,0.15)'; ctx.fillRect(3, 5, T - 4, T - 6);
+        ctx.fillStyle = '#8a6a4e'; ctx.fillRect(2, 3, T - 4, T - 5);
+        ctx.fillStyle = '#f4efe6'; ctx.fillRect(4, 5, T - 8, T - 9);
+        ctx.fillStyle = '#ffffff'; ctx.fillRect(6, 6, T - 12, 6);
+        ctx.fillStyle = '#9fb7d9'; ctx.fillRect(4, 14, T - 8, T - 18);
+        break;
       case 'house':
       default:
         break;
