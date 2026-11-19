@@ -202,6 +202,7 @@ export class Sim {
     const ex = r.moodlets.find((m) => m.id === id && m.source === source);
     if (ex) { ex.until = until; ex.value = value; return; }
     r.moodlets.push({ id, label, value, until, by, source });
+    if (Math.abs(value) >= 8) this.float(r, `기분 ${value > 0 ? '+' : ''}${Math.round(value)} · ${label}`, value > 0 ? 'pos' : 'neg');
     if (r.moodlets.length > 12) r.moodlets.sort((a, b) => Math.abs(b.value) - Math.abs(a.value)).length = 12;
   }
 
@@ -522,10 +523,20 @@ export class Sim {
     a.phase = 'do';
     r.recent = [...(r.recent ?? []).filter((x) => this.now - x.t < 8 * HOUR), { id: a.id, t: this.now, together: !!a.partner }].slice(-12);
     a.end = this.now + a.minutes * MIN;
+    a.startNeeds = { ...r.needs };
+    a.startMoney = r.money;
+    this.float(r, `${def.icon} ${def.name}`, 'info');
     for (const [k, v] of Object.entries(def.once ?? {})) {
-      if (k === 'money') r.money = Math.max(0, r.money + v);
-      else if (k === 'groceries') r.groceries = Math.max(0, r.groceries + (v > 0 ? this.traits.v(r, 'groceries.bought', v) : v));
-      else if (NEEDS.includes(k)) r.needs[k] = clamp(r.needs[k] + v);
+      if (k === 'money') { r.money = Math.max(0, r.money + v); this.float(r, `💰 ${v > 0 ? '+' : ''}${v}`, v > 0 ? 'pos' : 'neg'); }
+      else if (k === 'groceries') {
+        const g = v > 0 ? this.traits.v(r, 'groceries.bought', v) : v;
+        r.groceries = Math.max(0, r.groceries + g);
+        this.float(r, `🧺 식료품 ${g > 0 ? '+' : ''}${g}`, g > 0 ? 'pos' : 'neg');
+      } else if (NEEDS.includes(k)) {
+        const before = r.needs[k];
+        r.needs[k] = clamp(r.needs[k] + v);
+        this.float(r, this.needLabel(k, r.needs[k] - before), 'pos');
+      }
     }
     if (def.moodlet) this.addMoodlet(r, def.moodlet.id, def.name, def.moodlet.value, def.moodlet.hours);
     if ((a.id === 'eat_home' || a.id === 'snack') && this.hasBehavior(r, 'enjoyFood')) {
@@ -554,6 +565,15 @@ export class Sim {
     const a = r.action;
     if (!a) return;
     const def = this.actions[a.id];
+    if (a.phase === 'do' && a.startNeeds) {
+      for (const [n, rate] of Object.entries(def.rates ?? {})) {
+        if (rate <= 0) continue;
+        const d = r.needs[n] - a.startNeeds[n];
+        if (d >= 3) this.float(r, this.needLabel(n, d), 'pos');
+      }
+      const dm = r.money - a.startMoney;
+      if (def.work && dm >= 1) this.float(r, `💰 +${Math.round(dm)}`, 'pos');
+    }
     if (a.phase === 'do') {
       // 활동 기억: 하는 동안 기분이 크게 바뀌었으면
       const delta = r.mood - a.moodAtStart;
@@ -926,7 +946,9 @@ export class Sim {
     // 효과
     const sg = { good: 20, neutral: 12, bad: 6 }[outcome];
     for (const [x, y] of [[r, s], [s, r]]) {
+      const before = x.needs.social;
       x.needs.social = clamp(x.needs.social + sg * this.socialMul(x, y.id));
+      if (x.needs.social - before >= 3) this.float(x, this.needLabel('social', x.needs.social - before), 'pos');
       x.needs.fun = clamp(x.needs.fun + (outcome === 'good' ? 4 : 1));
     }
     // 말 거는 쪽의 재미: 특성(독설가 +5, 유쾌 ×1.5)이 끼어듦
@@ -1157,6 +1179,16 @@ export class Sim {
 
   say(r, text, delay = 0) {
     if (text) this.out.push({ kind: 'say', who: r.id, text, delay });
+  }
+
+  /** 머리 위에 잠깐 떴다 사라지는 수치·행동 표시 (tone: pos/neg/info) */
+  float(r, text, tone = 'info') {
+    this.out.push({ kind: 'float', who: r.id, text, tone });
+  }
+
+  needLabel(n, v) {
+    const d = this.needsCfg.needs[n];
+    return `${d.icon} ${d.name} ${v > 0 ? '+' : ''}${Math.round(v)}`;
   }
 
   tag(r, text, trait = null) {

@@ -29,12 +29,28 @@ export class SpeechBubbles {
     this.items.push({ target, obj, life: 1.8, total: 1.8, tag: true });
   }
 
+  /** 수치·행동 표시: 잠깐 떠올랐다 사라짐. 같은 사람에게 여러 개면 차례로 */
+  float(target, text, tone = 'info') {
+    const color = { pos: '#2f8a4e', neg: '#b8433a', info: 'rgba(45,42,50,0.82)' }[tone] ?? '#555';
+    const last = this.items.filter((it) => it.float && it.target === target).reduce((m, it) => Math.max(m, it.born), 0);
+    const now = performance.now();
+    const born = Math.max(now, last + 350);
+    if (born > now) { this.queue.push({ target, text, float: tone, at: born }); return; }
+    const obj = this.scene.add.text(0, 0, text, {
+      fontFamily: FONT, fontSize: '11px', color: '#fff', backgroundColor: color, padding: { x: 5, y: 2 }, resolution: DPR * 3,
+    }).setOrigin(0.5, 1).setDepth(DEPTH.bubble + 2);
+    this.items.push({ target, obj, life: 2.2, total: 2.2, tag: true, float: true, born: now });
+  }
+
   update(dt) {
     const now = performance.now();
     if (this.queue.length) {
       const due = this.queue.filter((q) => q.at <= now);
       this.queue = this.queue.filter((q) => q.at > now);
-      for (const q of due) this.show(q.target, q.text, q.seconds);
+      for (const q of due) {
+        if (q.float) this.float(q.target, q.text, q.float);
+        else this.show(q.target, q.text, q.seconds);
+      }
     }
     const cam = this.scene.cameras.main;
     const k = Math.min(2.2, Math.max(0.8, (DPR * 1.0) / cam.zoom)); // 화면에서 비슷한 크기로

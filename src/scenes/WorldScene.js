@@ -328,9 +328,10 @@ export class WorldScene extends Phaser.Scene {
     const busy = speed >= 300; // 아주 빠를 땐 말풍선을 일부만 (소식에는 전부 남음)
     for (const ev of this.sim.out) {
       const v = this.views.get(ev.who);
-      if (busy && ev.kind !== 'news' && Math.random() > 0.15) continue;
+      if (busy && ev.kind !== 'news' && Math.random() > (ev.kind === 'float' ? 0.3 : 0.15)) continue;
       if (ev.kind === 'say' && v) this.bubbles.show(v, ev.text, 3.2, ev.delay ?? 0);
       else if (ev.kind === 'tag' && v) this.bubbles.tag(v, ev.text);
+      else if (ev.kind === 'float' && v) this.bubbles.float(v, ev.text, ev.tone);
       else if (ev.kind === 'news' && ev.item.text) this.panels.addNews(ev.item);
     }
     this.sim.out.length = 0;
