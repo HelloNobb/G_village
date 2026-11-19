@@ -1,0 +1,15 @@
+{
+  "_note": "연애. confess = 서로 호감도·친밀도가 기준 이상이고 둘 다 연인이 없을 때, 가까이 있으면 시간마다 chancePerHour 확률로 한쪽이 고백. 수락 확률 = (상대의 호감도 - acceptFrom) / (100 - acceptFrom). date = 연인끼리 같이 하기 점수 배율. breakup = 한쪽 호감도가 below 아래로 hours 넘게 머물면 시간마다 chancePerHour 확률로 이별.",
+  "confess": { "minAffinity": 85, "minCloseness": 60, "radius": 6, "chancePerHour": 0.05, "acceptFrom": 60 },
+  "date": { "scoreMul": 1.6, "gainMul": 1.5 },
+  "breakup": { "below": 40, "hours": 48, "chancePerHour": 0.02 },
+  "stages": [
+    { "id": "unknown", "name": "모르는 사이" },
+    { "id": "acquaintance", "name": "아는 사이", "min": -29 },
+    { "id": "friend", "name": "친구", "min": 40 },
+    { "id": "close", "name": "친한 친구", "min": 70 },
+    { "id": "awkward", "name": "껄끄러운 사이", "max": -30 },
+    { "id": "lover", "name": "연인" }
+  ],
+  "relation": { "closenessPerInteraction": 2, "closenessDecayPerDay": 0.5 }
+}

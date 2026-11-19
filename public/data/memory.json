@@ -1,0 +1,162 @@
+{
+ "_note": "기억 장치 설정. kinds = 기억 종류: subject(person 사람 / activity 활동 / place 장소), valence(-1~1 좋고 나쁨), intensity(0~100 강도), text(정보 카드에 보일 문구: {other} = 상대 이름, {activity}/{place} = 이름). 태도 점수 = Σ(valence × intensity × 옅어진 정도 × 특성 가중치), -100~100. 단기 기억은 halfLifeHours.short 로, 장기 기억은 .long 으로 옅어짐. 같은 대상·같은 방향의 기억이 consolidate.count 번(windowDays 안에) 쌓이거나 강도가 consolidate.intensity 이상이면 장기 기억으로 합쳐짐. avoidAt 이하면 피하고 preferAt 이상이면 선호함.",
+ "halfLifeHours": {
+  "short": 12,
+  "long": 168
+ },
+ "limits": {
+  "short": 40,
+  "long": 60
+ },
+ "consolidate": {
+  "intensity": 60,
+  "count": 3,
+  "windowDays": 3,
+  "mergedIntensity": 70
+ },
+ "avoidAt": -30,
+ "preferAt": 30,
+ "kinds": {
+  "first_meet": {
+   "subject": "person",
+   "valence": 0.3,
+   "intensity": 20,
+   "text": "{other:와} 처음 인사했다"
+  },
+  "talk_good": {
+   "subject": "person",
+   "valence": 0.6,
+   "intensity": 30,
+   "text": "{other:와} 즐겁게 이야기했다"
+  },
+  "talk_bad": {
+   "subject": "person",
+   "valence": -0.6,
+   "intensity": 35,
+   "text": "{other:와} 이야기하다 기분이 상했다"
+  },
+  "insulted": {
+   "subject": "person",
+   "valence": -0.9,
+   "intensity": 50,
+   "text": "{other}의 말이 아팠다"
+  },
+  "rejected": {
+   "subject": "person",
+   "valence": -0.4,
+   "intensity": 20,
+   "text": "{other}에게 거절당했다"
+  },
+  "comforted": {
+   "subject": "person",
+   "valence": 0.9,
+   "intensity": 55,
+   "text": "{other:이} 위로해 줬다"
+  },
+  "together": {
+   "subject": "person",
+   "valence": 0.7,
+   "intensity": 40,
+   "text": "{other:와} {activity:을} 했다"
+  },
+  "cheered": {
+   "subject": "person",
+   "valence": 0.4,
+   "intensity": 20,
+   "text": "{other} 덕분에 웃었다"
+  },
+  "jealous": {
+   "subject": "person",
+   "valence": -0.7,
+   "intensity": 28,
+   "text": "{other:이} 신경 쓰였다",
+   "rival": true
+  },
+  "date": {
+   "subject": "person",
+   "valence": 0.9,
+   "intensity": 55,
+   "text": "{other:와} 데이트했다"
+  },
+  "romance_start": {
+   "subject": "person",
+   "valence": 1,
+   "intensity": 90,
+   "text": "{other:와} 연인이 됐다"
+  },
+  "confess_rejected": {
+   "subject": "person",
+   "valence": -0.8,
+   "intensity": 70,
+   "text": "{other}에게 고백했지만 거절당했다"
+  },
+  "breakup": {
+   "subject": "person",
+   "valence": -1,
+   "intensity": 90,
+   "text": "{other:와} 헤어졌다"
+  },
+  "activity_great": {
+   "subject": "activity",
+   "valence": 0.6,
+   "intensity": 35,
+   "text": "{activity:이} 아주 즐거웠다"
+  },
+  "activity_bad": {
+   "subject": "activity",
+   "valence": -0.6,
+   "intensity": 35,
+   "text": "{activity:이} 별로였다"
+  },
+  "work_done_well": {
+   "subject": "activity",
+   "valence": 0.6,
+   "intensity": 40,
+   "text": "일을 완벽하게 마쳤다"
+  },
+  "work_unfinished": {
+   "subject": "activity",
+   "valence": -0.6,
+   "intensity": 40,
+   "text": "일을 마무리하지 못했다"
+  },
+  "promotion": {
+   "subject": "activity",
+   "valence": 1,
+   "intensity": 80,
+   "text": "일터 레벨이 올랐다 (Lv.{level})"
+  },
+  "skill_up": {
+   "subject": "activity",
+   "valence": 0.6,
+   "intensity": 40,
+   "text": "{activity} 실력이 늘었다"
+  },
+  "starving": {
+   "subject": "place",
+   "valence": -0.8,
+   "intensity": 60,
+   "text": "{place}에서 너무 배고팠다"
+  },
+  "exhausted": {
+   "subject": "place",
+   "valence": -0.7,
+   "intensity": 50,
+   "text": "{place}에서 녹초가 됐다"
+  },
+  "crowded": {
+   "subject": "place",
+   "valence": -0.4,
+   "intensity": 25,
+   "text": "{place:이} 북적여서 피곤했다"
+  }
+ },
+ "summaries": {
+  "person.negative": "{other:은} 좀 피하고 싶다",
+  "person.positive": "{other:와} 있으면 좋다",
+  "activity.negative": "{activity:은} 별로다",
+  "activity.positive": "{activity:이} 좋다",
+  "place.negative": "{place:은} 가기 싫다",
+  "place.positive": "{place:이} 좋다"
+ }
+}

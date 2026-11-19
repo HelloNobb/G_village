@@ -1,29 +1,109 @@
 # G village
 
-도시 외곽 작은 동네의 하루를 걷는 탑다운 2D 마을 생활 시뮬레이션 (Phaser 3 + Vite).
-**실제 한국 시간**에 맞춰 하늘과 조명이 바뀌고, 주민 다섯 명이 각자의 스케줄대로 일하고 쉬고 산책합니다.
+작은 동네에 사는 주민 다섯 명(핀·데이지·솜·슈·디)을 **지켜보는** 생활 시뮬레이션 (Phaser 3 + Vite).
+고정 스케줄 없이, 주민마다 **욕구·기분·특성·기억·관계**에 따라 스스로 다음 행동을 고릅니다. 시간은 현실 한국 시각에서 시작하고 배속을 바꿀 수 있습니다.
 
 - 플레이: https://hellonobb.github.io/G_village/
-- 세계관·인물 기준 문서: [`docs/characters.md`](docs/characters.md)
-- 설계 문서: [`PLAN.md`](PLAN.md)
+- 설계: [`PLAN.md`](PLAN.md)
 
-## 조작
+## 화면
 
-| | PC | 모바일 |
-|---|---|---|
-| 이동 | 방향키 / WASD, 클릭한 곳으로 이동 | 화면 드래그(조이스틱), 탭한 곳으로 이동 |
-| 말걸기 / 대화 넘기기 | Space / E | 💬 버튼(항상 보임), 주민 탭, 화면 두 번 탭 |
-| 노크 | 주민 집 문 앞에서 Space | 집을 탭 / 문 앞에서 💬 |
-| 빠른 이동 | 미니맵 클릭 | 미니맵 탭 |
-| 메뉴 | Esc / 메뉴 | 메뉴 |
+| 위치 | 내용 |
+|---|---|
+| 상단 | `Day N`(시작한 날 = Day 0, 자정마다 +1), 날짜·시각, 배속(⏸ 1× 2× 5× 10× 30×), 내보내기·불러오기·초기화 |
+| 게임 화면 | 맵 전체(집 4채·일터·카페·도서관·마트·공원·해변). 주민 머리 위 기분(😊🙂😞)·말풍선·특성 태그(😤질투, ✨하하 …), 일터 책상 이름표 `이름 Lv.n` |
+| 정보 카드 | **PC: 주민에게 마우스를 올리면 / 휴대폰: 주민을 누르면.** 욕구 5개, 기분과 그 이유, 지금 하는 일·이유·영향을 준 특성, 돈·식료품·일터 레벨·취미 숙련, 특성, 타고난 능력, 최근 기억, 좋아하는 것·꺼리는 것 |
+| 오른쪽 탭 | **지금 마을**(주민별 행동·이유), **관계도**(방향별 호감도 화살표 — 누르면 서로를 어떻게 생각하는지), **소식**(사건 + 오간 대사) |
 
-화면 구성: 테두리 안 게임 화면(왼쪽 위 시계·하늘, 오른쪽 위 실시간 미니맵) + 오른쪽 패널(**지금 마을에서** = 주민별 현재 위치, **마을 소식** = 스케줄 변화·가게 영업·해 뜨고 짐·주민끼리 나눈 대화). 좁은 화면에서는 패널이 게임 아래로 내려갑니다.
+휴대폰은 맵 전체가 보이고, **두 손가락으로 확대·이동**할 수 있습니다(PC는 휠·드래그). "⤢ 전체 보기"로 되돌립니다.
 
-- 주민이 **집 안에 있을 때만** 노크에 대답합니다. 밖에 있는 주민에게는 어디서든 바로 말을 걸 수 있습니다.
-- 주민마다 하루 첫 대화에서 친밀도가 오르고(메뉴에서 확인), 친해질수록 말투가 편해지거나 다른 이야기를 합니다.
-- 진행 상태(이름·위치·친밀도·본 대사)는 브라우저 localStorage에 저장됩니다. 메뉴 → 저장 초기화.
+## 저장
 
-## 실행
+- 마을은 **이 브라우저의 localStorage**에 10초마다 저장됩니다. 탭·브라우저를 닫거나 재부팅해도 남습니다.
+- 사라지는 경우: 사이트 데이터 삭제, 시크릿 창, **아이폰·맥 Safari에서 7일 넘게 접속 안 함**(홈 화면에 추가한 경우 예외).
+- **내보내기** = 마을 전체가 든 JSON 파일 하나. **불러오기**로 그 파일을 넣으면 그대로 이어지고, 파일을 저장한 뒤 흐른 시간도 최대 3일까지 계산합니다.
+- 다시 접속하면 그동안 흐른 시간(1배속, 최대 3일)을 빠르게 계산하고 **"자리를 비운 사이"** 창에 하루별 사건을 보여줍니다. 일시정지 상태로 나갔다면 시간이 흐르지 않습니다.
+- 접속하는 사람·기기마다 각자의 마을입니다.
+
+## 시뮬레이션 요약
+
+- **욕구** 허기·수면·재미·성취·사회적 접촉 (0~100, 각자의 속도로 줄어듦). 생활리듬(아침형/보통/야행성)은 수면 욕구가 줄어드는 속도로 만들어집니다.
+- **기분** 좋음/양호/나쁨 = 욕구 상태 + 일시 효과(즐거운 대화, 독설을 들음, 질투, 승진 …).
+- **행동 고르기** 점수 = Σ(욕구의 급한 정도 × 채워 주는 양) + 돈·식료품 필요 × 특성 배율 × 기억(좋았던 곳 ↑, 싫었던 곳 ↓) × 거기 있는 사람 − 이동 거리. 상위 3개 중 하나를 고름.
+- **일** 자기 책상에서 일하면 돈·성취·업무 경험치 → 레벨 1~5 (시급·성취 ↑). 돈으로 마트에서 식료품을 사서 집에서 먹음.
+- **대화** 가까이 있으면 외향성·사회 욕구·기분·호감도로 먼저 말을 걸지 정함 → 상대가 받아 줄지 → 결과(좋음/보통/나쁨). 말풍선으로 보이고 소식에 남음.
+- **같이 하기** 같이 산책·카페·취미는 요청 → 수락하면 함께 함. 연인끼리는 데이트.
+- **연애** 서로 호감도 85·친밀도 60 이상이면 가끔 고백. 호감도가 오래 낮으면 이별. Day 0엔 솜–슈만 연인이고 나머지는 모두 모르는 사이.
+
+## 특성
+
+모든 수치 계산은 하나의 통로(`src/sim/traits.js`의 `apply`)를 거치고, `public/data/traits.json`의 `mods`에 적힌 hook이 맞으면 그 특성이 끼어듭니다. 어떤 특성이 끼어들었는지는 정보 카드의 "이유"와 소식의 `[특성]` 표시로 보입니다.
+
+| hook | 뜻 |
+|---|---|
+| `needDecay.<욕구>` | 욕구 감소 속도 |
+| `needPerceived.<욕구>` | 욕구를 얼마나 급하게 느끼는지 (+ = 덜 급함) |
+| `needGain.<욕구>.<행동>` / `needGain.<욕구>.tag:<태그>` | 그 행동으로 채워지는 양 |
+| `moodWeight.<욕구>` | 그 욕구가 기분에 주는 영향 |
+| `actionScore.<행동 / tag:태그>` | 행동을 고를 확률 |
+| `actionDuration.<행동 / tag:태그>` | 걸리는 시간 |
+| `interruptAt.<행동 / tag:태그>` | 하던 일을 멈추는 욕구 기준(낮을수록 버팀) |
+| `work.money` · `work.xp` · `work.progress` · `study.efficiency` · `skillGain(.숙련)` | 일·공부·취미 효율 |
+| `talk.initiate` · `talk.accept` · `talk.good` · `talk.bad` · `talk.funSelf` · `talk.partnerAffinityGood/Bad` | 대화 |
+| `invite.accept` · `invite.focus` | 같이 하기 수락 |
+| `social.gain.focus/others` · `affinity.gain.focus/others` · `place.withFocus` | 한 사람에게만 몰두 |
+| `place.<장소>` | 장소 선호 |
+| `mood.base` · `moodlet.duration.negative` | 기분 |
+| `memory.weight.person/rival/focus` · `memory.halfLife.negative` | 기억 강도·지속 |
+| `groceries.bought` · `money.target` · `insult.received` | 기타 |
+
+특별 행동(`behavior`): 독설가=독설, 다정함=위로하러 감, 유쾌=주변 기분 올리기, 독립적=사람 많으면 지침, 먹보=먹으면 행복, 완벽주의=일을 끝까지 마치면 보너스·못 마치면 찜찜, 천재=집중, 질투심 많은=질투·끼어들기, 게으른=돈이 바닥날 때까지 미루기, 한 사람에게만 몰두=몰두 대상.
+
+## 기억
+
+- 기분 변화가 크거나 의미 있는 일만 기억합니다(종류는 `memory.json`의 `kinds`).
+- **단기 기억**(반감기 12시간) → 강도 60 이상이거나 같은 대상에게 같은 방향의 일이 3일 안에 3번이면 **장기 기억**(반감기 7일) 하나로 합쳐짐.
+- **태도 점수** = Σ(좋음/나쁨 × 강도 × 옅어진 정도 × 특성 가중치), −100~100. **−30 이하면 피함**: 그 활동·장소는 덜 고르고, 그 사람에겐 먼저 말 걸지 않고 요청도 잘 거절함.
+
+## 데이터 직접 고치기 (`public/data/`)
+
+| 파일 | 내용 |
+|---|---|
+| `residents.json` | 주민 이름·특성·외향성·생활리듬·능력·기본 자금, Day 0 관계 |
+| `traits.json` | 특성 정의·충돌·hook |
+| `needs.json` | 욕구 감소·생활리듬 곡선·기분 기준·돈·레벨 |
+| `actions.json` | 행동 목록(장소·시간·효과·비용·태그) |
+| `memory.json` | 기억 종류·강도·반감기·장기 기억 조건 |
+| `romance.json` | 고백·데이트·이별·관계 단계 |
+| `talk.json` | 말풍선 대사 (상황·말투·결과·특성·장소 조건) |
+| `news.json` | 소식·브리핑 문구 |
+| `map.json` | 맵·건물·자리·산책 루트 |
+
+`{a:이}`처럼 쓰면 받침에 맞춰 조사가 붙습니다(이/가, 은/는, 을/를, 와/과, 아/야, 이에요/예요).
+
+```bash
+npm run validate
+```
+
+데이터 검사(참조·특성 충돌·대사 조건·금지어·1일 시뮬레이션). 배포 때 자동으로 돌고, 실패하면 배포가 멈춥니다.
+
+```bash
+npm run sim -- 7 42
+```
+
+화면 없이 7일(시드 42)을 돌려서 주민별 하루 시간 배분·잠든 시각·기분 분포·관계·사건·브리핑을 출력합니다. 수치를 바꾼 뒤 확인용.
+
+### 7일 시뮬레이션 예시 (seed 7)
+
+| 주민 | 특성 | 하루 평균 (상위) | 기분 좋음/나쁨 | 7일 뒤 |
+|---|---|---|---|---|
+| 핀 | 유쾌·먹보 | 잠 7.6 · 일 4.5 · 게임 2.5 · 간식 1.9h | 60% / 0% | Lv.3 |
+| 데이지 | 독설가·완벽주의 | 잠 7.4 · 일 3.8 · 독서 3.2 · 그림 2.5h | 20% / 2% | Lv.3, 다들 데이지를 피하기 시작 |
+| 솜 | 천재·게으른 | 잠 8.0 · 같이 취미 3.3 · 쉬기 2.3 · 일 1.8h | 36% / 0% | Lv.2 |
+| 슈 | 한 사람에게만 몰두·질투심 많은 | 잠 8.3 · 같이 취미 3.3 · 일 2.7h | 24% / 0% | 솜과 어울린 사람을 피함 |
+| 디 | 독립적·책벌레 | 독서 4.7 · 일 3.3 · 카페 3.3h | 29% / 0% | Lv.3 |
+
+## 실행·배포
 
 ```bash
 npm install
@@ -33,135 +113,16 @@ npm install
 npm run dev
 ```
 
-```bash
-npm run validate
-```
-
-`validate`는 데이터 JSON을 검사합니다(문법, 스폿·루트·주민 참조, 시간 형식, 대사 id 중복, **금지어**). GitHub Actions에서도 빌드 전에 실행되어, 실패하면 배포가 멈춥니다.
-
-### 시간 테스트 (디버그)
-
-주소 뒤에 붙이면 됩니다. 이때 `` ` `` 키로 주민 상태 패널을 켜고 끕니다.
-
-- `?t=2026-11-01T21:30` — 그 시각(KST)부터 시작
-- `&speed=60` — 60배속
-- `?debug=1` — 실제 시간 그대로 디버그 패널만
-
-예: `http://localhost:5173/?t=2026-11-03T21:00&speed=10` (화요일 밤 바)
-
-## 배포
-
-`main` 브랜치에 push하면 `.github/workflows/deploy.yml`이 검증 → 빌드 → GitHub Pages 배포를 합니다.
-(처음 한 번: 저장소 Settings → Pages → Source = **GitHub Actions**)
-
----
-
-## 데이터 직접 고치기
-
-코드를 건드리지 않고 `public/data/` 안의 JSON만 고쳐서 push하면 반영됩니다. 모든 JSON에 `"_note"`(메모) 필드를 써도 게임은 무시합니다.
-
-| 파일 | 내용 |
-|------|------|
-| `dialogue/<주민>.json` | 말걸기 대사 (`fin`, `daisy`, `som`, `shu`, `di`, `kkamangi`) |
-| `ambient.json` | 주민끼리 대화, 길에서 스칠 때 인사 |
-| `schedules.json` | 주민 스케줄 |
-| `places.json` | 장소 이름, 가게 영업시간 |
-| `map.json` | 맵(글자 그림), 건물, 스폿, 산책 루트, 가로등 |
-| `npcs.json` | 주민 이름·직업·집·이름표 색 |
-| `daylight.json` | 월별 일출·일몰 |
-| `news.json` | 오른쪽 '마을 소식' 문구 (`{name:이}` = 받침에 맞는 조사) |
-
-### 대사 한 줄 형식
-
-```json
-{
-  "id": "fin.cafe.morning.01",
-  "when": { "place": "cafe", "activity": "work", "timeBand": "morning" },
-  "pages": ["어서 오세요! 오늘은 곰돌이 쿠키가 제일 먼저 구워졌어요.", "하나 맛보실래요?"]
-}
-```
-
-- `id`: 아무 이름이나, 단 **전체에서 겹치면 안 됨**.
-- `pages`: 대화창 한 페이지씩. `{player}` = 플레이어 이름, `{time}` = "오후 3시", `{weekday}` = "토요일".
-- `narration: true` 를 넣으면 이름 없이 (행동 묘사)로 나옵니다.
-- `once: true` 면 평생 한 번만, `priority` 숫자를 주면 더 자주 뽑힙니다.
-
-**`when` 조건** — 적은 것만 검사하고, 적은 조건이 많을수록(구체적일수록) 우선합니다.
-
-| 키 | 값 |
-|----|----|
-| `context` | `talk`(기본, 직접 대화) / `knock`(문 노크) / `busy`(주민끼리 대화 중에 말 걸었을 때) |
-| `place` | `cafe` `jewelry` `salon` `bar` `bookstore` `plaza` `park` `beach` `residential` `street` `home` |
-| `activity` | 스케줄의 activity (예: `work` `bake` `bartend` `buy_latte` `walk_cat` `stargaze` `sleep` …) |
-| `timeBand` | `dawn`(5–7) `morning`(7–11) `lunch`(11–14) `afternoon`(14–18) `evening`(18–21) `night`(21–24) `latenight`(0–5) |
-| `dayType` | `weekday` / `weekend` |
-| `days` | `["mon","wed"]` 처럼 요일 |
-| `months` | `[12,1,2]` 처럼 월 |
-| `familiarity` | `{ "min": 2 }`, `{ "max": 1 }` (0 처음 · 1 아는 사이 · 2 친한 이웃 · 3 단골 이웃) |
-| `with` / `without` | 같은 장소에 그 주민이 있을 때 / 없을 때 (노크: 같은 집 안) |
-| `firstMeet` | `true` = 첫 만남 전용 |
-| `moving` | `true` = 걸어가는 중일 때 |
-
-여러 값을 배열로 주면 "그중 하나"라는 뜻입니다 (`"timeBand": ["evening", "night"]`).
-
-### 주민끼리 대화
-
-```json
-{ "id": "amb.fin_di.latte.01", "participants": ["fin", "di"], "when": { "place": "cafe" }, "cooldownMin": 90,
-  "lines": [{ "s": "fin", "t": "디! 오늘도 딸기라떼지?" }, { "s": "di", "t": "…응." }] }
-```
-
-참여자 전원이 같은 장소에서 가까이 서 있고, 플레이어 화면 안에 있을 때 가끔 머리 위 말풍선으로 나옵니다. `allowMoving: true`면 걸으면서도 합니다(산책).
-
-### 스케줄 한 줄
-
-```json
-{ "days": "weekday", "from": "15:00", "to": "15:30", "at": "cafe.order2", "activity": "buy_latte", "label": "딸기라떼 사러" }
-```
-
-- 게임 하루는 **05:00 시작**이라 새벽은 `25:00`(= 01:00)처럼 씁니다.
-- `days`: `all` / `weekday` / `weekend` / `mon`… / `["tue","thu"]`. 겹치면 더 구체적인 요일 지정이 이깁니다.
-- `at`: `map.json`의 `spots` 이름. `home.<집>`은 집 안(화면에서 사라짐). 배열 + `every`(분)면 번갈아 이동.
-- `route`: `map.json`의 `routes` 이름(반복해서 걷기) / `follow`: 다른 주민 따라가기.
-- `npm run validate`가 **06~21시엔 누군가 밖을 걷고 있는지, 21시~다음 날 07시(밤·새벽)엔 2명 이상 밖에 있는지** 확인해서 빈 시간을 경고로 알려 줍니다.
-
-### 반드시 지킬 것 (docs/characters.md "구현 시 주의")
-
-- 데이지에게 성별 대명사(그/그녀)를 쓰지 않습니다. **언니·오빠·누나·형 같은 성별 호칭은 누구에게도 쓰지 않습니다.**
-- 솜과 슈는 "동거인"으로만 표현합니다 (연인·애인·커플·데이트·자기야 등 금지).
-- 주민의 깊은 사정·과거사는 대사로 설명하지 않습니다. 말투와 행동으로만 드러냅니다.
-
-금지어는 `scripts/banned-words.json`에 정규식으로 있고, `npm run validate`와 배포 때 자동 검사됩니다.
-
----
-
-## 화질
-
-캔버스를 기기 픽셀 비율(최대 2배)로 그리고, 플레이스홀더 그림도 2~3배 해상도로 만든 뒤 줄여서 씁니다(`src/config.js`). 실제 그림을 넣을 때 2배 크기로 그렸다면 manifest 항목에 `"resolution": 2`를 적으면 같은 크기로 보입니다.
-
-## 그림 바꾸기 (플레이스홀더 → 스프라이트)
-
-게임 코드는 **텍스처 키**만 알고, 그게 도형인지 그림인지는 모릅니다. `public/assets/manifest.json`에서 키의 `type`만 바꾸면 됩니다.
-
-```json
-"npc.fin": { "type": "spritesheet", "url": "assets/sprites/fin.png", "frameWidth": 32, "frameHeight": 48 }
-```
-
-- 캐릭터 시트 프레임 배치: **down 0–2, left 3–5, right 6–8, up 9–11** (각 방향 첫 칸 = 서 있기). 다른 배치면 `"frames": { "down": [0,1,2], "left": [...], ... }` 추가.
-- 타일: `"tiles": { "type": "image", "url": "assets/tiles.png", "tileSize": 32 }` — `map.json`의 `legend` 순서대로 타일을 가로로 나열 (`margin`/`spacing` 지정 가능).
-- 집 `bld.<집>` / 가게 지붕 `roof.<가게>`: `{ "type": "image", "url": "..." }`. 집 창문 불빛 위치는 `"windows": [{ "x": 30, "y": 90 }]`(이미지 픽셀 좌표).
+`main`에 push하면 GitHub Actions가 검사 → 빌드 → GitHub Pages 배포. 디버그: 주소에 `?debug=1`이면 브라우저 콘솔에서 `window.__village`로 상태를 볼 수 있습니다.
 
 ## 구조
 
 ```
-src/
-  scenes/   BootScene(데이터·그림 로드) · WorldScene(게임)
-  systems/  Clock(KST) · DayNight · Pathfinder(A*) · ScheduleSystem · DialogueSystem · AmbientChatSystem · SaveSystem
-  entities/ Player · Npc · Pet
-  map/      MapBuilder
-  art/      PlaceholderFactory · AnimRegistry
-  ui/       DialogueBox · Hud · Minimap · NewsFeed · TouchControls · SpeechBubbles · Menu
-public/data/  게임 데이터(JSON)
-public/assets/manifest.json  텍스처 목록
-scripts/validate-data.mjs     데이터 검증
+src/sim/      Sim(본체) · traits(특성 통로) · memory(기억) · briefing(브리핑) · grid · time · text(조사) · rng
+src/scenes/   BootScene · WorldScene(화면)
+src/ui/       InfoCard · Panels(지금·관계도·소식) · CameraControls · SpeechBubbles · SaveStore · Hud · describe
+src/map/      MapBuilder      src/art/  PlaceholderFactory · AnimRegistry
+scripts/      validate-data.mjs · simulate.mjs · banned-words.json
 ```
+
+그림 교체: `public/assets/manifest.json`에서 같은 키를 `{ "type": "spritesheet", "url": "...", "frameWidth": 32, "frameHeight": 48 }`로 바꾸면 됩니다(프레임 배치 down 0-2, left 3-5, right 6-8, up 9-11).

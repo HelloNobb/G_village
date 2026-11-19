@@ -1,0 +1,173 @@
+{
+ "_note": "욕구(0~100). decay = 시간당 기본 감소량(특성·능력으로 바뀜). urgency = 행동 고를 때 이 욕구의 무게. moodWeight = 60 아래로 떨어진 만큼 기분을 깎는 정도. 생활리듬 curve = 깨어 있을 때 시각(0~23시)별 수면 감소 배율. sleepWindow = 잠들기 좋은 시간대 [시작, 끝]. [가정] 수치는 시뮬레이터(npm run sim)로 맞춘 값.",
+ "needs": {
+  "hunger": {
+   "name": "허기",
+   "icon": "🍚",
+   "decay": 9,
+   "urgency": 1.3,
+   "moodWeight": 0.4
+  },
+  "energy": {
+   "name": "수면",
+   "icon": "💤",
+   "decay": 5,
+   "urgency": 1.2,
+   "moodWeight": 0.4
+  },
+  "fun": {
+   "name": "재미",
+   "icon": "🎈",
+   "decay": 8,
+   "urgency": 0.8,
+   "moodWeight": 0.3
+  },
+  "achievement": {
+   "name": "성취",
+   "icon": "🏆",
+   "decay": 4,
+   "urgency": 0.7,
+   "moodWeight": 0.25
+  },
+  "social": {
+   "name": "사회적 접촉",
+   "icon": "💬",
+   "decay": 7,
+   "urgency": 0.9,
+   "moodWeight": 0.3
+  }
+ },
+ "interruptAt": 12,
+ "chronotypes": {
+  "morning": {
+   "name": "아침형",
+   "wake": 6,
+   "sleepWindow": [
+    21.5,
+    6.5
+   ],
+   "curve": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1.6,
+    1.6,
+    1.6,
+    1.6,
+    2,
+    2
+   ]
+  },
+  "normal": {
+   "name": "보통",
+   "wake": 8,
+   "sleepWindow": [
+    23.5,
+    8.5
+   ],
+   "curve": [
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    2,
+    0.8,
+    0.8,
+    0.8,
+    0.8,
+    0.8,
+    0.8,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1,
+    1.6,
+    1.6,
+    1.6,
+    1.6
+   ]
+  },
+  "night": {
+   "name": "야행성",
+   "wake": 12,
+   "sleepWindow": [
+    5,
+    12.5
+   ],
+   "curve": [
+    1.2,
+    1.2,
+    1.2,
+    1.2,
+    2,
+    2,
+    2,
+    2.2,
+    2.2,
+    2.2,
+    2.2,
+    2.2,
+    0.6,
+    0.6,
+    0.6,
+    0.6,
+    0.6,
+    0.6,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7,
+    0.7
+   ]
+  }
+ },
+ "mood": {
+  "base": 30,
+  "good": 35,
+  "bad": 0,
+  "names": {
+   "good": "좋음",
+   "okay": "양호",
+   "bad": "나쁨"
+  },
+  "icons": {
+   "good": "😊",
+   "okay": "🙂",
+   "bad": "😞"
+  }
+ },
+ "economy": {
+  "payBase": 12,
+  "payPerLevel": 5,
+  "levelXp": [
+   0,
+   10,
+   26,
+   48,
+   76
+  ],
+  "maxLevel": 5,
+  "foodMoneyTarget": 90
+ }
+}

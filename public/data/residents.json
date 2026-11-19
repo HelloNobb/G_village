@@ -1,0 +1,23 @@
+{
+  "_note": "Day 0 주민 설정. traits = traits.json 의 id (충돌 없는 1~2개). extro = 외향성 0(소심)~100(외향). chrono = needs.json 의 생활리듬(morning/normal/night). abilities 1~5: work 업무 · stamina 체력 · craft 손재주 · learning 학습력 · charm 말솜씨. money = 기본 자금, groceries = 처음 식료품. desk = map.json 의 일터 책상 자리.",
+  "residents": [
+    { "id": "fin",   "name": "핀",     "house": "fin",    "desk": "work.desk1", "sprite": "npc.fin",   "color": "#8aa53c",
+      "traits": ["cheerful", "glutton"],      "extro": 80, "chrono": "morning",
+      "abilities": { "work": 2, "stamina": 4, "craft": 3, "learning": 2, "charm": 5 }, "money": 150, "groceries": 2 },
+    { "id": "daisy", "name": "데이지", "house": "daisy",  "desk": "work.desk2", "sprite": "npc.daisy", "color": "#d6408f",
+      "traits": ["toxic", "perfectionist"],   "extro": 55, "chrono": "night",
+      "abilities": { "work": 4, "stamina": 2, "craft": 5, "learning": 3, "charm": 3 }, "money": 150, "groceries": 2 },
+    { "id": "som",   "name": "솜",     "house": "somshu", "desk": "work.desk3", "sprite": "npc.som",   "color": "#d9604a",
+      "traits": ["genius", "lazy"],           "extro": 65, "chrono": "normal",
+      "abilities": { "work": 5, "stamina": 3, "craft": 3, "learning": 4, "charm": 3 }, "money": 150, "groceries": 2 },
+    { "id": "shu",   "name": "슈",     "house": "somshu", "desk": "work.desk4", "sprite": "npc.shu",   "color": "#b0835a",
+      "traits": ["obsessive", "jealous"],     "extro": 30, "chrono": "morning",
+      "abilities": { "work": 3, "stamina": 2, "craft": 3, "learning": 3, "charm": 3 }, "money": 150, "groceries": 2 },
+    { "id": "di",    "name": "디",     "house": "di",     "desk": "work.desk5", "sprite": "npc.di",    "color": "#5e6f8a",
+      "traits": ["independent", "bookworm"],  "extro": 15, "chrono": "night",
+      "abilities": { "work": 3, "stamina": 3, "craft": 4, "learning": 5, "charm": 2 }, "money": 150, "groceries": 2 }
+  ],
+  "relations": [
+    { "_note": "Day 0 에 이미 아는 사이. 나머지는 전부 모르는 사이(호감도 0).", "a": "som", "b": "shu", "affinity": 80, "closeness": 70, "lover": true }
+  ]
+}

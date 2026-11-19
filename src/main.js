@@ -13,7 +13,6 @@ const game = new Phaser.Game({
   parent: 'game',
   backgroundColor: '#10132a',
   scale: { mode: Phaser.Scale.NONE, width: Math.round(s0.w * DPR), height: Math.round(s0.h * DPR), zoom: 1 / DPR },
-  physics: { default: 'arcade', arcade: { debug: false } },
   render: { antialias: true, roundPixels: false, mipmapFilter: 'LINEAR_MIPMAP_LINEAR' },
   input: { activePointers: 3 },
   scene: [BootScene, WorldScene],

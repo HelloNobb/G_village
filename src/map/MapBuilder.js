@@ -26,7 +26,7 @@ export class WorldMap {
     this.rows = data.rows.map((r) => r.padEnd(this.W, ',').slice(0, this.W));
     this.walkable = this.rows.map((row) => [...row].map((c) => !!data.legend[c]?.walkable));
     this.buildings = data.buildings.map((b) => ({ ...b }));
-    this.shops = this.buildings.filter((b) => b.kind === 'shop');
+    this.shops = this.buildings.filter((b) => b.kind === 'facility');
     this.houses = this.buildings.filter((b) => b.kind === 'house');
     this.areas = data.areas;
     this.spots = data.spots;
@@ -97,17 +97,13 @@ export class WorldMap {
       const sx = (b.w * T) / img.width;
       b.windows = wins.map((w) => ({ x: b.x * T + w.x * sx, y: (b.y + b.h) * T - img.displayHeight + w.y * sx }));
     }
-    // 상가 지붕 (안에 들어가면 투명해짐) + 문 앞 충돌(영업 외 시간)
+    // 시설: 지붕 없이 안이 보이고, 위쪽 벽에 간판
     for (const b of this.shops) {
-      b.roof = s.add.image(b.x * T, b.y * T, `roof.${b.id}`).setOrigin(0).setDisplaySize(b.w * T, b.h * T);
-      b.roof.setDepth((b.y + b.h) * T + 2);
       b.interior = { x: b.x + 1, y: b.y + 1, w: b.w - 2, h: b.h - 2 };
-      const door = s.add.zone(b.door.x * T + T / 2, b.door.y * T + T / 2, T, T);
-      s.physics.add.existing(door, true);
-      b.doorBody = door;
-      b.closedSign = s.add.text(b.front.x * T + T / 2, b.front.y * T + 4, 'CLOSED', {
-        fontFamily: 'sans-serif', fontSize: '11px', color: '#fff', backgroundColor: '#8a3b3b', padding: { x: 4, y: 1 },
-      }).setOrigin(0.5, 0).setDepth((b.y + b.h) * T + 3).setVisible(false);
+      b.sign = s.add.text((b.x + b.w / 2) * T, b.y * T + T / 2, b.label, {
+        fontFamily: "'Gowun Dodum','Apple SD Gothic Neo','Noto Sans KR',sans-serif", fontSize: '15px', color: '#2d2a32',
+        backgroundColor: '#fff7e6', padding: { x: 8, y: 2 }, resolution: (window.devicePixelRatio || 1) * 2.5,
+      }).setOrigin(0.5).setDepth((b.y + 1) * T + 1);
     }
     return this;
   }

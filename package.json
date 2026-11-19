@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "validate": "node scripts/validate-data.mjs"
+    "validate": "node scripts/validate-data.mjs",
+    "sim": "node scripts/simulate.mjs"
   },
   "dependencies": {
     "phaser": "^3.90.0"

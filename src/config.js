@@ -13,3 +13,6 @@ export function texResolution(spec) {
 }
 
 export const IS_TOUCH = window.matchMedia('(pointer: coarse)').matches || 'ontouchstart' in window;
+
+// 맵 전체가 한 화면에 들어가도 사람이 작아 보이지 않도록 캐릭터만 키워서 그림
+export const CHAR_SCALE = 1.6;

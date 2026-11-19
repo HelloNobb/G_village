@@ -1,0 +1,461 @@
+{
+ "_note": "행동 목록. at = 할 수 있는 자리들: home(자기 집) / desk(자기 책상) / spots:<map.json spots 접두어>(빈자리 중 하나) / route:<루트>. minutes = [최소, 최대] 걸리는 시간(특성 actionDuration 으로 바뀜). rates = 하는 동안 시간당 욕구 변화. once = 시작할 때 한 번(돈·식료품·욕구). socialIfOthers = 같은 곳에 다른 사람이 있으면 시간당 사회 욕구 +. require = 필요 조건. hours = 할 수 있는 시각 [시작, 끝]. partner = 같이 하는 행동(요청 → 수락). tags = 특성이 끼어드는 분류. skill = 오르는 취미 숙련. homeFunMul = 집에서 할 때 재미 배율(집에만 있으면 덜 재밌음). daylight = 낮(07~19시)에 점수 배율.",
+ "actions": {
+  "sleep": {
+   "name": "잠",
+   "icon": "💤",
+   "at": [
+    "home"
+   ],
+   "minutes": [
+    60,
+    600
+   ],
+   "until": {
+    "energy": 98
+   },
+   "rates": {
+    "energy": 12.5
+   },
+   "tags": [
+    "rest",
+    "sleep"
+   ]
+  },
+  "eat_home": {
+   "name": "식사",
+   "icon": "🍚",
+   "at": [
+    "home"
+   ],
+   "minutes": [
+    25,
+    35
+   ],
+   "once": {
+    "hunger": 60,
+    "groceries": -1
+   },
+   "require": {
+    "groceries": 1
+   },
+   "tags": [
+    "food"
+   ]
+  },
+  "snack": {
+   "name": "간식",
+   "icon": "🥐",
+   "at": [
+    "spots:cafe.s"
+   ],
+   "minutes": [
+    15,
+    25
+   ],
+   "once": {
+    "hunger": 25,
+    "money": -8
+   },
+   "socialIfOthers": 6,
+   "require": {
+    "money": 8
+   },
+   "tags": [
+    "food",
+    "public"
+   ]
+  },
+  "buy_groceries": {
+   "name": "장보기",
+   "icon": "🛒",
+   "at": [
+    "spots:mart."
+   ],
+   "minutes": [
+    10,
+    20
+   ],
+   "once": {
+    "money": -24,
+    "groceries": 3
+   },
+   "require": {
+    "money": 24
+   },
+   "tags": [
+    "errand",
+    "public"
+   ]
+  },
+  "rest_home": {
+   "name": "집에서 쉬기",
+   "icon": "🛋️",
+   "at": [
+    "home"
+   ],
+   "minutes": [
+    40,
+    80
+   ],
+   "rates": {
+    "fun": 5,
+    "energy": 3
+   },
+   "tags": [
+    "rest",
+    "solo"
+   ],
+   "homeFunMul": 0.75
+  },
+  "work": {
+   "name": "일하기",
+   "icon": "💼",
+   "at": [
+    "desk"
+   ],
+   "minutes": [
+    90,
+    180
+   ],
+   "rates": {
+    "achievement": 25,
+    "fun": -5,
+    "energy": -2
+   },
+   "work": true,
+   "tags": [
+    "work",
+    "focus"
+   ]
+  },
+  "study": {
+   "name": "공부",
+   "icon": "📖",
+   "at": [
+    "spots:library.s"
+   ],
+   "minutes": [
+    60,
+    120
+   ],
+   "rates": {
+    "achievement": 12,
+    "fun": -3
+   },
+   "xpPerHour": 0.4,
+   "tags": [
+    "study",
+    "focus",
+    "solo",
+    "quiet"
+   ]
+  },
+  "cafe_rest": {
+   "name": "카페에서 쉬기",
+   "icon": "☕",
+   "at": [
+    "spots:cafe.s"
+   ],
+   "minutes": [
+    40,
+    80
+   ],
+   "once": {
+    "money": -5
+   },
+   "rates": {
+    "fun": 11,
+    "energy": 2
+   },
+   "socialIfOthers": 8,
+   "require": {
+    "money": 5
+   },
+   "tags": [
+    "rest",
+    "public"
+   ]
+  },
+  "walk_solo": {
+   "name": "혼자 산책",
+   "icon": "🚶",
+   "at": [
+    "route:park.loop",
+    "route:beach.walk"
+   ],
+   "minutes": [
+    30,
+    50
+   ],
+   "rates": {
+    "fun": 16
+   },
+   "moodlet": {
+    "id": "fresh",
+    "value": 5,
+    "hours": 1
+   },
+   "tags": [
+    "walk",
+    "solo",
+    "outdoor"
+   ],
+   "daylight": 1.35
+  },
+  "sea_view": {
+   "name": "바다 보며 쉬기",
+   "icon": "🌊",
+   "at": [
+    "spots:beach.bench"
+   ],
+   "minutes": [
+    30,
+    50
+   ],
+   "rates": {
+    "fun": 10
+   },
+   "moodlet": {
+    "id": "sea",
+    "value": 5,
+    "hours": 2
+   },
+   "tags": [
+    "rest",
+    "solo",
+    "outdoor"
+   ],
+   "daylight": 1.35
+  },
+  "stargaze": {
+   "name": "별 보기",
+   "icon": "🌌",
+   "at": [
+    "spots:park.lawn",
+    "spots:beach.bench"
+   ],
+   "minutes": [
+    45,
+    90
+   ],
+   "hours": [
+    21,
+    4
+   ],
+   "rates": {
+    "fun": 12
+   },
+   "tags": [
+    "solo",
+    "outdoor",
+    "night"
+   ]
+  },
+  "exercise": {
+   "name": "운동",
+   "icon": "🏃",
+   "at": [
+    "home",
+    "spots:park.gym"
+   ],
+   "minutes": [
+    40,
+    60
+   ],
+   "rates": {
+    "fun": 12,
+    "achievement": 6,
+    "energy": -6
+   },
+   "skill": "exercise",
+   "tags": [
+    "hobby",
+    "solo",
+    "active"
+   ],
+   "homeFunMul": 0.75
+  },
+  "read": {
+   "name": "독서",
+   "icon": "📕",
+   "at": [
+    "home",
+    "spots:cafe.s",
+    "spots:library.s"
+   ],
+   "minutes": [
+    45,
+    90
+   ],
+   "rates": {
+    "fun": 12,
+    "achievement": 6
+   },
+   "skill": "reading",
+   "tags": [
+    "hobby",
+    "solo",
+    "quiet"
+   ],
+   "homeFunMul": 0.75
+  },
+  "game": {
+   "name": "게임",
+   "icon": "🎮",
+   "at": [
+    "home",
+    "spots:cafe.s"
+   ],
+   "minutes": [
+    45,
+    90
+   ],
+   "rates": {
+    "fun": 13
+   },
+   "skill": "game",
+   "tags": [
+    "hobby",
+    "solo"
+   ],
+   "homeFunMul": 0.75
+  },
+  "draw": {
+   "name": "그림",
+   "icon": "🎨",
+   "at": [
+    "home",
+    "spots:cafe.s",
+    "spots:library.s",
+    "spots:park.lawn"
+   ],
+   "minutes": [
+    45,
+    90
+   ],
+   "rates": {
+    "fun": 12,
+    "achievement": 6
+   },
+   "skill": "drawing",
+   "tags": [
+    "hobby",
+    "solo",
+    "creative"
+   ],
+   "homeFunMul": 0.75
+  },
+  "walk_together": {
+   "name": "같이 산책",
+   "icon": "👫",
+   "at": [
+    "route:park.loop",
+    "route:beach.walk"
+   ],
+   "minutes": [
+    30,
+    60
+   ],
+   "partner": true,
+   "rates": {
+    "fun": 15,
+    "social": 20
+   },
+   "tags": [
+    "walk",
+    "together",
+    "outdoor"
+   ],
+   "daylight": 1.35
+  },
+  "cafe_together": {
+   "name": "같이 카페",
+   "icon": "☕",
+   "at": [
+    "spots:cafe.s"
+   ],
+   "minutes": [
+    40,
+    70
+   ],
+   "partner": true,
+   "once": {
+    "money": -5
+   },
+   "rates": {
+    "fun": 10,
+    "social": 18
+   },
+   "require": {
+    "money": 5
+   },
+   "tags": [
+    "together",
+    "public"
+   ]
+  },
+  "hobby_together": {
+   "name": "같이 취미",
+   "icon": "🎲",
+   "at": [
+    "spots:cafe.s",
+    "spots:park.lawn",
+    "home"
+   ],
+   "minutes": [
+    45,
+    80
+   ],
+   "partner": true,
+   "rates": {
+    "fun": 12,
+    "social": 12,
+    "achievement": 4
+   },
+   "skill": "game",
+   "tags": [
+    "together",
+    "hobby"
+   ]
+  },
+  "comfort": {
+   "name": "위로하러 가기",
+   "icon": "🤍",
+   "at": [
+    "person"
+   ],
+   "minutes": [
+    3,
+    5
+   ],
+   "needsBehavior": "comfort",
+   "tags": [
+    "social"
+   ]
+  },
+  "interrupt": {
+   "name": "끼어들러 가기",
+   "icon": "😤",
+   "at": [
+    "person"
+   ],
+   "minutes": [
+    2,
+    4
+   ],
+   "needsBehavior": "jealousy",
+   "tags": [
+    "social"
+   ],
+   "auto": true
+  }
+ },
+ "skills": {
+  "exercise": "운동",
+  "reading": "독서",
+  "game": "게임",
+  "drawing": "그림"
+ },
+ "skillPerHour": 0.08
+}

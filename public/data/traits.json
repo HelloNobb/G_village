@@ -1,0 +1,145 @@
+{
+  "_note": "특성 정의. mods = 어느 계산(hook)에 어떻게 끼어드는지 {mul: 곱하기, add: 더하기}. 모든 수치 계산은 src/sim/traits.js 의 applyTraits 를 거치므로, 여기 적은 hook 은 해당 계산에 항상 적용됨. hook 이름 규칙은 README '특성' 참고. tag:xxx 는 행동 태그(actions.json). conflicts = 함께 가질 수 없는 특성. behavior = 코드에 있는 특별 행동(질투·위로·주변 효과 등)을 켬, 세부 수치는 params.",
+  "traits": {
+    "toxic": {
+      "name": "독설가", "icon": "🗡️", "desc": "말이 날카로워 상대 기분을 망칠 때가 많음", "conflicts": ["kind"],
+      "mods": {
+        "talk.bad": { "add": 0.25 },
+        "talk.badWhenMoodBad": { "add": 0.1 },
+        "talk.funSelf": { "add": 5 },
+        "talk.partnerAffinityBad": { "mul": 1.4 }
+      },
+      "behavior": ["insult"], "params": { "insultMood": -12, "insultHours": 3, "insultAffinity": -6 }
+    },
+    "kind": {
+      "name": "다정함", "icon": "🤍", "desc": "상대를 잘 챙기고 기분 나쁜 사람을 위로함", "conflicts": ["toxic"],
+      "mods": {
+        "talk.good": { "add": 0.2 },
+        "talk.partnerAffinityGood": { "mul": 1.5 },
+        "invite.accept": { "mul": 1.3 },
+        "memory.halfLife.negative": { "mul": 0.5 },
+        "insult.received": { "mul": 0.5 }
+      },
+      "behavior": ["comfort"], "params": { "comfortMood": 12, "comfortHours": 3 }
+    },
+    "cheerful": {
+      "name": "유쾌", "icon": "✨", "desc": "본인·대화 상대·주변 사람 기분을 자주 좋게 함", "conflicts": [],
+      "mods": {
+        "mood.base": { "add": 10 },
+        "talk.good": { "add": 0.15 },
+        "talk.funSelf": { "mul": 1.5 },
+        "moodlet.duration.negative": { "mul": 0.7 }
+      },
+      "behavior": ["aura"], "params": { "auraEveryMin": 20, "auraChance": 0.3, "auraRadius": 4, "auraMood": 5, "auraHours": 1 }
+    },
+    "independent": {
+      "name": "독립적", "icon": "🌙", "desc": "사람이 덜 필요하고 혼자 하는 일을 즐김", "conflicts": ["obsessive"],
+      "mods": {
+        "needDecay.social": { "mul": 0.4 },
+        "moodWeight.social": { "mul": 0.5 },
+        "talk.initiate": { "mul": 0.5 },
+        "invite.accept": { "mul": 0.6 },
+        "needGain.fun.tag:solo": { "mul": 1.4 },
+        "memory.weight.person": { "mul": 0.7 }
+      },
+      "behavior": ["crowdTired"], "params": { "crowdSize": 3, "crowdFunPerHour": -4 }
+    },
+    "glutton": {
+      "name": "먹보", "icon": "🍩", "desc": "빨리 배고파지고 조금만 배고파도 먹으러 감", "conflicts": ["lightEater"],
+      "mods": {
+        "needDecay.hunger": { "mul": 1.5 },
+        "needPerceived.hunger": { "add": -25 },
+        "moodWeight.hunger": { "mul": 1.5 },
+        "actionScore.snack": { "mul": 1.4 },
+        "groceries.bought": { "add": 2 },
+        "money.target": { "mul": 1.5 }
+      },
+      "behavior": ["enjoyFood"], "params": { "foodMood": 8, "foodHours": 2 }
+    },
+    "lightEater": {
+      "name": "소식가", "icon": "🥢", "desc": "천천히 배고파짐", "conflicts": ["glutton"],
+      "mods": {
+        "needDecay.hunger": { "mul": 0.6 },
+        "needPerceived.hunger": { "add": 15 },
+        "actionScore.snack": { "mul": 0.5 },
+        "money.target": { "mul": 0.7 }
+      }
+    },
+    "perfectionist": {
+      "name": "완벽주의", "icon": "📐", "desc": "일할 때 세부 사항에 집착해 한 번 하면 오래 하고, 끝까지 마치면 결과가 좋음", "conflicts": ["lazy"],
+      "mods": {
+        "actionDuration.work": { "mul": 1.6 },
+        "actionDuration.tag:hobby": { "mul": 1.3 },
+        "actionDuration.study": { "mul": 1.3 },
+        "work.progress": { "mul": 0.9 },
+        "needDecay.achievement": { "mul": 1.3 },
+        "skillGain": { "mul": 1.2 },
+        "interruptAt.work": { "add": -5 }
+      },
+      "behavior": ["finishWork"], "params": { "minWorkMin": 120, "finishXpMul": 1.4, "finishAchievement": 15, "unfinishedMood": -10, "unfinishedHours": 3 }
+    },
+    "genius": {
+      "name": "천재", "icon": "🧠", "desc": "집중을 잘하고 업무 능력이 뛰어남", "conflicts": [],
+      "mods": {
+        "work.money": { "mul": 1.5 },
+        "work.xp": { "mul": 1.5 },
+        "needGain.achievement.work": { "mul": 1.5 },
+        "study.efficiency": { "mul": 1.5 },
+        "needDecay.fun": { "mul": 1.1 },
+        "interruptAt.tag:focus": { "add": -6 },
+        "talk.initiate.focus": { "mul": 0.2 },
+        "talk.accept.focus": { "mul": 0.5 }
+      },
+      "behavior": ["focus"]
+    },
+    "jealous": {
+      "name": "질투심 많은", "icon": "😤", "desc": "좋아하는 사람이 다른 사람과 어울리면 기분이 상함", "conflicts": [],
+      "mods": {
+        "memory.weight.rival": { "mul": 1.5 }
+      },
+      "behavior": ["jealousy"], "params": { "minAffinity": 60, "seeRadius": 10, "hearChance": 0.3, "jealousMood": -12, "jealousHours": 2, "rivalAffinity": -4, "loverAffinity": -1, "interruptChance": 0.35 }
+    },
+    "lazy": {
+      "name": "게으른", "icon": "🛋️", "desc": "일·공부를 미루고 쉬는 걸 좋아함", "conflicts": ["perfectionist"],
+      "mods": {
+        "actionScore.work": { "mul": 0.6 },
+        "actionScore.study": { "mul": 0.6 },
+        "actionDuration.work": { "mul": 0.6 },
+        "actionDuration.study": { "mul": 0.6 },
+        "work.progress": { "mul": 0.8 },
+        "needDecay.achievement": { "mul": 0.6 },
+        "needDecay.fun": { "mul": 1.2 },
+        "actionScore.tag:rest": { "mul": 1.3 },
+        "actionScore.game": { "mul": 1.3 },
+        "actionScore.tag:walk": { "mul": 1.3 }
+      },
+      "behavior": ["procrastinate"], "params": { "panicMoney": 30, "panicWorkMul": 3 }
+    },
+    "bookworm": {
+      "name": "책벌레", "icon": "📚", "desc": "독서·도서관을 특히 좋아함", "conflicts": [],
+      "mods": {
+        "actionScore.read": { "mul": 1.6 },
+        "actionScore.study": { "mul": 1.6 },
+        "needGain.fun.read": { "mul": 1.6 },
+        "needGain.achievement.study": { "mul": 1.3 },
+        "skillGain.reading": { "mul": 1.5 },
+        "place.library": { "mul": 1.3 },
+        "talk.good.withBookworm": { "add": 0.1 }
+      }
+    },
+    "obsessive": {
+      "name": "한 사람에게만 몰두", "icon": "💘", "desc": "마음이 한 사람에게 쏠려 그 사람과의 교류만 크게 채워짐", "conflicts": ["independent"],
+      "mods": {
+        "social.gain.focus": { "mul": 2 },
+        "social.gain.others": { "mul": 0.4 },
+        "affinity.gain.focus": { "mul": 1.5 },
+        "affinity.gain.others": { "mul": 0.5 },
+        "talk.initiate.focus": { "mul": 3 },
+        "invite.focus": { "mul": 2 },
+        "place.withFocus": { "mul": 1.5 },
+        "memory.weight.focus": { "mul": 1.5 }
+      },
+      "behavior": ["focusPerson"], "params": { "minAffinity": 30 }
+    }
+  }
+}
