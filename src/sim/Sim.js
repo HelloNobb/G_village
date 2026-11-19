@@ -380,7 +380,11 @@ export class Sim {
       if (ctx.partner.id === r.focusPerson) s = T('invite.focus', s);
     }
     // 같은 걸 연달아 하면 조금 지루함
-    if (r.lastAction === id && id !== 'sleep' && id !== 'work') s *= 0.6;
+    if (!['sleep', 'work', 'eat_home', 'buy_groceries'].includes(id)) {
+      const same = (r.recent ?? []).filter((x) => (x.id === id || (def.partner && x.together)) && this.now - x.t < 6 * HOUR).length;
+      if (same) s *= Math.pow(0.55, same);
+      if (r.lastAction === id) s *= 0.6;
+    }
     // 이동 거리
     const destTile = dest.spot ? this.grid.spots[dest.spot] : dest.tile;
     if (destTile && !r.hidden) s -= this.mh(this.grid.tileOf(r.pos.x, r.pos.y), destTile) * 0.02;
@@ -516,6 +520,7 @@ export class Sim {
     const a = r.action;
     const def = this.actions[a.id];
     a.phase = 'do';
+    r.recent = [...(r.recent ?? []).filter((x) => this.now - x.t < 8 * HOUR), { id: a.id, t: this.now, together: !!a.partner }].slice(-12);
     a.end = this.now + a.minutes * MIN;
     for (const [k, v] of Object.entries(def.once ?? {})) {
       if (k === 'money') r.money = Math.max(0, r.money + v);
@@ -1021,7 +1026,8 @@ export class Sim {
       return false;
     }
     this.say(p, this.line('invite_yes', p, r, {})?.a ?? '좋아요!', 2);
-    r.cooldown[`invite:${p.id}`] = this.now + 90 * MIN;
+    r.cooldown[`invite:${p.id}`] = this.now + 3 * HOUR;
+    p.cooldown[`invite:${r.id}`] = this.now + 3 * HOUR;
     this.endAction(p, false);
     // 상대는 따라가거나 옆자리
     if (def.at.some((x) => x.startsWith('route:')) && c.dest.route) {

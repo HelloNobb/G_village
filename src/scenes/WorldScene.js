@@ -265,6 +265,8 @@ export class WorldScene extends Phaser.Scene {
   // ───────────────────────────── 상단 버튼
   setupControls() {
     const speedBtns = [...document.querySelectorAll('#speed button')];
+    const allowed = speedBtns.map((b) => Number(b.dataset.speed));
+    if (!allowed.includes(this.sim.state.speed)) this.sim.state.speed = allowed.reduce((a, b) => (Math.abs(b - this.sim.state.speed) < Math.abs(a - this.sim.state.speed) ? b : a));
     const mark = () => speedBtns.forEach((b) => b.classList.toggle('on', Number(b.dataset.speed) === this.sim.state.speed));
     speedBtns.forEach((b) => b.addEventListener('click', () => { this.sim.state.speed = Number(b.dataset.speed); mark(); this.save(); }));
     mark();
@@ -317,13 +319,16 @@ export class WorldScene extends Phaser.Scene {
     const dt = Math.min(0.25, delta / 1000);
     const speed = this.sim.state.speed;
     if (speed > 0) {
-      this.sim.advance(dt * speed, 2);
+      // 빠른 배속에서도 계산이 촘촘하도록 한 프레임을 여러 번으로 쪼개서 진행
+      this.sim.advance(dt * speed, speed >= 300 ? 5 : 2);
     } else {
       this.sim.state.savedAt = Date.now();
     }
     // 시뮬레이션이 보낸 이벤트
+    const busy = speed >= 300; // 아주 빠를 땐 말풍선을 일부만 (소식에는 전부 남음)
     for (const ev of this.sim.out) {
       const v = this.views.get(ev.who);
+      if (busy && ev.kind !== 'news' && Math.random() > 0.15) continue;
       if (ev.kind === 'say' && v) this.bubbles.show(v, ev.text, 3.2, ev.delay ?? 0);
       else if (ev.kind === 'tag' && v) this.bubbles.tag(v, ev.text);
       else if (ev.kind === 'news' && ev.item.text) this.panels.addNews(ev.item);
