@@ -49,6 +49,7 @@ export class WorldScene extends Phaser.Scene {
     // ── 주민 그림
     this.views = new Map();
     for (const r of this.sim.list()) this.makeView(r);
+    this.pets = this.sim.list().filter((r) => r.pet).map((r) => this.makePet(r));
     this.deskLabels = new Map();
     for (const r of this.sim.list()) {
       const s = this.data_.map.spots[r.desk];
@@ -62,7 +63,7 @@ export class WorldScene extends Phaser.Scene {
     this.bubbles = new SpeechBubbles(this);
     this.hud = new Hud();
     this.card = new InfoCard(this.sim);
-    this.panels = new Panels(this.sim, { onSelect: (id) => this.select(id) });
+    this.panels = new Panels(this.sim, { onSelect: () => {} });
     this.camCtl = new CameraControls(this, {
       worldW: this.worldW, worldH: this.worldH,
       onHover: (w, l) => this.hover(w, l),
@@ -86,9 +87,51 @@ export class WorldScene extends Phaser.Scene {
     const sprite = this.add.sprite(r.pos.x, r.pos.y, r.sprite, 0).setOrigin(0.5, 0.92).setScale(scale);
     const mood = this.add.text(r.pos.x, r.pos.y, '', { fontSize: '15px', resolution: DPR * 3 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble - 1);
     const heart = this.add.text(r.pos.x, r.pos.y, '💕', { fontSize: '12px', resolution: DPR * 3 }).setOrigin(0.5, 1).setDepth(DEPTH.bubble - 1).setVisible(false);
-    const view = { id: r.id, sprite, mood, heart, x: r.pos.x, y: r.pos.y, top: r.pos.y - 60, visible: true };
+    const homeDot = this.add.circle(0, 0, 6, Phaser.Display.Color.HexStringToColor(r.color).color).setStrokeStyle(2, 0xffffff).setDepth(DEPTH.bubble - 2).setVisible(false);
+    const homeZ = this.add.text(0, 0, 'z', { fontFamily: FONT, fontSize: '11px', color: '#fff', resolution: DPR * 3 }).setOrigin(0.5).setDepth(DEPTH.bubble - 2).setVisible(false);
+    const ring = this.add.ellipse(0, 0, 30, 12).setStrokeStyle(2.5, 0xffe28a).setDepth(1.5).setVisible(false);
+    const view = { id: r.id, sprite, mood, heart, homeDot, homeZ, ring, x: r.pos.x, y: r.pos.y, top: r.pos.y - 60, visible: true };
     this.views.set(r.id, view);
     return view;
+  }
+
+  // 반려동물: 주인이 같이 산책할 때만 밖에 나와 주인이 지나간 자리를 따라감
+  makePet(owner) {
+    const p = owner.pet;
+    const scale = (1 / texResolution(this.manifest[p.sprite])) * CHAR_SCALE;
+    const sprite = this.add.sprite(owner.pos.x, owner.pos.y, p.sprite, 0).setOrigin(0.5, 0.9).setScale(scale).setVisible(false);
+    return { owner: owner.id, pet: p, sprite, trail: [], facing: 'down', x: owner.pos.x, y: owner.pos.y, top: owner.pos.y, visible: false };
+  }
+
+  syncPets(dt) {
+    for (const v of this.pets) {
+      const o = this.sim.get(v.owner);
+      const out = !o.hidden && o.action?.id === 'walk_cat';
+      if (!out) { v.sprite.setVisible(false); v.visible = false; v.trail = []; continue; }
+      if (!v.visible) { v.sprite.setPosition(o.pos.x + 16, o.pos.y + 2); v.trail = []; }
+      v.visible = true;
+      v.sprite.setVisible(true);
+      const last = v.trail[v.trail.length - 1];
+      if (!last || Math.hypot(last.x - o.pos.x, last.y - o.pos.y) > 6) v.trail.push({ x: o.pos.x, y: o.pos.y });
+      // 발자취를 짧게(주인 뒤 약 1.5칸) 유지 → 바로 뒤를 따라다님
+      while (v.trail.length > 1 && Math.hypot(v.trail[0].x - o.pos.x, v.trail[0].y - o.pos.y) > 48) v.trail.shift();
+      if (Math.hypot(o.pos.x - v.sprite.x, o.pos.y - v.sprite.y) > 140) v.sprite.setPosition(v.trail[0].x, v.trail[0].y);
+      let moving = false;
+      if (v.trail.length > 1) {
+        const p = v.trail[0];
+        const dx = p.x - v.sprite.x, dy = p.y - v.sprite.y, d = Math.hypot(dx, dy);
+        const step = Math.min(d, Math.max(60, d * 3) * dt);
+        if (d > 1) {
+          v.sprite.setPosition(v.sprite.x + (dx / d) * step, v.sprite.y + (dy / d) * step);
+          v.facing = Math.abs(dx) > Math.abs(dy) ? (dx < 0 ? 'left' : 'right') : dy < 0 ? 'up' : 'down';
+          moving = true;
+        }
+        if (d < 3) v.trail.shift();
+      }
+      v.sprite.anims.play(`${v.pet.sprite}.${moving ? 'walk' : 'idle'}.${v.facing}`, true);
+      v.sprite.setDepth(v.sprite.y);
+      v.x = v.sprite.x; v.y = v.sprite.y; v.top = v.sprite.y - v.sprite.displayHeight;
+    }
   }
 
   syncViews() {
@@ -110,6 +153,19 @@ export class WorldScene extends Phaser.Scene {
       const k = Math.min(1.8, Math.max(0.8, DPR / this.cameras.main.zoom));
       v.mood.setScale(k);
       v.heart.setVisible(visible && !!r.action?.date).setPosition(r.pos.x - s.displayWidth * 0.35, v.top + 4).setScale(k);
+      // 집 안이면 집 위에 색 점 (자는 중이면 z)
+      if (r.hidden) {
+        const h = this.world.houseById(r.hidden);
+        const inside = sim.list().filter((x) => x.hidden === r.hidden);
+        const i = inside.indexOf(r);
+        const T = this.world.T;
+        const cx = (h.x + h.w / 2) * T + (i - (inside.length - 1) / 2) * 16;
+        const cy = (h.y + h.h) * T - 8;
+        v.homeDot.setPosition(cx, cy).setVisible(true).setAlpha(sim.asleep(r) ? 0.55 : 1);
+        v.homeZ.setPosition(cx, cy - 1).setVisible(sim.asleep(r));
+        v.x = cx; v.y = cy + 8; v.top = cy - 8;
+      } else { v.homeDot.setVisible(false); v.homeZ.setVisible(false); }
+      v.ring.setVisible(this.panels.expanded.has(r.id) && visible).setPosition(r.pos.x, r.pos.y - 2);
       const label = this.deskLabels.get(r.id);
       const txt = `${r.name} Lv.${r.lv}`;
       if (label.text !== txt) label.setText(txt);
@@ -163,15 +219,21 @@ export class WorldScene extends Phaser.Scene {
     if (!w) return null;
     let best = null, bd = 30;
     for (const r of this.sim.list()) {
-      if (r.hidden) continue;
       const v = this.views.get(r.id);
-      const d = Math.hypot(w.x - r.pos.x, w.y - (r.pos.y - v.sprite.displayHeight * 0.45));
+      const d = r.hidden ? Math.hypot(w.x - v.homeDot.x, w.y - v.homeDot.y) * 2.2 : Math.hypot(w.x - r.pos.x, w.y - (r.pos.y - v.sprite.displayHeight * 0.45));
       if (d < Math.max(bd, v.sprite.displayHeight * 0.5) && d < (best?.d ?? Infinity)) best = { id: r.id, d };
     }
     return best?.id ?? null;
   }
 
+  pickPet(w) {
+    if (!w) return null;
+    return this.pets.find((v) => v.visible && Math.hypot(w.x - v.x, w.y - (v.y - 10)) < 22) ?? null;
+  }
+
   hover(w, l) {
+    const pet = this.pickPet(w);
+    if (pet) { this.card.showPet(pet, this.sim.get(pet.owner), { x: l.x, y: l.y }); return; }
     const id = this.pick(w);
     if (id) this.card.show(id, { x: l.x, y: l.y });
     else this.card.hide();
@@ -179,6 +241,8 @@ export class WorldScene extends Phaser.Scene {
   }
 
   tap(w, l, type) {
+    const pet = this.pickPet(w);
+    if (pet) { this.card.showPet(pet, this.sim.get(pet.owner), { x: l.x, y: l.y, pinned: true }); return; }
     const id = this.pick(w);
     if (id) this.card.show(id, { x: l.x, y: l.y, pinned: true });
     else this.card.hide(true);
@@ -267,6 +331,7 @@ export class WorldScene extends Phaser.Scene {
     this.sim.out.length = 0;
 
     this.syncViews();
+    this.syncPets(dt);
     this.bubbles.update(dt);
     this.skyTimer -= dt;
     if (this.skyTimer <= 0) { this.skyTimer = 1; this.updateSky(); }

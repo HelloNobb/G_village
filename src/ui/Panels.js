@@ -1,6 +1,7 @@
 // 오른쪽 패널: 지금 마을 / 관계도 / 소식
 import { kst } from '../sim/time.js';
 import { thought, STAGE_NAMES, needColor } from './describe.js';
+import { fullHTML } from './InfoCard.js';
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
 const NEED_ORDER = ['hunger', 'energy', 'fun', 'achievement', 'social'];
@@ -20,9 +21,15 @@ export class Panels {
     this.selPair = null;
     document.querySelectorAll('#tabs button').forEach((b) => b.addEventListener('click', () => this.setTab(b.dataset.tab)));
     this.rows = new Map();
+    this.expanded = new Set(); // 전체 정보를 펼친 주민
     for (const r of sim.list()) {
       const li = document.createElement('li');
-      li.addEventListener('click', () => onSelect(r.id));
+      li.addEventListener('click', (e) => {
+        if (e.target.closest('.full')) return; // 펼친 내용 안을 누를 땐 접지 않음
+        if (this.expanded.has(r.id)) this.expanded.delete(r.id); else this.expanded.add(r.id);
+        this.renderNow();
+        onSelect(r.id, this.expanded.has(r.id));
+      });
       this.nowEl.append(li);
       this.rows.set(r.id, li);
     }
@@ -52,11 +59,13 @@ export class Panels {
       const ex = sim.explain(r);
       const bars = NEED_ORDER.map((n) => `<span title="${sim.needsCfg.needs[n].name} ${Math.round(r.needs[n])}"><i style="width:${r.needs[n]}%;background:${needColor(r.needs[n])}"></i></span>`).join('');
       const traits = ex.by.map((t) => sim.traits.defs[t]?.icon ?? '').join('');
-      const html = `<div class="top"><span class="dot" style="background:${r.color}"></span><span class="name">${esc(r.name)}</span><span class="lv">Lv.${r.lv}${r.lover ? ` · 💕${esc(sim.get(r.lover).name)}` : ''}</span><span class="moodi">${icons[sim.moodLevel(r)]}</span></div>
+      const html = `<div class="top"><span class="caret">${this.expanded.has(r.id) ? '▾' : '▸'}</span><span class="dot" style="background:${r.color}"></span><span class="name">${esc(r.name)}</span><span class="lv">Lv.${r.lv}${r.lover ? ` · 💕${esc(sim.get(r.lover).name)}` : ''}</span><span class="moodi">${icons[sim.moodLevel(r)]}</span></div>
         <div class="what">${esc(ex.what)} <span class="why">· ${esc(ex.where ?? '')}</span></div>
         ${ex.why || traits ? `<div class="why">${esc(ex.why)} ${traits}</div>` : ''}
-        <div class="minibars">${bars}</div>`;
+        <div class="minibars">${bars}</div>
+        ${this.expanded.has(r.id) ? fullHTML(sim, r) : ''}`;
       const li = this.rows.get(r.id);
+      li.classList.toggle('open', this.expanded.has(r.id));
       if (li.innerHTML !== html) li.innerHTML = html;
     }
   }

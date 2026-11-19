@@ -1,5 +1,5 @@
 {
- "_note": "행동 목록. at = 할 수 있는 자리들: home(자기 집) / desk(자기 책상) / spots:<map.json spots 접두어>(빈자리 중 하나) / route:<루트>. minutes = [최소, 최대] 걸리는 시간(특성 actionDuration 으로 바뀜). rates = 하는 동안 시간당 욕구 변화. once = 시작할 때 한 번(돈·식료품·욕구). socialIfOthers = 같은 곳에 다른 사람이 있으면 시간당 사회 욕구 +. require = 필요 조건. hours = 할 수 있는 시각 [시작, 끝]. partner = 같이 하는 행동(요청 → 수락). tags = 특성이 끼어드는 분류. skill = 오르는 취미 숙련. homeFunMul = 집에서 할 때 재미 배율(집에만 있으면 덜 재밌음). daylight = 낮(07~19시)에 점수 배율.",
+ "_note": "행동 목록. at = 할 수 있는 자리들: home(자기 집) / desk(자기 책상) / spots:<map.json spots 접두어>(빈자리 중 하나) / route:<루트>. minutes = [최소, 최대] 걸리는 시간(특성 actionDuration 으로 바뀜). rates = 하는 동안 시간당 욕구 변화. once = 시작할 때 한 번(돈·식료품·욕구). socialIfOthers = 같은 곳에 다른 사람이 있으면 시간당 사회 욕구 +. require = 필요 조건. hours = 할 수 있는 시각 [시작, 끝]. partner = 같이 하는 행동(요청 → 수락). tags = 특성이 끼어드는 분류. skill = 오르는 취미 숙련. homeFunMul = 집에서 할 때 재미 배율(집에만 있으면 덜 재밌음). daylight = 낮(07~19시)에 점수 배율. requirePet = 반려동물이 있는 주민만 할 수 있음.",
  "actions": {
   "sleep": {
    "name": "잠",
@@ -449,6 +449,35 @@
     "social"
    ],
    "auto": true
+  },
+  "walk_cat": {
+   "name": "까망이 산책",
+   "icon": "🐈‍⬛",
+   "at": [
+    "route:park.loop",
+    "route:beach.walk"
+   ],
+   "minutes": [
+    30,
+    50
+   ],
+   "requirePet": true,
+   "rates": {
+    "fun": 14,
+    "social": 5
+   },
+   "moodlet": {
+    "id": "cat",
+    "value": 7,
+    "hours": 2
+   },
+   "daylight": 1.2,
+   "tags": [
+    "walk",
+    "solo",
+    "outdoor",
+    "pet"
+   ]
   }
  },
  "skills": {

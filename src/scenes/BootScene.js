@@ -36,7 +36,10 @@ export class BootScene extends Phaser.Scene {
       t.getContext().fillRect(0, 0, 4, 4);
       t.refresh();
     }
-    for (const r of this.cache.json.get('residents').residents) registerCharacterAnims(this, r.sprite, manifest[r.sprite]);
+    for (const r of this.cache.json.get('residents').residents) {
+      registerCharacterAnims(this, r.sprite, manifest[r.sprite]);
+      if (r.pet) registerCharacterAnims(this, r.pet.sprite, manifest[r.pet.sprite]);
+    }
     // 접속 안 한 동안 계산은 World 에서 (화면에 "불러오는 중"이 먼저 뜨도록 한 프레임 쉼)
     document.getElementById('loading').textContent = '자리를 비운 사이의 마을을 계산하는 중…';
     setTimeout(() => this.scene.start('World'), 30);

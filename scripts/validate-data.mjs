@@ -70,6 +70,7 @@ for (const [id, a] of Object.entries(ACT)) {
   for (const k of Object.keys(a.rates ?? {})) if (!NEEDS.includes(k)) err(`${w}: rates '${k}' 는 욕구가 아님`);
   if (a.skill && !actions.skills[a.skill]) err(`${w}: 숙련 '${a.skill}' 없음`);
   if (!Array.isArray(a.minutes) || a.minutes[0] > a.minutes[1]) err(`${w}: minutes 는 [최소, 최대]`);
+  if (a.requirePet && !residents.residents.some((r) => r.pet)) warn(`${w}: 반려동물이 있는 주민이 없어서 아무도 못 함`);
 }
 
 // ── memory / talk / news

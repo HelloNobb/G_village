@@ -29,6 +29,11 @@ export class Sim {
     this.rng = new Rng(state.rng);
     this.out = []; // 화면으로 보낼 일회성 이벤트 (말풍선·태그)
     this.capture = null; // 접속 안 한 동안 계산할 때 사건 모으기
+    // 예전 저장 파일에 없던 값 채우기 (반려동물 등)
+    for (const def of data.residents.residents) {
+      const r = state.residents[def.id];
+      if (r && def.pet && !r.pet) r.pet = { ...def.pet };
+    }
     for (const r of this.list()) this.refreshFocus(r);
   }
 
@@ -47,6 +52,7 @@ export class Sim {
       residents[def.id] = {
         id: def.id, name: def.name, color: def.color, sprite: def.sprite, house: def.house, desk: def.desk,
         traits: randomTraits ? traits.randomSet(rng) : [...def.traits],
+        pet: def.pet ? { ...def.pet } : null,
         extro: def.extro, chrono: def.chrono, abilities: { ...def.abilities },
         needs: {
           hunger: rng.range(55, 85), energy: asleep ? rng.range(35, 55) : rng.range(65, 90),
@@ -344,6 +350,13 @@ export class Sim {
       s *= inHours(clock.h, win) ? 1.8 : r.needs.energy < 10 ? 1 : 0.05;
     }
     if (def.hours && !inHours(clock.h, def.hours)) return null;
+    // 반려동물도 산책이 필요함: 마지막 산책 뒤로 시간이 지날수록 점수 ↑
+    if (def.requirePet && r.pet) {
+      const since = (this.now - (r.pet.lastWalk ?? this.state.created - 6 * HOUR)) / HOUR;
+      if (since < 4) s *= 0.25; // 방금 다녀왔으면 당분간은 덜 감
+      else s += Math.min(2.5, (since - 4) / 4);
+      if (since > 8) note = 'pet';
+    }
     if (def.daylight && clock.h >= 7 && clock.h < 19) s *= def.daylight;
 
     // 특성의 행동 점수 배율
@@ -406,6 +419,7 @@ export class Sim {
       if (def.require?.money && r.money < def.require.money) continue;
       if (def.require?.groceries && r.groceries < def.require.groceries) continue;
       if (def.needsBehavior && !this.hasBehavior(r, def.needsBehavior)) continue;
+      if (def.requirePet && !r.pet) continue;
       if (id === 'comfort') {
         const target = this.comfortTarget(r);
         if (!target) continue;
@@ -518,6 +532,11 @@ export class Sim {
     if (a.id === 'work' && this.traits.has(r, 'genius') && this.cool(r, 'focusNews', 8 * HOUR)) {
       this.tag(r, '🧠 집중', 'genius');
       this.emit('focus', { a: r.name }, { actors: [r.id], trait: 'genius', importance: 10 });
+    }
+    if (a.id === 'walk_cat' && r.pet) {
+      r.pet.lastWalk = this.now;
+      this.tag(r, `🐈‍⬛ ${r.pet.name}`);
+      if (this.cool(r, 'catNews', 3 * HOUR)) this.emit('walk_cat', { a: r.name }, { actors: [r.id], importance: 12 });
     }
     if (a.date && !a.follower && this.cool(r, `dateNews`, 2 * HOUR)) {
       const p = this.get(a.partner);
@@ -1180,7 +1199,7 @@ export class Sim {
     if (!a) return { what: '생각 중', why: '' };
     const def = this.actions[a.id];
     const needNames = (a.why.needs ?? []).map((n) => `${this.needsCfg.needs[n].name} ${Math.round(r.needs[n])}`);
-    const notes = { money: '돈이 부족해서', food: '먹을 걸 사려고', panic: '돈이 바닥나서 허겁지겁', groceries: '식료품이 떨어져서', rejected: '거절당해서 혼자', invited: '같이 하자고 해서', comfort: '기분이 처진 사람을 보고', jealous: '신경 쓰여서' };
+    const notes = { money: '돈이 부족해서', food: '먹을 걸 사려고', panic: '돈이 바닥나서 허겁지겁', groceries: '식료품이 떨어져서', rejected: '거절당해서 혼자', invited: '같이 하자고 해서', comfort: '기분이 처진 사람을 보고', jealous: '신경 쓰여서', pet: '까망이가 산책하고 싶어 해서' };
     const why = [a.why.note && notes[a.why.note], needNames.length && `${needNames.join(', ')}`].filter(Boolean).join(' · ');
     const partner = a.partner ? this.get(a.partner)?.name : a.person ? this.get(a.person)?.name : null;
     const where = a.phase === 'travel' ? '가는 중' : this.areaName(this.area(r));

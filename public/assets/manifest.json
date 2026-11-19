@@ -70,5 +70,12 @@
     "type": "placeholder-house",
     "roof": "#d9734f",
     "wall": "#f7e6d2"
+  },
+  "pet.kkamangi": {
+    "type": "placeholder-character",
+    "shape": "cat",
+    "color": "#1a1a1a",
+    "frameWidth": 32,
+    "frameHeight": 32
   }
 }
